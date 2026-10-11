@@ -5,7 +5,11 @@ const LOCATION_ID = "A0gpQEZUjXc6m3mzsCUH";
 
 const PAGE_SIZE = 100;
 const MAX_PAGES = 200;
+const DAY_MS = 24 * 60 * 60 * 1000;
 
+/**
+ * Validate a YYYY-MM-DD date and parse it as UTC midnight.
+ */
 function parseDate(value, fieldName) {
   if (!value) return null;
 
@@ -25,6 +29,9 @@ function parseDate(value, fieldName) {
   return date;
 }
 
+/**
+ * Send an authenticated request to HighLevel.
+ */
 async function ghlRequest(path, params = {}) {
   const token = process.env.GHL_API_KEY;
 
@@ -62,6 +69,10 @@ async function ghlRequest(path, params = {}) {
   return response.json();
 }
 
+/**
+ * Fetch all available orders using pagination.
+ * Duplicate order IDs are ignored.
+ */
 async function fetchAllOrders() {
   const orders = [];
   const seenIds = new Set();
@@ -118,6 +129,9 @@ async function fetchAllOrders() {
   };
 }
 
+/**
+ * Parse an order's creation timestamp.
+ */
 function getValidCreatedAt(order) {
   if (!order.createdAt) return null;
 
@@ -126,27 +140,42 @@ function getValidCreatedAt(order) {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
+/**
+ * Return orders with completed status.
+ */
 function getCompletedOrders(orders) {
   return orders.filter(
     (order) => order.status === "completed"
   );
 }
 
+/**
+ * Sum order amounts safely.
+ */
 function sumAmount(orders) {
   return Number(
-    orders.reduce((total, order) => {
-      const amount = Number(order.amount);
+    orders
+      .reduce((total, order) => {
+        const amount = Number(order.amount);
 
-      return total + (
-        Number.isFinite(amount) ? amount : 0
-      );
-    }, 0).toFixed(2)
+        return (
+          total +
+          (Number.isFinite(amount) ? amount : 0)
+        );
+      }, 0)
+      .toFixed(2)
   );
 }
 
+/**
+ * Calculate order and customer analytics.
+ *
+ * Customer behavior metrics use completed orders.
+ * Historical comparisons use all available fetched orders.
+ */
 function calculateMetrics(orders, startDate, endDate) {
   const endExclusive = new Date(
-    endDate.getTime() + 86400000
+    endDate.getTime() + DAY_MS
   );
 
   const validDatedOrders = orders
@@ -156,6 +185,7 @@ function calculateMetrics(orders, startDate, endDate) {
     }))
     .filter((entry) => entry.createdAt !== null);
 
+  // Orders created inside the selected date range.
   const filteredEntries = validDatedOrders.filter(
     ({ createdAt }) =>
       createdAt >= startDate &&
@@ -184,7 +214,10 @@ function calculateMetrics(orders, startDate, endDate) {
       order.paymentStatus !== "unpaid"
   );
 
-  // Keep the existing order and payment metrics.
+  // ----------------------------------------
+  // 1. ORDER ANALYTICS
+  // ----------------------------------------
+
   const orderMetrics = {
     orders: {
       total: completedOrders.length,
@@ -210,17 +243,26 @@ function calculateMetrics(orders, startDate, endDate) {
     },
   };
 
-  /*
-   * Customer analytics
-   *
-   * Customer metrics use completed orders only.
-   * Historical comparisons use all available order history.
-   */
+  // ----------------------------------------
+  // 2. CUSTOMER ANALYTICS
+  // ----------------------------------------
 
   const allCompletedEntries = validDatedOrders.filter(
     ({ order }) => order.status === "completed"
   );
 
+  /*
+   * Store order history for each customer.
+   *
+   * totalOrders:
+   * All completed orders available for this customer.
+   *
+   * ordersInPeriod:
+   * Completed orders within the selected period.
+   *
+   * firstOrderAt:
+   * Earliest completed order available in the dataset.
+   */
   const customerHistory = new Map();
 
   for (const { order, createdAt } of allCompletedEntries) {
@@ -230,7 +272,6 @@ function calculateMetrics(orders, startDate, endDate) {
       customerHistory.set(order.contactId, {
         firstOrderAt: createdAt,
         ordersInPeriod: 0,
-        ordersBeforePeriod: 0,
         totalOrders: 0,
       });
     }
@@ -238,10 +279,6 @@ function calculateMetrics(orders, startDate, endDate) {
     const customer = customerHistory.get(order.contactId);
 
     customer.totalOrders += 1;
-
-    if (createdAt < startDate) {
-      customer.ordersBeforePeriod += 1;
-    }
 
     if (
       createdAt >= startDate &&
@@ -262,12 +299,21 @@ function calculateMetrics(orders, startDate, endDate) {
   let activeCustomerOrderCount = 0;
 
   for (const customer of customerHistory.values()) {
+    // Customers must have at least one completed order
+    // within the selected period to be active.
     if (customer.ordersInPeriod === 0) continue;
 
     activeCustomers += 1;
 
     activeCustomerOrderCount += customer.ordersInPeriod;
 
+    /*
+     * A customer is returning if they have at least one
+     * completed order before another completed order.
+     *
+     * This includes previous orders inside the selected
+     * period or before the selected period.
+     */
     const hasPreviousOrder =
       customer.totalOrders > customer.ordersInPeriod;
 
@@ -277,6 +323,8 @@ function calculateMetrics(orders, startDate, endDate) {
       newCustomers += 1;
     }
 
+    // Repeat buyers have at least two completed orders
+    // within the selected period.
     if (customer.ordersInPeriod >= 2) {
       repeatBuyers += 1;
     }
@@ -285,8 +333,7 @@ function calculateMetrics(orders, startDate, endDate) {
   const returningCustomerRate = activeCustomers > 0
     ? Number(
         (
-          returningCustomers /
-          activeCustomers *
+          (returningCustomers / activeCustomers) *
           100
         ).toFixed(2)
       )
@@ -295,8 +342,7 @@ function calculateMetrics(orders, startDate, endDate) {
   const repeatBuyerRate = activeCustomers > 0
     ? Number(
         (
-          repeatBuyers /
-          activeCustomers *
+          (repeatBuyers / activeCustomers) *
           100
         ).toFixed(2)
       )
@@ -325,4 +371,103 @@ function calculateMetrics(orders, startDate, endDate) {
     },
   };
 
-  
+  return {
+    ...orderMetrics,
+    ...customerMetrics,
+  };
+}
+
+/**
+ * Vercel serverless function handler.
+ */
+export default async function handler(req, res) {
+  res.setHeader("Cache-Control", "no-store");
+
+  if (req.method !== "GET") {
+    res.setHeader("Allow", "GET");
+
+    return res.status(405).json({
+      success: false,
+      error: "Method not allowed",
+    });
+  }
+
+  try {
+    const now = new Date();
+
+    const defaultEndDate = now.toISOString().slice(0, 10);
+
+    const defaultStart = new Date(now);
+    defaultStart.setUTCDate(
+      defaultStart.getUTCDate() - 29
+    );
+
+    const defaultStartDate =
+      defaultStart.toISOString().slice(0, 10);
+
+    const requestedStart = req.query.startDate;
+    const requestedEnd = req.query.endDate;
+
+    const startDate = parseDate(
+      requestedStart || defaultStartDate,
+      "startDate"
+    );
+
+    const endDate = parseDate(
+      requestedEnd || defaultEndDate,
+      "endDate"
+    );
+
+    if (startDate > endDate) {
+      return res.status(400).json({
+        success: false,
+        error: "startDate must not be after endDate",
+      });
+    }
+
+    const {
+      orders,
+      reportedTotal,
+      pagesFetched,
+    } = await fetchAllOrders();
+
+    const metrics = calculateMetrics(
+      orders,
+      startDate,
+      endDate
+    );
+
+    return res.status(200).json({
+      success: true,
+      source: "highlevel_payments_orders",
+
+      period: {
+        startDate: requestedStart || defaultStartDate,
+        endDate: requestedEnd || defaultEndDate,
+        timezone: "UTC",
+      },
+
+      data: {
+        ...metrics,
+        currency: "EGP",
+      },
+
+      diagnostics: {
+        ordersFetched: orders.length,
+        apiReportedTotal: reportedTotal,
+        pagesFetched,
+        calculatedAt: new Date().toISOString(),
+      },
+    });
+  } catch (error) {
+    console.error(
+      "Dashboard API failed:",
+      error.message
+    );
+
+    return res.status(500).json({
+      success: false,
+      error: "Unable to calculate dashboard metrics",
+    });
+  }
+}
