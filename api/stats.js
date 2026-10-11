@@ -95,9 +95,7 @@ async function fetchAllOrders() {
       totalCount = result.totalCount;
     }
 
-    const page = result.data;
-
-    for (const order of page) {
+    for (const order of result.data) {
       if (!order._id || seenIds.has(order._id)) {
         continue;
       }
@@ -106,11 +104,11 @@ async function fetchAllOrders() {
       orders.push(order);
     }
 
-    if (page.length === 0) {
+    if (result.data.length === 0) {
       break;
     }
 
-    offset += page.length;
+    offset += result.data.length;
   }
 
   return {
@@ -120,31 +118,56 @@ async function fetchAllOrders() {
   };
 }
 
-function calculateMetrics(orders, startDate, endDate) {
-  const endExclusive = endDate
-    ? new Date(endDate.getTime() + 86400000)
-    : null;
+function getValidCreatedAt(order) {
+  if (!order.createdAt) return null;
 
-  const filteredOrders = orders.filter((order) => {
-    const createdAt = new Date(order.createdAt);
+  const date = new Date(order.createdAt);
 
-    if (Number.isNaN(createdAt.getTime())) {
-      return false;
-    }
+  return Number.isNaN(date.getTime()) ? null : date;
+}
 
-    if (startDate && createdAt < startDate) {
-      return false;
-    }
-
-    if (endExclusive && createdAt >= endExclusive) {
-      return false;
-    }
-
-    return true;
-  });
-
-  const completedOrders = filteredOrders.filter(
+function getCompletedOrders(orders) {
+  return orders.filter(
     (order) => order.status === "completed"
+  );
+}
+
+function sumAmount(orders) {
+  return Number(
+    orders.reduce((total, order) => {
+      const amount = Number(order.amount);
+
+      return total + (
+        Number.isFinite(amount) ? amount : 0
+      );
+    }, 0).toFixed(2)
+  );
+}
+
+function calculateMetrics(orders, startDate, endDate) {
+  const endExclusive = new Date(
+    endDate.getTime() + 86400000
+  );
+
+  const validDatedOrders = orders
+    .map((order) => ({
+      order,
+      createdAt: getValidCreatedAt(order),
+    }))
+    .filter((entry) => entry.createdAt !== null);
+
+  const filteredEntries = validDatedOrders.filter(
+    ({ createdAt }) =>
+      createdAt >= startDate &&
+      createdAt < endExclusive
+  );
+
+  const filteredOrders = filteredEntries.map(
+    ({ order }) => order
+  );
+
+  const completedOrders = getCompletedOrders(
+    filteredOrders
   );
 
   const paidOrders = completedOrders.filter(
@@ -161,20 +184,8 @@ function calculateMetrics(orders, startDate, endDate) {
       order.paymentStatus !== "unpaid"
   );
 
-  const sumAmount = (items) =>
-    Number(
-      items
-        .reduce((total, order) => {
-          const amount = Number(order.amount);
-
-          return total + (
-            Number.isFinite(amount) ? amount : 0
-          );
-        }, 0)
-        .toFixed(2)
-    );
-
-  return {
+  // Keep the existing order and payment metrics.
+  const orderMetrics = {
     orders: {
       total: completedOrders.length,
       paid: paidOrders.length,
@@ -197,6 +208,112 @@ function calculateMetrics(orders, startDate, endDate) {
       unknownPaymentStatus:
         unknownPaymentOrders.length,
     },
+  };
+
+  /*
+   * Customer analytics
+   *
+   * Behavioral metrics use completed orders.
+   * New/returning classification compares each customer's
+   * first completed order with the selected period.
+   */
+
+  const allCompletedEntries = validDatedOrders.filter(
+    ({ order }) => order.status === "completed"
+  );
+
+  const customerHistory = new Map();
+
+  for (const { order, createdAt } of allCompletedEntries) {
+    if (!order.contactId) continue;
+
+    const existing = customerHistory.get(order.contactId);
+
+    if (!existing) {
+      customerHistory.set(order.contactId, {
+        firstOrderAt: createdAt,
+        ordersInPeriod: 0,
+        ordersBeforePeriod: 0,
+        totalOrders: 0,
+      });
+    }
+
+    const customer = customerHistory.get(order.contactId);
+
+    customer.totalOrders += 1;
+
+    if (createdAt < startDate) {
+      customer.ordersBeforePeriod += 1;
+    }
+
+    if (
+      createdAt >= startDate &&
+      createdAt < endExclusive
+    ) {
+      customer.ordersInPeriod += 1;
+    }
+
+    if (createdAt < customer.firstOrderAt) {
+      customer.firstOrderAt = createdAt;
+    }
+  }
+
+  let activeCustomers = 0;
+  let newCustomers = 0;
+  let returningCustomers = 0;
+  let activeCustomerOrderCount = 0;
+
+  for (const customer of customerHistory.values()) {
+    if (customer.ordersInPeriod === 0) continue;
+
+    activeCustomers += 1;
+    activeCustomerOrderCount += customer.ordersInPeriod;
+
+    if (customer.ordersBeforePeriod > 0) {
+      returningCustomers += 1;
+    } else {
+      newCustomers += 1;
+    }
+  }
+
+  const repeatCustomerRate = activeCustomers > 0
+    ? Number(
+        (
+          returningCustomers /
+          activeCustomers *
+          100
+        ).toFixed(2)
+      )
+    : 0;
+
+  const ordersPerCustomer = activeCustomers > 0
+    ? Number(
+        (
+          activeCustomerOrderCount /
+          activeCustomers
+        ).toFixed(2)
+      )
+    : 0;
+
+  // Unique customers across all completed orders available
+  // from the Orders API, not only the selected period.
+  const uniqueCustomers = customerHistory.size;
+
+  const customerMetrics = {
+    customers: {
+      unique: uniqueCustomers,
+      active: activeCustomers,
+      new: newCustomers,
+      returning: returningCustomers,
+      repeatCustomerRate,
+      ordersPerCustomer,
+      currency: "EGP",
+    },
+  };
+
+  return {
+    ...orderMetrics,
+    ...customerMetrics,
   };
 }
 
@@ -243,8 +360,11 @@ export default async function handler(req, res) {
       });
     }
 
-    const { orders, reportedTotal, pagesFetched } =
-      await fetchAllOrders();
+    const {
+      orders,
+      reportedTotal,
+      pagesFetched,
+    } = await fetchAllOrders();
 
     const metrics = calculateMetrics(
       orders,
