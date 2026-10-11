@@ -213,9 +213,8 @@ function calculateMetrics(orders, startDate, endDate) {
   /*
    * Customer analytics
    *
-   * Behavioral metrics use completed orders.
-   * New/returning classification compares each customer's
-   * first completed order with the selected period.
+   * Customer metrics use completed orders only.
+   * Historical comparisons use all available order history.
    */
 
   const allCompletedEntries = validDatedOrders.filter(
@@ -227,9 +226,7 @@ function calculateMetrics(orders, startDate, endDate) {
   for (const { order, createdAt } of allCompletedEntries) {
     if (!order.contactId) continue;
 
-    const existing = customerHistory.get(order.contactId);
-
-    if (!existing) {
+    if (!customerHistory.has(order.contactId)) {
       customerHistory.set(order.contactId, {
         firstOrderAt: createdAt,
         ordersInPeriod: 0,
@@ -261,25 +258,44 @@ function calculateMetrics(orders, startDate, endDate) {
   let activeCustomers = 0;
   let newCustomers = 0;
   let returningCustomers = 0;
+  let repeatBuyers = 0;
   let activeCustomerOrderCount = 0;
 
   for (const customer of customerHistory.values()) {
     if (customer.ordersInPeriod === 0) continue;
 
     activeCustomers += 1;
+
     activeCustomerOrderCount += customer.ordersInPeriod;
 
-    if (customer.ordersBeforePeriod > 0) {
+    const hasPreviousOrder =
+      customer.totalOrders > customer.ordersInPeriod;
+
+    if (hasPreviousOrder) {
       returningCustomers += 1;
     } else {
       newCustomers += 1;
     }
+
+    if (customer.ordersInPeriod >= 2) {
+      repeatBuyers += 1;
+    }
   }
 
-  const repeatCustomerRate = activeCustomers > 0
+  const returningCustomerRate = activeCustomers > 0
     ? Number(
         (
           returningCustomers /
+          activeCustomers *
+          100
+        ).toFixed(2)
+      )
+    : 0;
+
+  const repeatBuyerRate = activeCustomers > 0
+    ? Number(
+        (
+          repeatBuyers /
           activeCustomers *
           100
         ).toFixed(2)
@@ -295,111 +311,18 @@ function calculateMetrics(orders, startDate, endDate) {
       )
     : 0;
 
-  // Unique customers across all completed orders available
-  // from the Orders API, not only the selected period.
-  const uniqueCustomers = customerHistory.size;
-
   const customerMetrics = {
     customers: {
-      unique: uniqueCustomers,
+      unique: customerHistory.size,
       active: activeCustomers,
       new: newCustomers,
       returning: returningCustomers,
-      repeatCustomerRate,
+      repeatBuyers,
+      returningCustomerRate,
+      repeatBuyerRate,
       ordersPerCustomer,
       currency: "EGP",
     },
   };
 
-  return {
-    ...orderMetrics,
-    ...customerMetrics,
-  };
-}
-
-export default async function handler(req, res) {
-  res.setHeader("Cache-Control", "no-store");
-
-  if (req.method !== "GET") {
-    res.setHeader("Allow", "GET");
-
-    return res.status(405).json({
-      success: false,
-      error: "Method not allowed",
-    });
-  }
-
-  try {
-    const now = new Date();
-
-    const defaultEndDate = now.toISOString().slice(0, 10);
-
-    const defaultStart = new Date(now);
-    defaultStart.setUTCDate(defaultStart.getUTCDate() - 29);
-
-    const defaultStartDate =
-      defaultStart.toISOString().slice(0, 10);
-
-    const requestedStart = req.query.startDate;
-    const requestedEnd = req.query.endDate;
-
-    const startDate = parseDate(
-      requestedStart || defaultStartDate,
-      "startDate"
-    );
-
-    const endDate = parseDate(
-      requestedEnd || defaultEndDate,
-      "endDate"
-    );
-
-    if (startDate > endDate) {
-      return res.status(400).json({
-        success: false,
-        error: "startDate must not be after endDate",
-      });
-    }
-
-    const {
-      orders,
-      reportedTotal,
-      pagesFetched,
-    } = await fetchAllOrders();
-
-    const metrics = calculateMetrics(
-      orders,
-      startDate,
-      endDate
-    );
-
-    return res.status(200).json({
-      success: true,
-      source: "highlevel_payments_orders",
-
-      period: {
-        startDate: requestedStart || defaultStartDate,
-        endDate: requestedEnd || defaultEndDate,
-        timezone: "UTC",
-      },
-
-      data: {
-        ...metrics,
-        currency: "EGP",
-      },
-
-      diagnostics: {
-        ordersFetched: orders.length,
-        apiReportedTotal: reportedTotal,
-        pagesFetched,
-        calculatedAt: new Date().toISOString(),
-      },
-    });
-  } catch (error) {
-    console.error("Dashboard API failed:", error.message);
-
-    return res.status(500).json({
-      success: false,
-      error: "Unable to calculate dashboard metrics",
-    });
-  }
-}
+  
