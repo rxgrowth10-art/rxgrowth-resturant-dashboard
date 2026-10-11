@@ -8,8 +8,7 @@
 <meta name="description" content="Restaurant performance and customer intelligence dashboard.">
 <meta name="theme-color" content="#070B14">
 
-<link rel="icon" type="image/png"
-      href="https://assets.cdn.filesafe.space/A0gpQEZUjXc6m3mzsCUH/media/6ac43aa9bbad531ac8d905d4.png">
+<link rel="icon" type="image/png" href="https://assets.cdn.filesafe.space/A0gpQEZUjXc6m3mzsCUH/media/6ac43aa9bbad531ac8d905d4.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,23 +23,17 @@
   --card: #101827;
   --card2: #0D1523;
   --border: #243247;
-
   --primary: #5DEFFF;
   --text: #F5F9FF;
   --muted: #A9B8CC;
-  --muted-strong: #C0CCDC;
-
   --green: #4ADE80;
   --yellow: #FBBF24;
   --red: #FB7185;
   --purple: #A5B4FC;
-
   --sidebar-width: 250px;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html {
   min-height: 100%;
@@ -56,13 +49,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-button, select {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
+button, select { font: inherit; }
+button { cursor: pointer; }
 
 button:focus-visible,
 select:focus-visible {
@@ -70,9 +58,9 @@ select:focus-visible {
   outline-offset: 3px;
 }
 
-/* =========================================================
+/* =====================================================
    SIDEBAR
-========================================================= */
+===================================================== */
 
 .sidebar {
   position: fixed;
@@ -87,41 +75,22 @@ select:focus-visible {
 
 .brand {
   height: 72px;
-  padding: 0 20px;
+  padding: 0 18px;
   display: flex;
   align-items: center;
-  gap: 11px;
   border-bottom: 1px solid #1B2738;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
-.mark {
-  width: 36px;
-  height: 36px;
-  border: 1px solid #397A86;
-  border-radius: 10px;
-  background: #102632;
-  color: var(--primary);
-  display: grid;
-  place-items: center;
-  font-weight: 800;
+.brand-logo {
+  display: block;
+  width: 100%;
+  max-width: 195px;
+  max-height: 46px;
+  object-fit: contain;
+  object-position: left center;
 }
-
-.brand-name {
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: -.4px;
-  color: #F8FAFC;
-}
-
-.brand-sub {
-  font-size: 10px;
-  color: #A9B8CC;
-  letter-spacing: 1.5px;
-  margin-top: 4px;
-}
-
-/* Workspace card removed */
 
 .nav {
   padding: 13px 10px 14px;
@@ -129,9 +98,7 @@ select:focus-visible {
   flex: 1;
 }
 
-.nav-group {
-  margin-top: 8px;
-}
+.nav-group { margin-top: 8px; }
 
 .group-toggle {
   width: 100%;
@@ -148,23 +115,12 @@ select:focus-visible {
   text-align: left;
 }
 
-.chev {
-  font-size: 12px;
-  transition: transform .15s;
-}
+.chev { font-size: 12px; transition: transform .15s; }
 
-.nav-group.collapsed .chev {
-  transform: rotate(-90deg);
-}
+.nav-group.collapsed .chev { transform: rotate(-90deg); }
+.nav-group.collapsed .group-items { display: none; }
 
-.nav-group.collapsed .group-items {
-  display: none;
-}
-
-.group-items {
-  display: grid;
-  gap: 3px;
-}
+.group-items { display: grid; gap: 3px; }
 
 .nav-item {
   width: 100%;
@@ -259,9 +215,9 @@ select:focus-visible {
   margin-top: 7px;
 }
 
-/* =========================================================
-   MAIN / HEADER
-========================================================= */
+/* =====================================================
+   MAIN / AMBIENT GRADIENT
+===================================================== */
 
 .main {
   margin-left: var(--sidebar-width);
@@ -270,7 +226,6 @@ select:focus-visible {
   isolation: isolate;
 }
 
-/* Teal ambient glow: content only, never the sidebar */
 .main::before {
   content: "";
   position: absolute;
@@ -279,18 +234,18 @@ select:focus-visible {
   top: 0;
   left: 0;
   right: 0;
-  height: 620px;
+  height: 650px;
   background:
     radial-gradient(
       ellipse at 65% 0%,
-      rgba(25, 176, 194, .105) 0%,
-      rgba(20, 123, 145, .055) 28%,
-      rgba(7, 11, 20, 0) 70%
+      rgba(25,176,194,.105) 0%,
+      rgba(20,123,145,.055) 30%,
+      rgba(7,11,20,0) 72%
     ),
     linear-gradient(
       180deg,
-      rgba(12, 29, 42, .20) 0%,
-      rgba(7, 11, 20, 0) 100%
+      rgba(12,29,42,.20) 0%,
+      rgba(7,11,20,0) 100%
     );
 }
 
@@ -315,8 +270,6 @@ select:focus-visible {
   gap: 11px;
   min-width: 0;
 }
-
-/* Breadcrumb and duplicate title removed */
 
 .top-right {
   display: flex;
@@ -346,9 +299,7 @@ select:focus-visible {
   font-size: 11px;
 }
 
-.date-control option {
-  background: var(--card);
-}
+.date-control option { background: var(--card); }
 
 .icon-button {
   width: 35px;
@@ -370,7 +321,7 @@ select:focus-visible {
 .profile {
   width: 39px;
   height: 39px;
-  padding: 4px;
+  padding: 5px;
   border-radius: 10px;
   background: rgba(16,24,39,.8);
   border: 1px solid #26384B;
@@ -388,13 +339,11 @@ select:focus-visible {
 }
 
 .mobile-menu,
-.overlay {
-  display: none;
-}
+.overlay { display: none; }
 
-/* =========================================================
-   CONTENT
-========================================================= */
+/* =====================================================
+   PAGE HEADER
+===================================================== */
 
 .content {
   max-width: 1650px;
@@ -411,9 +360,7 @@ select:focus-visible {
   margin-bottom: 26px;
 }
 
-.page-heading-copy {
-  min-width: 0;
-}
+.page-heading-copy { min-width: 0; }
 
 .page-title {
   font-size: 29px;
@@ -498,9 +445,9 @@ select:focus-visible {
   display: none !important;
 }
 
-/* =========================================================
+/* =====================================================
    SECTION HEADINGS
-========================================================= */
+===================================================== */
 
 .section-head {
   display: flex;
@@ -535,9 +482,9 @@ select:focus-visible {
   white-space: nowrap;
 }
 
-/* =========================================================
+/* =====================================================
    METRIC CARDS
-========================================================= */
+===================================================== */
 
 .metrics {
   display: grid;
@@ -620,9 +567,9 @@ select:focus-visible {
   flex-shrink: 0;
 }
 
-/* =========================================================
+/* =====================================================
    CHARTS / PANELS
-========================================================= */
+===================================================== */
 
 .charts {
   display: grid;
@@ -657,9 +604,7 @@ select:focus-visible {
   margin-top: 5px;
 }
 
-.panel-body {
-  padding: 16px;
-}
+.panel-body { padding: 16px; }
 
 .chart {
   position: relative;
@@ -667,9 +612,7 @@ select:focus-visible {
   height: 220px;
 }
 
-.chart.small {
-  height: 205px;
-}
+.chart.small { height: 205px; }
 
 .legend {
   display: flex;
@@ -693,9 +636,9 @@ select:focus-visible {
   flex-shrink: 0;
 }
 
-/* =========================================================
+/* =====================================================
    CUSTOMER INSIGHTS
-========================================================= */
+===================================================== */
 
 .insights {
   display: grid;
@@ -724,9 +667,9 @@ select:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 
-/* =========================================================
-   DATA NOTICE / FOOTER
-========================================================= */
+/* =====================================================
+   NOTICE / FOOTER
+===================================================== */
 
 .notice {
   display: flex;
@@ -768,13 +711,11 @@ select:focus-visible {
   font-size: 10px;
 }
 
-.footer strong {
-  color: #E0E8F2;
-}
+.footer strong { color: #E0E8F2; }
 
-/* =========================================================
+/* =====================================================
    PLANNED MODULES
-========================================================= */
+===================================================== */
 
 .placeholder {
   border: 1px solid var(--border);
@@ -832,23 +773,14 @@ select:focus-visible {
   50% { opacity: .55; }
 }
 
-/* =========================================================
+/* =====================================================
    RESPONSIVE
-========================================================= */
+===================================================== */
 
 @media(max-width:1200px) {
-  .metrics {
-    grid-template-columns: repeat(2,minmax(0,1fr));
-  }
-
-  .content {
-    padding-left: 22px;
-    padding-right: 22px;
-  }
-
-  .topbar {
-    padding: 0 22px;
-  }
+  .metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .content { padding-left: 22px; padding-right: 22px; }
+  .topbar { padding: 0 22px; }
 }
 
 @media(max-width:850px) {
@@ -857,9 +789,7 @@ select:focus-visible {
     transition: transform .2s ease;
   }
 
-  .sidebar.open {
-    transform: translateX(0);
-  }
+  .sidebar.open { transform: translateX(0); }
 
   .overlay.open {
     display: block;
@@ -869,40 +799,18 @@ select:focus-visible {
     z-index: 20;
   }
 
-  .main {
-    margin-left: 0;
-  }
+  .main { margin-left: 0; }
+  .mobile-menu { display: grid; }
+  .charts { grid-template-columns: 1fr; }
 
-  .mobile-menu {
-    display: grid;
-  }
-
-  .charts {
-    grid-template-columns: 1fr;
-  }
-
-  .topbar {
-    min-height: 64px;
-  }
-
-  .content {
-    padding-top: 25px;
-  }
+  .topbar { min-height: 64px; }
+  .content { padding-top: 25px; }
 }
 
 @media(max-width:560px) {
-  .topbar {
-    padding: 0 12px;
-    gap: 7px;
-  }
-
-  .topbar-left {
-    gap: 7px;
-  }
-
-  .top-right {
-    gap: 5px;
-  }
+  .topbar { padding: 0 12px; gap: 7px; }
+  .topbar-left { gap: 7px; }
+  .top-right { gap: 5px; }
 
   .date-control {
     padding: 8px 7px;
@@ -921,26 +829,11 @@ select:focus-visible {
     padding: 3px;
   }
 
-  .content {
-    padding: 22px 12px 27px;
-  }
+  .content { padding: 22px 12px 27px; }
+  .page-title { font-size: 27px; }
+  .description { font-size: 12px; }
 
-  .page-heading {
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .page-title {
-    font-size: 27px;
-  }
-
-  .description {
-    font-size: 12px;
-  }
-
-  .heading-actions {
-    gap: 7px;
-  }
+  .heading-actions { gap: 7px; }
 
   .updated {
     font-size: 9px;
@@ -952,17 +845,9 @@ select:focus-visible {
     font-size: 10px;
   }
 
-  .metrics {
-    gap: 8px;
-  }
-
-  .metric {
-    padding: 12px;
-  }
-
-  .metric-label {
-    font-size: 10px;
-  }
+  .metrics { gap: 8px; }
+  .metric { padding: 12px; }
+  .metric-label { font-size: 10px; }
 
   .metric-icon {
     width: 25px;
@@ -979,93 +864,43 @@ select:focus-visible {
     align-items: flex-start;
   }
 
-  .section-title {
-    font-size: 12px;
-  }
+  .section-title { font-size: 12px; }
+  .caption { font-size: 10px; }
+  .panel-head { padding: 13px; }
+  .panel-body { padding: 12px; }
+  .chart { height: 200px; }
+  .chart.small { height: 190px; }
 
-  .caption {
-    font-size: 10px;
-  }
+  .insights { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .insight { padding: 11px; }
+  .insight-label { font-size: 9px; }
+  .insight-value { font-size: 19px; }
 
-  .panel-head {
-    padding: 13px;
-  }
-
-  .panel-body {
-    padding: 12px;
-  }
-
-  .chart {
-    height: 200px;
-  }
-
-  .chart.small {
-    height: 190px;
-  }
-
-  .insights {
-    grid-template-columns: repeat(2,minmax(0,1fr));
-  }
-
-  .insight {
-    padding: 11px;
-  }
-
-  .insight-label {
-    font-size: 9px;
-  }
-
-  .insight-value {
-    font-size: 19px;
-  }
-
-  .notice {
-    padding: 11px;
-  }
-
-  .notice-text {
-    font-size: 9px;
-  }
-
-  .footer {
-    flex-direction: column;
-  }
-
-  .placeholder {
-    padding: 18px;
-  }
+  .notice { padding: 11px; }
+  .notice-text { font-size: 9px; }
+  .footer { flex-direction: column; }
+  .placeholder { padding: 18px; }
 }
 
 @media(max-width:380px) {
-  .brand {
-    padding-left: 15px;
-  }
+  .brand { padding-left: 15px; }
 
-  .date-control > span {
-    display: none;
-  }
-
-  .date-control select {
-    max-width: 80px;
-  }
+  .date-control > span { display: none; }
+  .date-control select { max-width: 80px; }
 
   .page-heading {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .heading-actions {
-    align-items: flex-start;
-  }
+  .heading-actions { align-items: flex-start; }
 
   .updated {
     max-width: none;
     text-align: left;
   }
 
-  .insights {
-    grid-template-columns: 1fr;
-  }
+  .insights { grid-template-columns: 1fr; }
 }
 
 @media(prefers-reduced-motion:reduce) {
@@ -1086,12 +921,12 @@ select:focus-visible {
 
 <aside class="sidebar" id="sidebar">
 
+  <!-- PRIMARY BRAND LOGO -->
   <div class="brand">
-    <div class="mark">Rx</div>
-    <div>
-      <div class="brand-name">RxGrowth</div>
-      <div class="brand-sub">RESTAURANT OS</div>
-    </div>
+    <img
+      class="brand-logo"
+      src="https://assets.cdn.filesafe.space/A0gpQEZUjXc6m3mzsCUH/media/6acbcffbbbad531ac891a4c6.png"
+      alt="RxGrowth Restaurant OS">
   </div>
 
   <nav class="nav" aria-label="Main navigation">
@@ -1244,6 +1079,7 @@ select:focus-visible {
 <main class="main">
 
   <header class="topbar">
+
     <div class="topbar-left">
       <button
         id="mobileMenu"
@@ -1271,10 +1107,11 @@ select:focus-visible {
         aria-label="Refresh dashboard"
         title="Refresh dashboard">↻</button>
 
+      <!-- SECONDARY LOGO -->
       <div class="profile" title="RxGrowth">
         <img
-          src="https://assets.cdn.filesafe.space/A0gpQEZUjXc6m3mzsCUH/media/6acbcffbbbad531ac891a4c6.png"
-          alt="RxGrowth logo">
+          src="https://assets.cdn.filesafe.space/A0gpQEZUjXc6m3mzsCUH/media/6ac43aa9bbad531ac8d905d4.png"
+          alt="RxGrowth icon">
       </div>
 
     </div>
@@ -1786,13 +1623,9 @@ function chartDefaults() {
   return {
     responsive: true,
     maintainAspectRatio: false,
-    animation: {
-      duration: 180
-    },
+    animation: { duration: 180 },
     plugins: {
-      legend: {
-        display: false
-      },
+      legend: { display: false },
       tooltip: {
         backgroundColor: "#101827",
         borderColor: "#243247",
@@ -1811,11 +1644,7 @@ function destroyCharts() {
     if (chart) chart.destroy();
   });
 
-  charts = {
-    value: null,
-    count: null,
-    customers: null
-  };
+  charts = { value: null, count: null, customers: null };
 }
 
 function renderCharts(data) {
@@ -1859,9 +1688,7 @@ function renderCharts(data) {
         },
         y: {
           beginAtZero: true,
-          grid: {
-            color: "rgba(148,163,184,.09)"
-          },
+          grid: { color: "rgba(148,163,184,.09)" },
           border: { display: false },
           ticks: {
             callback: value => numberFormat.format(value)
@@ -1890,11 +1717,7 @@ function renderCharts(data) {
           Number(orders.unpaid) || 0,
           Number(orders.otherPaymentStatus) || 0
         ],
-        backgroundColor: [
-          "#4ADE80",
-          "#FBBF24",
-          "#64748B"
-        ],
+        backgroundColor: ["#4ADE80", "#FBBF24", "#64748B"],
         borderColor: "#101827",
         borderWidth: 4,
         hoverOffset: 3
@@ -1925,10 +1748,7 @@ function renderCharts(data) {
           Number(customers.new) || 0,
           Number(customers.returning) || 0
         ],
-        backgroundColor: [
-          "#5DEFFF",
-          "#A5B4FC"
-        ],
+        backgroundColor: ["#5DEFFF", "#A5B4FC"],
         borderColor: "#101827",
         borderWidth: 4,
         hoverOffset: 3
@@ -1959,45 +1779,27 @@ function renderDashboard(data, period, diagnostics) {
   $("totalOrders").textContent = formatNumber(orders.total);
   $("paidOrders").textContent = formatNumber(orders.paid);
   $("unpaidOrders").textContent = formatNumber(orders.unpaid);
-
-  $("totalOrderValue").textContent =
-    formatMoney(values.total);
+  $("totalOrderValue").textContent = formatMoney(values.total);
 
   $("averageOrderValue").textContent =
     Number(orders.total) > 0
       ? formatMoney(Number(values.total) / Number(orders.total))
       : "—";
 
-  $("activeCustomers").textContent =
-    formatNumber(customers.active);
+  $("activeCustomers").textContent = formatNumber(customers.active);
+  $("returningCustomers").textContent = formatNumber(customers.returning);
+  $("repeatBuyerRate").textContent = formatPercent(customers.repeatBuyerRate);
+  $("returningCustomerRate").textContent = formatPercent(customers.returningCustomerRate);
+  $("ordersPerCustomer").textContent = formatNumber(customers.ordersPerCustomer);
+  $("newCustomers").textContent = formatNumber(customers.new);
+  $("otherPaymentStatus").textContent = formatNumber(orders.otherPaymentStatus);
 
-  $("returningCustomers").textContent =
-    formatNumber(customers.returning);
-
-  $("repeatBuyerRate").textContent =
-    formatPercent(customers.repeatBuyerRate);
-
-  $("returningCustomerRate").textContent =
-    formatPercent(customers.returningCustomerRate);
-
-  $("ordersPerCustomer").textContent =
-    formatNumber(customers.ordersPerCustomer);
-
-  $("newCustomers").textContent =
-    formatNumber(customers.new);
-
-  $("otherPaymentStatus").textContent =
-    formatNumber(orders.otherPaymentStatus);
-
-  const updatedDate = new Date(
+  $("lastUpdated").textContent = new Date(
     diagnostics.calculatedAt || Date.now()
-  );
-
-  $("lastUpdated").textContent =
-    updatedDate.toLocaleString("en-US", {
-      dateStyle: "medium",
-      timeStyle: "short"
-    });
+  ).toLocaleString("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
 
   setConnection(
     true,
@@ -2008,14 +1810,10 @@ function renderDashboard(data, period, diagnostics) {
   removeLoadingStyles();
   clearError();
 
-  /*
-   * Metrics remain available if the optional chart library fails.
-   */
   try {
     renderCharts(data);
   } catch (chartError) {
     console.error("Charts could not be rendered:", chartError);
-
     showError(
       "The metrics loaded successfully, but the charts could not load. Check your internet connection and refresh.",
       "Charts unavailable"
@@ -2024,12 +1822,9 @@ function renderDashboard(data, period, diagnostics) {
 }
 
 async function loadDashboard() {
-  if (controller) {
-    controller.abort();
-  }
+  if (controller) controller.abort();
 
   controller = new AbortController();
-
   const signal = controller.signal;
 
   setLoading(true);
@@ -2043,24 +1838,17 @@ async function loadDashboard() {
   });
 
   try {
-    const response = await fetch(
-      `/api/stats?${params.toString()}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json"
-        },
-        cache: "no-store",
-        signal
-      }
-    );
+    const response = await fetch(`/api/stats?${params.toString()}`, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+      signal
+    });
 
     const result = await response.json();
 
     if (!response.ok || !result.success) {
-      throw new Error(
-        result.error || `Request failed (${response.status})`
-      );
+      throw new Error(result.error || `Request failed (${response.status})`);
     }
 
     if (
@@ -2068,9 +1856,7 @@ async function loadDashboard() {
       !result.data?.orderValue ||
       !result.data?.customers
     ) {
-      throw new Error(
-        "The API response is missing required dashboard data."
-      );
+      throw new Error("The API response is missing required dashboard data.");
     }
 
     renderDashboard(
@@ -2080,9 +1866,7 @@ async function loadDashboard() {
     );
 
   } catch (err) {
-    if (err.name === "AbortError") {
-      return;
-    }
+    if (err.name === "AbortError") return;
 
     console.error("Dashboard loading failed:", err);
 
@@ -2112,10 +1896,7 @@ function showPage(key) {
   const page = pages[key] || pages.overview;
 
   document.querySelectorAll(".nav-item").forEach(button => {
-    button.classList.toggle(
-      "active",
-      button.dataset.page === key
-    );
+    button.classList.toggle("active", button.dataset.page === key);
   });
 
   $("pageTitle").textContent = page[1];
@@ -2130,7 +1911,6 @@ function showPage(key) {
     $("placeholderTitle").textContent = page[0];
     $("placeholderDescription").textContent = page[3];
     $("placeholderIcon").textContent = page[4];
-
     clearError();
   }
 
@@ -2142,17 +1922,12 @@ document.querySelectorAll(".group-toggle").forEach(button => {
     const group = button.closest(".nav-group");
     const collapsed = group.classList.toggle("collapsed");
 
-    button.setAttribute(
-      "aria-expanded",
-      String(!collapsed)
-    );
+    button.setAttribute("aria-expanded", String(!collapsed));
   });
 });
 
 document.querySelectorAll(".nav-item").forEach(button => {
-  button.addEventListener("click", () => {
-    showPage(button.dataset.page);
-  });
+  button.addEventListener("click", () => showPage(button.dataset.page));
 });
 
 $("refresh").addEventListener("click", loadDashboard);
