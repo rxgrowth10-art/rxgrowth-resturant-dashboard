@@ -314,15 +314,14 @@ function calculateMetrics(orders, startDate, endDate) {
      * This includes previous orders inside the selected
      * period or before the selected period.
      */
-    const hasPreviousOrder =
-      customer.totalOrders > customer.ordersInPeriod;
+        const hasPreviousOrder =
+      customer.totalOrders > 1;
 
     if (hasPreviousOrder) {
       returningCustomers += 1;
     } else {
       newCustomers += 1;
     }
-
     // Repeat buyers have at least two completed orders
     // within the selected period.
     if (customer.ordersInPeriod >= 2) {
