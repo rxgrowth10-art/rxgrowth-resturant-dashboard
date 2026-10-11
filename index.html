@@ -1,55 +1,1921 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>لوحة مؤشرات المطعم</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>RxGrowth | Restaurant Intelligence</title>
+
+  <meta
+    name="description"
+    content="Restaurant performance and customer intelligence dashboard."
+  >
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-  <style> body { font-family: 'Cairo', sans-serif; } </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --bg: #070B14;
+      --sidebar: #090D18;
+      --card: #101827;
+      --card-hover: #141F30;
+      --border: #243247;
+      --primary: #5DEFFF;
+      --text: #F5F9FF;
+      --muted: #94A3B8;
+      --green: #4ADE80;
+      --red: #FB7185;
+      --yellow: #FBBF24;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: 248px;
+      background: var(--sidebar);
+      border-right: 1px solid rgba(148, 163, 184, 0.12);
+      display: flex;
+      flex-direction: column;
+      z-index: 30;
+    }
+
+    .brand {
+      height: 84px;
+      padding: 0 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.10);
+    }
+
+    .brand-mark {
+      width: 39px;
+      height: 39px;
+      border-radius: 12px;
+      background: rgba(93, 239, 255, 0.10);
+      border: 1px solid rgba(93, 239, 255, 0.35);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .brand-name {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.7px;
+    }
+
+    .brand-subtitle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 1.8px;
+    }
+
+    .workspace {
+      padding: 22px 20px 14px;
+    }
+
+    .workspace-label {
+      color: #64748B;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.6px;
+      margin-bottom: 12px;
+    }
+
+    .workspace-box {
+      padding: 12px;
+      background: #101827;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .workspace-icon {
+      width: 34px;
+      height: 34px;
+      background: #1A293C;
+      color: var(--primary);
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+    }
+
+    .workspace-name {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .workspace-type {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .nav {
+      padding: 15px 13px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .nav-label {
+      padding: 12px 12px 9px;
+      color: #64748B;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+    }
+
+    .nav-item {
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 12px;
+      border-radius: 9px;
+      margin: 3px 0;
+      text-align: left;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-item:hover {
+      background: rgba(148, 163, 184, 0.06);
+      color: var(--text);
+    }
+
+    .nav-item.active {
+      background: rgba(93, 239, 255, 0.08);
+      border-color: rgba(93, 239, 255, 0.15);
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      width: 19px;
+      text-align: center;
+      font-size: 15px;
+    }
+
+    .nav-item span:nth-child(2) {
+      flex: 1;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .nav-badge {
+      color: #64748B;
+      font-size: 9px;
+      background: #141D2C;
+      padding: 4px 6px;
+      border-radius: 5px;
+    }
+
+    .sidebar-bottom {
+      padding: 16px;
+      border-top: 1px solid rgba(148, 163, 184, 0.10);
+    }
+
+    .connection-card {
+      background: #101827;
+      border: 1px solid var(--border);
+      padding: 13px;
+      border-radius: 10px;
+    }
+
+    .connection-heading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .connection-text {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.6;
+      margin-top: 9px;
+    }
+
+    .main {
+      margin-left: 248px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 84px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 36px;
+      gap: 20px;
+      background: rgba(7, 11, 20, 0.92);
+    }
+
+    .breadcrumb {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    .breadcrumb span {
+      color: #475569;
+      margin: 0 7px;
+    }
+
+    .topbar-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .date-control {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 11px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .date-control select {
+      color: var(--text);
+      background: transparent;
+      border: 0;
+      outline: 0;
+      max-width: 145px;
+      cursor: pointer;
+    }
+
+    .date-control option {
+      background: var(--card);
+      color: var(--text);
+    }
+
+    .icon-button {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--card);
+      color: var(--muted);
+      display: grid;
+      place-items: center;
+    }
+
+    .icon-button:hover {
+      color: var(--primary);
+      border-color: rgba(93, 239, 255, 0.35);
+    }
+
+    .profile {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #183142;
+      border: 1px solid rgba(93, 239, 255, 0.3);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .content {
+      max-width: 1600px;
+      padding: 32px 36px 44px;
+      margin: 0 auto;
+    }
+
+    .page-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 26px;
+    }
+
+    .eyebrow {
+      color: var(--primary);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 11px;
+    }
+
+    .page-title {
+      font-size: clamp(23px, 2.2vw, 29px);
+      font-weight: 700;
+      letter-spacing: -1.1px;
+      line-height: 1.25;
+    }
+
+    .page-description {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+      margin-top: 9px;
+    }
+
+    .updated-label {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 10px;
+    }
+
+    .updated-label strong {
+      color: #CBD5E1;
+      font-weight: 500;
+    }
+
+    .primary-button {
+      border: 1px solid rgba(93, 239, 255, 0.30);
+      background: rgba(93, 239, 255, 0.10);
+      color: var(--primary);
+      padding: 10px 14px;
+      border-radius: 9px;
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      white-space: nowrap;
+    }
+
+    .primary-button:hover {
+      background: rgba(93, 239, 255, 0.16);
+    }
+
+    .primary-button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin: 31px 0 15px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .section-caption {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .section-tag {
+      color: #A5B4FC;
+      font-size: 9px;
+      padding: 5px 8px;
+      border-radius: 6px;
+      background: rgba(129, 140, 248, 0.09);
+      border: 1px solid rgba(129, 140, 248, 0.15);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .metric-card {
+      min-width: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 19px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::after {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 2px;
+      background: var(--accent, var(--primary));
+      opacity: 0.75;
+    }
+
+    .metric-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .metric-icon {
+      width: 33px;
+      height: 33px;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      color: var(--accent, var(--primary));
+      background: var(--icon-bg, rgba(93, 239, 255, 0.08));
+      flex-shrink: 0;
+      font-size: 15px;
+    }
+
+    .metric-value {
+      margin-top: 20px;
+      font-size: clamp(23px, 2.2vw, 31px);
+      font-weight: 700;
+      letter-spacing: -1.1px;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .metric-footer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    .metric-foot-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent, var(--primary));
+      flex-shrink: 0;
+    }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+      gap: 15px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 20px 21px 16px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.10);
+    }
+
+    .panel-title {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .panel-subtitle {
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: 6px;
+    }
+
+    .panel-body {
+      padding: 21px;
+    }
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 255px;
+    }
+
+    .chart-container.small {
+      height: 225px;
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .legend-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .insight-card {
+      padding: 18px;
+      border-radius: 11px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      min-width: 0;
+    }
+
+    .insight-label {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .insight-value {
+      font-size: 22px;
+      font-weight: 700;
+      margin-top: 13px;
+      letter-spacing: -0.6px;
+    }
+
+    .insight-description {
+      font-size: 10px;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      background: rgba(251, 191, 36, 0.045);
+      border: 1px solid rgba(251, 191, 36, 0.14);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 23px;
+    }
+
+    .notice-icon {
+      color: var(--yellow);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .notice-title {
+      color: #FDE68A;
+      font-size: 10px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .notice-text {
+      color: #A8A29E;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .footer {
+      border-top: 1px solid rgba(148, 163, 184, 0.10);
+      margin-top: 35px;
+      padding-top: 19px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: #64748B;
+      font-size: 10px;
+    }
+
+    .footer-brand {
+      color: #CBD5E1;
+      font-weight: 600;
+    }
+
+    .state-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      margin: 20px 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .state-box.error {
+      border-color: rgba(251, 113, 133, 0.3);
+      color: #FDA4AF;
+    }
+
+    .mobile-menu-button {
+      display: none;
+    }
+
+    .sidebar-overlay {
+      display: none;
+    }
+
+    .loading-shimmer {
+      color: #64748B;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+
+    @media (max-width: 1250px) {
+      .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .content {
+        padding-left: 25px;
+        padding-right: 25px;
+      }
+
+      .topbar {
+        padding-left: 25px;
+        padding-right: 25px;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-overlay.open {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        z-index: 20;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .mobile-menu-button {
+        display: grid;
+      }
+
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .insights-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .topbar {
+        height: 72px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .topbar {
+        padding: 0 15px;
+        gap: 9px;
+      }
+
+      .topbar-title {
+        font-size: 12px;
+      }
+
+      .breadcrumb {
+        font-size: 9px;
+      }
+
+      .topbar-right {
+        gap: 7px;
+      }
+
+      .date-control {
+        padding: 8px;
+        gap: 4px;
+      }
+
+      .date-control select {
+        max-width: 95px;
+        font-size: 10px;
+      }
+
+      .profile {
+        display: none;
+      }
+
+      .content {
+        padding: 24px 15px 32px;
+      }
+
+      .page-heading {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .page-title {
+        font-size: 24px;
+      }
+
+      .page-heading > .primary-button {
+        align-self: flex-start;
+      }
+
+      .metrics-grid {
+        gap: 10px;
+      }
+
+      .metric-card {
+        padding: 14px;
+      }
+
+      .metric-label {
+        font-size: 10px;
+      }
+
+      .metric-icon {
+        width: 29px;
+        height: 29px;
+      }
+
+      .metric-value {
+        font-size: 23px;
+        margin-top: 17px;
+      }
+
+      .metric-footer {
+        font-size: 9px;
+      }
+
+      .panel-header {
+        padding: 16px;
+      }
+
+      .panel-body {
+        padding: 15px;
+      }
+
+      .chart-container {
+        height: 220px;
+      }
+
+      .chart-container.small {
+        height: 205px;
+      }
+
+      .insights-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
-<body class="bg-[#0b0f19] text-white p-8">
 
-  <div class="max-w-5xl mx-auto">
-    <div class="mb-8 pb-4 border-b border-gray-800 flex justify-between items-center">
-      <div>
-        <h1 class="text-2xl font-bold text-amber-500">لوحة تحكم المطعم 🍕</h1>
-        <p class="text-sm text-gray-400">متابعة الأداء والمبيعات اللحظية</p>
-      </div>
-      <span class="bg-emerald-500/10 text-emerald-400 text-xs px-3 py-1 rounded-full border border-emerald-500/20">متصل بالنظام</span>
-    </div>
+<body>
+  <div class="app">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="bg-[#131b2e] p-6 rounded-2xl border border-white/5 shadow-xl">
-        <p class="text-gray-400 text-sm mb-2">إجمالي مبيعات الطلبات</p>
-        <h2 class="text-4xl font-extrabold text-emerald-400" id="totalSales">جاري التحميل...</h2>
+    <!-- Mobile overlay -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+
+      <div class="brand">
+        <div class="brand-mark">Rx</div>
+
+        <div>
+          <div class="brand-name">RxGrowth</div>
+          <div class="brand-subtitle">RESTAURANT OS</div>
+        </div>
       </div>
 
-      <div class="bg-[#131b2e] p-6 rounded-2xl border border-white/5 shadow-xl">
-        <p class="text-gray-400 text-sm mb-2">إجمالي عدد الطلبات</p>
-        <h2 class="text-4xl font-extrabold text-sky-400" id="totalOrders">جاري التحميل...</h2>
+      <div class="workspace">
+        <div class="workspace-label">WORKSPACE</div>
+
+        <div class="workspace-box">
+          <div class="workspace-icon">R</div>
+
+          <div>
+            <div class="workspace-name">Restaurant Dashboard</div>
+            <div class="workspace-type">Performance & Intelligence</div>
+          </div>
+        </div>
       </div>
-    </div>
+
+      <nav class="nav">
+        <div class="nav-label">ANALYTICS</div>
+
+        <button class="nav-item active" type="button" data-section="overview">
+          <span class="nav-icon">◫</span>
+          <span>Overview</span>
+        </button>
+
+        <button class="nav-item" type="button" data-section="orders">
+          <span class="nav-icon">▤</span>
+          <span>Orders</span>
+          <span class="nav-badge">V1</span>
+        </button>
+
+        <button class="nav-item" type="button" data-section="customers">
+          <span class="nav-icon">♧</span>
+          <span>Customers</span>
+          <span class="nav-badge">V1</span>
+        </button>
+
+        <div class="nav-label">GROWTH</div>
+
+        <button class="nav-item" type="button" data-section="campaigns">
+          <span class="nav-icon">↗</span>
+          <span>Campaigns</span>
+          <span class="nav-badge">Soon</span>
+        </button>
+
+        <button class="nav-item" type="button" data-section="retention">
+          <span class="nav-icon">⟳</span>
+          <span>Retention</span>
+          <span class="nav-badge">Soon</span>
+        </button>
+
+        <button class="nav-item" type="button" data-section="reviews">
+          <span class="nav-icon">☆</span>
+          <span>Reviews</span>
+          <span class="nav-badge">Soon</span>
+        </button>
+
+        <div class="nav-label">MANAGEMENT</div>
+
+        <button class="nav-item" type="button" data-section="reports">
+          <span class="nav-icon">▥</span>
+          <span>Reports</span>
+          <span class="nav-badge">Soon</span>
+        </button>
+
+        <button class="nav-item" type="button" data-section="settings">
+          <span class="nav-icon">⚙</span>
+          <span>Settings</span>
+          <span class="nav-badge">Soon</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="connection-card">
+          <div class="connection-heading">
+            <span id="connectionDot" class="status-dot"></span>
+            <span id="connectionText">Connecting to HighLevel</span>
+          </div>
+
+          <div class="connection-text" id="connectionDetails">
+            Checking dashboard data source...
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Topbar -->
+      <header class="topbar">
+
+        <div style="display:flex;align-items:center;gap:12px;min-width:0;">
+          <button
+            id="mobileMenuButton"
+            class="icon-button mobile-menu-button"
+            type="button"
+            aria-label="Open navigation"
+          >
+            ☰
+          </button>
+
+          <div>
+            <div class="breadcrumb">
+              Workspace <span>/</span> Analytics
+            </div>
+
+            <div class="topbar-title" id="topbarPageTitle">
+              Overview Dashboard
+            </div>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+
+          <label class="date-control">
+            <span>Period</span>
+
+            <select id="periodSelect" aria-label="Select reporting period">
+              <option value="7">Last 7 days</option>
+              <option value="30" selected>Last 30 days</option>
+              <option value="90">Last 90 days</option>
+            </select>
+          </label>
+
+          <button
+            id="refreshButton"
+            class="icon-button"
+            type="button"
+            aria-label="Refresh dashboard"
+            title="Refresh dashboard"
+          >
+            ↻
+          </button>
+
+          <div class="profile" title="RxGrowth">Rx</div>
+        </div>
+
+      </header>
+
+      <!-- Content -->
+      <div class="content">
+
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">RESTAURANT INTELLIGENCE</div>
+
+            <h1 class="page-title">Overview</h1>
+
+            <p class="page-description">
+              Your restaurant performance, payments, and customer behavior.
+            </p>
+
+            <div class="updated-label">
+              Last updated: <strong id="lastUpdated">Waiting for data...</strong>
+            </div>
+          </div>
+
+          <button id="refreshMainButton" class="primary-button" type="button">
+            <span>↻</span>
+            Refresh data
+          </button>
+        </div>
+
+        <div id="errorBox" class="state-box error" hidden>
+          <strong>Unable to load dashboard data.</strong>
+          <div id="errorMessage" style="margin-top:6px;">
+            Please try again.
+          </div>
+        </div>
+
+        <!-- Orders -->
+        <section id="ordersSection">
+
+          <div class="section-heading" style="margin-top:0;">
+            <div>
+              <div class="section-title">Orders & Payments</div>
+              <div class="section-caption">
+                Completed orders recorded in HighLevel.
+              </div>
+            </div>
+
+            <span class="section-tag">ORDERS</span>
+          </div>
+
+          <div class="metrics-grid">
+
+            <article class="metric-card" style="--accent:#5DEFFF;">
+              <div class="metric-top">
+                <div class="metric-label">Total Orders</div>
+                <div class="metric-icon">▤</div>
+              </div>
+
+              <div class="metric-value loading-shimmer" id="totalOrders">—</div>
+
+              <div class="metric-footer">
+                <span class="metric-foot-dot"></span>
+                Completed orders in period
+              </div>
+            </article>
+
+            <article class="metric-card" style="--accent:#4ADE80;--icon-bg:rgba(74,222,128,.08);">
+              <div class="metric-top">
+                <div class="metric-label">Paid Orders</div>
+                <div class="metric-icon">✓</div>
+              </div>
+
+              <div class="metric-value loading-shimmer" id="paidOrders">—</div>
+
+              <div class="metric-footer">
+                <span class="metric-foot-dot"></span>
+                Recorded as paid
+              </div>
+            </article>
+
+            <article class="metric-card" style="--accent:#FBBF24;--icon-bg:rgba(251,191,36,.08);">
+              <div class="metric-top">
+                <div class="metric-label">Unpaid Orders</div>
+                <div class="metric-icon">◷</div>
+              </div>
+
+              <div class="metric-value loading-shimmer" id="unpaidOrders">—</div>
+
+              <div class="metric-footer">
+                <span class="metric-foot-dot"></span>
+                Recorded as unpaid
+              </div>
+            </article>
+
+            <article class="metric-card" style="--accent:#A5B4FC;--icon-bg:rgba(165,180,252,.08);">
+              <div class="metric-top">
+                <div class="metric-label">Total Order Value</div>
+                <div class="metric-icon">¤</div>
+              </div>
+
+              <div class="metric-value loading-shimmer" id="totalOrderValue">—</div>
+
+              <div class="metric-footer">
+                <span class="metric-foot-dot"></span>
+                Recorded order value
+              </div>
+            </article>
+
+          </div>
+
+          <div class="section-heading">
+            <div>
+              <div class="section-title">Order Value Breakdown</div>
+              <div class="section-caption">
+                Order amounts grouped by recorded payment status.
+              </div>
+            </div>
+          </div>
+
+          <div class="charts-grid">
+
+            <article class="panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Order Value by Payment Status</div>
+                  <div class="panel-subtitle">
+                    Recorded value, not independently verified collections.
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-body">
+                <div class="chart-container">
+                  <canvas id="paymentValueChart"></canvas>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Order Distribution</div>
+                  <div class="panel-subtitle">
+                    Completed orders by payment status.
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-body">
+                <div class="chart-container small">
+                  <canvas id="paymentCountChart"></canvas>
+                </div>
+
+                <div class="chart-legend">
+                  <div class="legend-item">
+                    <span class="legend-dot" style="background:#4ADE80;"></span>
+                    Paid
+                  </div>
+
+                  <div class="legend-item">
+                    <span class="legend-dot" style="background:#FBBF24;"></span>
+                    Unpaid
+                  </div>
+
+                  <div class="legend-item">
+                    <span class="legend-dot" style="background:#64748B;"></span>
+                    Other status
+                  </div>
+                </div>
+              </div>
+            </article>
+
+          </div>
+
+        </section>
+
+        <!-- Customers -->
+        <section id="customersSection">
+
+          <div class="section-heading">
+            <div>
+              <div class="section-title">Customer Intelligence</div>
+              <div class="section-caption">
+                Customer activity and repeat purchasing behavior.
+              </div>
+            </div>
+
+            <span class="section-tag">CUSTOMERS</span>
+          </div>
+
+          <div class="metrics-grid">
+
+            <article class="metric-card" style="--accent:#5DEFFF;">
+              <div class="metric-top">
+                <div class="metric-label">Active Customers</div>
+                <div class="metric-icon">♧</div>
+              </div>
+
+              <div class="metric-value loading-shimmer" id="activeCustomers">—</div>
+
+              <div class="metric-footer">
+                <span class="metric-foot-dot"></span>
+                Ordered during selected period
+              </div>
+            </article>
+
+            <article class="metric-card" style="--accent:#A5B4FC;--icon-bg:rgba(165,180,252,.08);">
+              <div class="metric-top">
+                <div class="metric-label">New Customers</div>
+                <div class="metric-icon">＋</div>
+              </div>
+
+              <div class="metric-value loading-shimmer" id="newCustomers">—</div>
+
+              <div class="metric-footer">
+                <span class="metric-foot-dot"></span>
+                First known completed order in period
+              </div>
+            </article>
+
+            <article class="metric-card" style="--accent:#4ADE80;--icon-bg:rgba(74,222,128,.08);">
+              <div class="metric-top">
+                <div class="metric-label">Returning Customers</div>
+                <div class="metric-icon">↻</div>
+              </div>
+
+              <div class="metric-value loading-shimmer" id="returningCustomers">—</div>
+
+              <div class="metric-footer">
+                <span class="metric-foot-dot"></span>
+                Multiple completed orders in available history
+              </div>
+            </article>
+
+            <article class="metric-card" style="--accent:#5DEFFF;">
+              <div class="metric-top">
+                <div class="metric-label">Repeat Buyer Rate</div>
+                <div class="metric-icon">%</div>
+              </div>
+
+              <div class="metric-value loading-shimmer" id="repeatBuyerRate">—</div>
+
+              <div class="metric-footer">
+                <span class="metric-foot-dot"></span>
+                Active customers with 2+ orders in period
+              </div>
+            </article>
+
+          </div>
+
+          <div class="section-heading">
+            <div>
+              <div class="section-title">Customer Behavior</div>
+              <div class="section-caption">
+                A closer look at repeat purchasing.
+              </div>
+            </div>
+          </div>
+
+          <div class="charts-grid">
+
+            <article class="panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Customer Segmentation</div>
+                  <div class="panel-subtitle">
+                    New and returning active customers.
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-body">
+                <div class="chart-container small">
+                  <canvas id="customerChart"></canvas>
+                </div>
+
+                <div class="chart-legend">
+                  <div class="legend-item">
+                    <span class="legend-dot" style="background:#5DEFFF;"></span>
+                    New customers
+                  </div>
+
+                  <div class="legend-item">
+                    <span class="legend-dot" style="background:#A5B4FC;"></span>
+                    Returning customers
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Customer Metrics</div>
+                  <div class="panel-subtitle">
+                    Key customer behavior indicators.
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-body">
+
+                <div class="insight-card" style="margin-bottom:12px;">
+                  <div class="insight-label">Returning Customer Rate</div>
+                  <div class="insight-value" id="returningCustomerRate">—</div>
+                  <div class="insight-description">
+                    Share of active customers with a previous completed order.
+                  </div>
+                </div>
+
+                <div class="insight-card">
+                  <div class="insight-label">Average Orders per Customer</div>
+                  <div class="insight-value" id="ordersPerCustomer">—</div>
+                  <div class="insight-description">
+                    Completed orders in the selected period divided by active customers.
+                  </div>
+                </div>
+
+              </div>
+            </article>
+
+          </div>
+
+        </section>
+
+        <!-- Data quality -->
+        <div class="notice">
+          <div class="notice-icon">ⓘ</div>
+
+          <div>
+            <div class="notice-title">Understanding Your Data</div>
+
+            <div class="notice-text">
+              Metrics are calculated from order records available in HighLevel.
+              Order value is not independent proof of payment collection.
+              New and returning customer classifications depend on the historical
+              orders available to this dashboard. Repeat buyer metrics count
+              completed orders within the selected period.
+            </div>
+          </div>
+        </div>
+
+        <footer class="footer">
+          <div>
+            <span class="footer-brand">RxGrowth</span>
+            <span> · Restaurant OS</span>
+          </div>
+
+          <div>
+            Data source: HighLevel Payments Orders API
+          </div>
+        </footer>
+
+      </div>
+    </main>
   </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const locationId = urlParams.get('location_id');
+    const $ = (id) => document.getElementById(id);
 
-    if (locationId) {
-      fetch(`/api/stats?locationId=${locationId}`)
-        .then(res => res.json())
-        .then(data => {
-          if(data.success) {
-            document.getElementById('totalSales').innerText = data.totalSales.toLocaleString() + ' ج.م';
-            document.getElementById('totalOrders').innerText = data.totalOrders + ' طلب';
-          } else {
-            document.getElementById('totalSales').innerText = 'خطأ في جلب البيانات';
-          }
-        })
-        .catch(err => console.error(err));
-    } else {
-      document.getElementById('totalSales').innerText = 'معرف المطعم غير متاح';
+    const numberFormatter = new Intl.NumberFormat("en-US", {
+      maximumFractionDigits: 2
+    });
+
+    const currencyFormatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "EGP",
+      maximumFractionDigits: 2
+    });
+
+    let paymentValueChart = null;
+    let paymentCountChart = null;
+    let customerChart = null;
+    let requestController = null;
+
+    function formatNumber(value) {
+      const number = Number(value);
+
+      if (!Number.isFinite(number)) {
+        return "—";
+      }
+
+      return numberFormatter.format(number);
     }
+
+    function formatCurrency(value) {
+      const number = Number(value);
+
+      if (!Number.isFinite(number)) {
+        return "—";
+      }
+
+      return currencyFormatter.format(number);
+    }
+
+    function formatPercent(value) {
+      const number = Number(value);
+
+      if (!Number.isFinite(number)) {
+        return "—";
+      }
+
+      return `${numberFormatter.format(number)}%`;
+    }
+
+    function utcDateString(date) {
+      return date.toISOString().slice(0, 10);
+    }
+
+    function getDateRange() {
+      const days = Number($("periodSelect").value);
+
+      const end = new Date();
+      const start = new Date(end);
+
+      start.setUTCDate(start.getUTCDate() - (days - 1));
+
+      return {
+        startDate: utcDateString(start),
+        endDate: utcDateString(end)
+      };
+    }
+
+    function setConnection(connected, message, details) {
+      const dot = $("connectionDot");
+
+      dot.style.background = connected
+        ? "#4ADE80"
+        : "#FB7185";
+
+      $("connectionText").textContent = message;
+      $("connectionDetails").textContent = details;
+    }
+
+    function showError(message) {
+      $("errorBox").hidden = false;
+      $("errorMessage").textContent = message;
+    }
+
+    function clearError() {
+      $("errorBox").hidden = true;
+      $("errorMessage").textContent = "";
+    }
+
+    function setLoading(isLoading) {
+      const buttons = [
+        $("refreshButton"),
+        $("refreshMainButton")
+      ];
+
+      buttons.forEach((button) => {
+        button.disabled = isLoading;
+      });
+
+      $("refreshButton").textContent = isLoading ? "…" : "↻";
+
+      const mainButton = $("refreshMainButton");
+
+      mainButton.innerHTML = isLoading
+        ? "<span>…</span> Loading data"
+        : "<span>↻</span> Refresh data";
+    }
+
+    function removeLoadingStyles() {
+      document.querySelectorAll(".metric-value").forEach((element) => {
+        element.classList.remove("loading-shimmer");
+      });
+    }
+
+    function setMetric(id, value) {
+      $(id).textContent = value;
+    }
+
+    function chartDefaults() {
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          duration: 250
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: "#101827",
+            borderColor: "#243247",
+            borderWidth: 1,
+            titleColor: "#F5F9FF",
+            bodyColor: "#CBD5E1",
+            padding: 11,
+            displayColors: true
+          }
+        }
+      };
+    }
+
+    function destroyCharts() {
+      [
+        paymentValueChart,
+        paymentCountChart,
+        customerChart
+      ].forEach((chart) => {
+        if (chart) {
+          chart.destroy();
+        }
+      });
+
+      paymentValueChart = null;
+      paymentCountChart = null;
+      customerChart = null;
+    }
+
+    function renderCharts(data) {
+      if (typeof Chart === "undefined") {
+        throw new Error("Chart library could not be loaded.");
+      }
+
+      destroyCharts();
+
+      const orders = data.orders;
+      const values = data.orderValue;
+      const customers = data.customers;
+
+      Chart.defaults.color = "#94A3B8";
+      Chart.defaults.font.family = "Inter, sans-serif";
+
+      paymentValueChart = new Chart(
+        $("paymentValueChart"),
+        {
+          type: "bar",
+
+          data: {
+            labels: ["Paid", "Unpaid"],
+
+            datasets: [{
+              label: "Recorded order value",
+              data: [
+                Number(values.paid) || 0,
+                Number(values.unpaid) || 0
+              ],
+              backgroundColor: [
+                "rgba(74, 222, 128, 0.75)",
+                "rgba(251, 191, 36, 0.75)"
+              ],
+              borderRadius: 6,
+              maxBarThickness: 65
+            }]
+          },
+
+          options: {
+            ...chartDefaults(),
+
+            scales: {
+              x: {
+                grid: {
+                  display: false
+                },
+                border: {
+                  display: false
+                }
+              },
+
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: "rgba(148, 163, 184, 0.09)"
+                },
+                border: {
+                  display: false
+                },
+                ticks: {
+                  callback(value) {
+                    return numberFormatter.format(value);
+                  }
+                }
+              }
+            },
+
+            plugins: {
+              ...chartDefaults().plugins,
+
+              tooltip: {
+                ...chartDefaults().plugins.tooltip,
+
+                callbacks: {
+                  label(context) {
+                    return formatCurrency(context.raw);
+                  }
+                }
+              }
+            }
+          }
+        }
+      );
+
+      paymentCountChart = new Chart(
+        $("paymentCountChart"),
+        {
+          type: "doughnut",
+
+          data: {
+            labels: ["Paid", "Unpaid", "Other status"],
+
+            datasets: [{
+              data: [
+                Number(orders.paid) || 0,
+                Number(orders.unpaid) || 0,
+                Number(orders.otherPaymentStatus) || 0
+              ],
+
+              backgroundColor: [
+                "#4ADE80",
+                "#FBBF24",
+                "#64748B"
+              ],
+
+              borderColor: "#101827",
+              borderWidth: 4,
+              hoverOffset: 3
+            }]
+          },
+
+          options: {
+            ...chartDefaults(),
+
+            cutout: "72%",
+
+            plugins: {
+              ...chartDefaults().plugins,
+
+              tooltip: {
+                ...chartDefaults().plugins.tooltip,
+
+                callbacks: {
+                  label(context) {
+                    return `${context.label}: ${formatNumber(context.raw)}`;
+                  }
+                }
+              }
+            }
+          }
+        }
+      );
+
+      customerChart = new Chart(
+        $("customerChart"),
+        {
+          type: "doughnut",
+
+          data: {
+            labels: ["New customers", "Returning customers"],
+
+            datasets: [{
+              data: [
+                Number(customers.new) || 0,
+                Number(customers.returning) || 0
+              ],
+
+              backgroundColor: [
+                "#5DEFFF",
+                "#A5B4FC"
+              ],
+
+              borderColor: "#101827",
+              borderWidth: 4,
+              hoverOffset: 3
+            }]
+          },
+
+          options: {
+            ...chartDefaults(),
+
+            cutout: "72%",
+
+            plugins: {
+              ...chartDefaults().plugins,
+
+              tooltip: {
+                ...chartDefaults().plugins.tooltip,
+
+                callbacks: {
+                  label(context) {
+                    return `${context.label}: ${formatNumber(context.raw)}`;
+                  }
+                }
+              }
+            }
+          }
+        }
+      );
+    }
+
+    function renderDashboard(data, period, diagnostics) {
+      const orders = data.orders;
+      const values = data.orderValue;
+      const customers = data.customers;
+
+      setMetric("totalOrders", formatNumber(orders.total));
+      setMetric("paidOrders", formatNumber(orders.paid));
+      setMetric("unpaidOrders", formatNumber(orders.unpaid));
+      setMetric("totalOrderValue", formatCurrency(values.total));
+
+      setMetric("activeCustomers", formatNumber(customers.active));
+      setMetric("newCustomers", formatNumber(customers.new));
+      setMetric("returningCustomers", formatNumber(customers.returning));
+
+      setMetric(
+        "repeatBuyerRate",
+        formatPercent(customers.repeatBuyerRate)
+      );
+
+      setMetric(
+        "returningCustomerRate",
+        formatPercent(customers.returningCustomerRate)
+      );
+
+      setMetric(
+        "ordersPerCustomer",
+        formatNumber(customers.ordersPerCustomer)
+      );
+
+      $("lastUpdated").textContent =
+        new Date(diagnostics.calculatedAt).toLocaleString("en-US", {
+          dateStyle: "medium",
+          timeStyle: "short"
+        });
+
+      setConnection(
+        true,
+        "Connected to HighLevel",
+        `${formatNumber(diagnostics.ordersFetched)} orders fetched · ${period.startDate} to ${period.endDate}`
+      );
+
+      renderCharts(data);
+
+      removeLoadingStyles();
+      clearError();
+    }
+
+    async function loadDashboard() {
+      if (requestController) {
+        requestController.abort();
+      }
+
+      requestController = new AbortController();
+
+      const signal = requestController.signal;
+
+      setLoading(true);
+      clearError();
+
+      const period = getDateRange();
+
+      const params = new URLSearchParams({
+        startDate: period.startDate,
+        endDate: period.endDate
+      });
+
+      try {
+        const response = await fetch(`/api/stats?${params.toString()}`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json"
+          },
+          cache: "no-store",
+          signal
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(
+            result.error || `Request failed (${response.status})`
+          );
+        }
+
+        if (
+          !result.data ||
+          !result.data.orders ||
+          !result.data.orderValue ||
+          !result.data.customers ||
+          !result.diagnostics
+        ) {
+          throw new Error("The API response is missing required dashboard data.");
+        }
+
+        renderDashboard(
+          result.data,
+          result.period,
+          result.diagnostics
+        );
+
+      } catch (error) {
+        if (error.name === "AbortError") {
+          return;
+        }
+
+        console.error("Dashboard loading failed:", error);
+
+        setConnection(
+          false,
+          "Connection issue",
+          "Dashboard data could not be loaded."
+        );
+
+        showError(
+          "We couldn't retrieve the latest metrics. Check the deployment and API connection, then try refreshing."
+        );
+
+      } finally {
+        if (requestController && requestController.signal === signal) {
+          setLoading(false);
+        }
+      }
+    }
+
+    $("refreshButton").addEventListener("click", loadDashboard);
+
+    $("refreshMainButton").addEventListener("click", loadDashboard);
+
+    $("periodSelect").addEventListener("change", loadDashboard);
+
+    // Mobile navigation.
+    function closeSidebar() {
+      $("sidebar").classList.remove("open");
+      $("sidebarOverlay").classList.remove("open");
+    }
+
+    $("mobileMenuButton").addEventListener("click", () => {
+      $("sidebar").classList.toggle("open");
+      $("sidebarOverlay").classList.toggle("open");
+    });
+
+    $("sidebarOverlay").addEventListener("click", closeSidebar);
+
+    // Navigation placeholders are intentionally not presented
+    // as implemented modules yet.
+    const navTitles = {
+      overview: "Overview Dashboard",
+      orders: "Orders",
+      customers: "Customers",
+      campaigns: "Campaigns",
+      retention: "Retention",
+      reviews: "Reviews",
+      reports: "Reports",
+      settings: "Settings"
+    };
+
+    document.querySelectorAll(".nav-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        const section = item.dataset.section;
+
+        document.querySelectorAll(".nav-item").forEach((navItem) => {
+          navItem.classList.remove("active");
+        });
+
+        item.classList.add("active");
+
+        $("topbarPageTitle").textContent =
+          navTitles[section] || "Overview Dashboard";
+
+        if (section === "overview") {
+          $("ordersSection").hidden = false;
+          $("customersSection").hidden = false;
+          $("errorBox").hidden = false;
+          $("errorBox").classList.add("error");
+
+          $("errorMessage").textContent =
+            "Overview dashboard showing order and customer analytics.";
+
+          $("errorBox").querySelector("strong").textContent =
+            "Overview";
+
+          closeSidebar();
+          return;
+        }
+
+        if (section === "orders" || section === "customers") {
+          $("ordersSection").hidden = section === "customers";
+          $("customersSection").hidden = section === "orders";
+          $("errorBox").hidden = true;
+          closeSidebar();
+          return;
+        }
+
+        $("ordersSection").hidden = true;
+        $("customersSection").hidden = true;
+
+        showError(
+          `${navTitles[section]} is planned for a future release and is not implemented yet.`
+        );
+
+        $("errorBox").querySelector("strong").textContent =
+          "Module not available yet";
+
+        closeSidebar();
+      });
+    });
+
+    // Initial load.
+    loadDashboard();
   </script>
 </body>
 </html>
