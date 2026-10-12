@@ -612,7 +612,33 @@ select:focus-visible {
   height: 220px;
 }
 
-.chart.small { height: 205px; }
+.chart.small { height: 205px; }\n
+.chart.chart-large { height: 286px; }
+.chart.chart-donut { height: 210px; max-width: 270px; margin: 0 auto 8px; }
+.donut-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none; }
+.donut-center strong { color:#F5F9FF; font-size:25px; font-weight:800; letter-spacing:-.6px; }
+.donut-center span { color:#94A3B8; font-size:10px; margin-top:3px; }
+.overview-bottom { margin-top:12px; }
+.overview-section-head { margin-top:24px; }
+.overview-bottom .panel { min-height:260px; }
+.fulfillment-head { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.fulfillment-summary { display:flex; align-items:baseline; gap:8px; margin:0 0 16px; }
+.fulfillment-summary strong { font-size:26px; letter-spacing:-.7px; color:#F5F9FF; }
+.fulfillment-summary span { color:#94A3B8; font-size:10px; }
+.fulfillment-stages { display:flex; flex-direction:column; gap:12px; }
+.fulfillment-stage { display:grid; grid-template-columns:minmax(95px, .85fr) minmax(60px,1.4fr) 28px; align-items:center; gap:10px; }
+.fulfillment-stage-name { color:#C7D2E2; font-size:10px; line-height:1.3; }
+.fulfillment-track { height:6px; border-radius:99px; overflow:hidden; background:#202C3E; }
+.fulfillment-bar { height:100%; border-radius:99px; background:linear-gradient(90deg,rgba(93,239,255,.48),#5DEFFF); transition:width .25s ease; }
+.fulfillment-stage-count { color:#F5F9FF; font-size:11px; text-align:right; font-weight:700; font-variant-numeric:tabular-nums; }
+.fulfillment-loading,.fulfillment-empty { padding:18px 0; color:#94A3B8; font-size:11px; }
+.data-note { margin-top:12px; color:#8191A8; font-size:9px; line-height:1.6; }
+.activity-empty { display:flex; align-items:flex-start; gap:12px; padding:18px 2px; }
+.activity-empty-icon { width:34px; height:34px; display:grid; place-items:center; flex-shrink:0; border:1px solid rgba(93,239,255,.16); background:rgba(93,239,255,.06); color:#5DEFFF; border-radius:9px; font-size:17px; }
+.activity-empty strong { color:#DDE7F5; font-size:11px; }
+.activity-empty p { color:#94A3B8; font-size:10px; line-height:1.7; margin:7px 0 0; max-width:340px; }
+.legend-item strong { margin-left:auto; color:#F5F9FF; font-size:10px; font-weight:700; }
+
 
 .legend {
   display: flex;
@@ -912,7 +938,17 @@ select:focus-visible {
     scroll-behavior: auto !important;
   }
 }
-</style>
+
+@media (max-width: 900px) {
+  .chart.chart-large { height: 250px; }
+}
+@media (max-width: 650px) {
+  .overview-bottom, .overview-charts { grid-template-columns:minmax(0,1fr); }
+  .chart.chart-large { height: 235px; }
+  .chart.chart-donut { height: 200px; }
+  .fulfillment-stage { grid-template-columns:minmax(92px,.9fr) minmax(45px,1fr) 24px; gap:8px; }
+}
+\n</style>
 </head>
 
 <body>
@@ -933,11 +969,11 @@ select:focus-visible {
 
     <div class="nav-group">
       <button class="group-toggle" type="button" aria-expanded="true">
-        <span>OVERVIEW</span><span class="chev">⌄</span>
+        <span>OVERVIEW</span><span class="chev">â</span>
       </button>
       <div class="group-items">
         <button class="nav-item active" type="button" data-page="overview">
-          <span class="nav-icon">◫</span>
+          <span class="nav-icon">â«</span>
           <span class="nav-text">Overview</span>
         </button>
       </div>
@@ -945,16 +981,16 @@ select:focus-visible {
 
     <div class="nav-group">
       <button class="group-toggle" type="button" aria-expanded="true">
-        <span>ORDERS & OPERATIONS</span><span class="chev">⌄</span>
+        <span>ORDERS & OPERATIONS</span><span class="chev">â</span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="orders">
-          <span class="nav-icon">▤</span>
+          <span class="nav-icon">â¤</span>
           <span class="nav-text">Orders</span>
           <span class="badge live">V1</span>
         </button>
         <button class="nav-item" type="button" data-page="abandoned">
-          <span class="nav-icon">◷</span>
+          <span class="nav-icon">â·</span>
           <span class="nav-text">Abandoned Checkouts</span>
           <span class="badge">Planned</span>
         </button>
@@ -963,16 +999,16 @@ select:focus-visible {
 
     <div class="nav-group">
       <button class="group-toggle" type="button" aria-expanded="true">
-        <span>CUSTOMERS</span><span class="chev">⌄</span>
+        <span>CUSTOMERS</span><span class="chev">â</span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="customers">
-          <span class="nav-icon">♧</span>
+          <span class="nav-icon">â§</span>
           <span class="nav-text">Customer Analytics</span>
           <span class="badge live">V1</span>
         </button>
         <button class="nav-item" type="button" data-page="segments">
-          <span class="nav-icon">◎</span>
+          <span class="nav-icon">â</span>
           <span class="nav-text">Customer Segments</span>
           <span class="badge">Planned</span>
         </button>
@@ -981,26 +1017,26 @@ select:focus-visible {
 
     <div class="nav-group">
       <button class="group-toggle" type="button" aria-expanded="true">
-        <span>CAMPAIGNS & QR</span><span class="chev">⌄</span>
+        <span>CAMPAIGNS & QR</span><span class="chev">â</span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="birthday">
-          <span class="nav-icon">✳</span>
+          <span class="nav-icon">â³</span>
           <span class="nav-text">Birthday</span>
           <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="winback">
-          <span class="nav-icon">↻</span>
+          <span class="nav-icon">â»</span>
           <span class="nav-text">Win-Back</span>
           <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="slowtime">
-          <span class="nav-icon">◷</span>
+          <span class="nav-icon">â·</span>
           <span class="nav-text">Slow-Time</span>
           <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="qr">
-          <span class="nav-icon">▦</span>
+          <span class="nav-icon">â¦</span>
           <span class="nav-text">QR Ecosystem</span>
           <span class="badge">Planned</span>
         </button>
@@ -1009,16 +1045,16 @@ select:focus-visible {
 
     <div class="nav-group">
       <button class="group-toggle" type="button" aria-expanded="true">
-        <span>RETENTION & LOYALTY</span><span class="chev">⌄</span>
+        <span>RETENTION & LOYALTY</span><span class="chev">â</span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="retention">
-          <span class="nav-icon">⟳</span>
+          <span class="nav-icon">â³</span>
           <span class="nav-text">Retention</span>
           <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="loyalty">
-          <span class="nav-icon">☆</span>
+          <span class="nav-icon">â</span>
           <span class="nav-text">Loyalty & Rewards</span>
           <span class="badge">Planned</span>
         </button>
@@ -1027,11 +1063,11 @@ select:focus-visible {
 
     <div class="nav-group">
       <button class="group-toggle" type="button" aria-expanded="true">
-        <span>REVIEWS & REPUTATION</span><span class="chev">⌄</span>
+        <span>REVIEWS & REPUTATION</span><span class="chev">â</span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="reviews">
-          <span class="nav-icon">☆</span>
+          <span class="nav-icon">â</span>
           <span class="nav-text">Reviews Overview</span>
           <span class="badge">Planned</span>
         </button>
@@ -1040,7 +1076,7 @@ select:focus-visible {
 
     <div class="nav-group">
       <button class="group-toggle" type="button" aria-expanded="true">
-        <span>MANAGEMENT</span><span class="chev">⌄</span>
+        <span>MANAGEMENT</span><span class="chev">â</span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="attention">
@@ -1049,12 +1085,12 @@ select:focus-visible {
           <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="reports">
-          <span class="nav-icon">▥</span>
+          <span class="nav-icon">â¥</span>
           <span class="nav-text">Reports</span>
           <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="settings">
-          <span class="nav-icon">⚙</span>
+          <span class="nav-icon">â</span>
           <span class="nav-text">Settings</span>
         </button>
       </div>
@@ -1069,7 +1105,7 @@ select:focus-visible {
         <span id="connectionText">Connecting to HighLevel</span>
       </div>
       <div class="connection-text" id="connectionDetails">
-        Checking dashboard data source…
+        Checking dashboard data sourceâ¦
       </div>
     </div>
   </div>
@@ -1085,7 +1121,7 @@ select:focus-visible {
         id="mobileMenu"
         class="icon-button mobile-menu"
         type="button"
-        aria-label="Open navigation">☰</button>
+        aria-label="Open navigation">â°</button>
     </div>
 
     <div class="top-right">
@@ -1105,7 +1141,7 @@ select:focus-visible {
         class="icon-button"
         type="button"
         aria-label="Refresh dashboard"
-        title="Refresh dashboard">↻</button>
+        title="Refresh dashboard">â»</button>
 
       <!-- SECONDARY LOGO -->
       <div class="profile" title="RxGrowth">
@@ -1131,11 +1167,11 @@ select:focus-visible {
       <div class="heading-actions">
         <div class="updated">
           Last updated
-          <strong id="lastUpdated">Waiting for data…</strong>
+          <strong id="lastUpdated">Waiting for dataâ¦</strong>
         </div>
 
         <button id="refreshMain" class="primary" type="button">
-          <span>↻</span> Refresh data
+          <span>â»</span> Refresh data
         </button>
       </div>
 
@@ -1149,265 +1185,112 @@ select:focus-visible {
     </div>
 
     <section id="overviewPage" class="page">
-
-      <div class="metrics">
-
+      <div class="metrics overview-kpis">
         <article class="metric" style="--accent:#5DEFFF">
-          <div class="metric-top">
-            <div class="metric-label">Recorded Order Value</div>
-            <div class="metric-icon">¤</div>
-          </div>
-          <div class="metric-value loading" id="totalOrderValue">—</div>
-          <div class="metric-foot">
-            <span class="foot-dot"></span>
-            Value recorded in HighLevel
-          </div>
+          <div class="metric-top"><div class="metric-label">Total Order Value</div><div class="metric-icon">Â¤</div></div>
+          <div class="metric-value loading" id="totalOrderValue">â</div>
+          <div class="metric-foot"><span class="foot-dot"></span>All orders created in selected period</div>
         </article>
-
         <article class="metric" style="--accent:#5DEFFF">
-          <div class="metric-top">
-            <div class="metric-label">Completed Orders</div>
-            <div class="metric-icon">▤</div>
-          </div>
-          <div class="metric-value loading" id="totalOrders">—</div>
-          <div class="metric-foot">
-            <span class="foot-dot"></span>
-            Completed orders in period
-          </div>
+          <div class="metric-top"><div class="metric-label">Total Orders</div><div class="metric-icon">â¤</div></div>
+          <div class="metric-value loading" id="totalOrders">â</div>
+          <div class="metric-foot"><span class="foot-dot"></span>All orders created in selected period</div>
         </article>
-
         <article class="metric" style="--accent:#A5B4FC;--icon-bg:rgba(165,180,252,.08)">
-          <div class="metric-top">
-            <div class="metric-label">Average Order Value</div>
-            <div class="metric-icon">↗</div>
-          </div>
-          <div class="metric-value loading" id="averageOrderValue">—</div>
-          <div class="metric-foot">
-            <span class="foot-dot"></span>
-            Recorded value ÷ completed orders
-          </div>
+          <div class="metric-top"><div class="metric-label">Average Order Value</div><div class="metric-icon">â</div></div>
+          <div class="metric-value loading" id="averageOrderValue">â</div>
+          <div class="metric-foot"><span class="foot-dot"></span>Total order value Ã· total orders</div>
         </article>
-
         <article class="metric" style="--accent:#4ADE80;--icon-bg:rgba(74,222,128,.08)">
-          <div class="metric-top">
-            <div class="metric-label">Active Customers</div>
-            <div class="metric-icon">♧</div>
-          </div>
-          <div class="metric-value loading" id="activeCustomers">—</div>
-          <div class="metric-foot">
-            <span class="foot-dot"></span>
-            Customers with a completed order
-          </div>
+          <div class="metric-top"><div class="metric-label">Paid Orders</div><div class="metric-icon">â</div></div>
+          <div class="metric-value loading" id="paidOrders">â</div>
+          <div class="metric-foot"><span class="foot-dot"></span>Recorded as paid in HighLevel</div>
         </article>
-
       </div>
 
-      <div class="section-head">
-        <div>
-          <div class="section-title">Orders & Payments</div>
-          <div class="caption">Payment status recorded in HighLevel.</div>
-        </div>
-        <span class="tag">ORDERS</span>
+      <div class="section-head overview-section-head">
+        <div><div class="section-title">Performance Overview</div><div class="caption">Order activity and customer mix at a glance.</div></div>
+        <span class="tag" id="overviewPeriodTag">TODAY</span>
       </div>
 
-      <div class="metrics">
-
-        <article class="metric" style="--accent:#4ADE80;--icon-bg:rgba(74,222,128,.08)">
-          <div class="metric-top">
-            <div class="metric-label">Paid Orders</div>
-            <div class="metric-icon">✓</div>
-          </div>
-          <div class="metric-value loading" id="paidOrders">—</div>
-          <div class="metric-foot">
-            <span class="foot-dot"></span>
-            Recorded as paid
-          </div>
-        </article>
-
-        <article class="metric" style="--accent:#FBBF24;--icon-bg:rgba(251,191,36,.08)">
-          <div class="metric-top">
-            <div class="metric-label">Unpaid Orders</div>
-            <div class="metric-icon">◷</div>
-          </div>
-          <div class="metric-value loading" id="unpaidOrders">—</div>
-          <div class="metric-foot">
-            <span class="foot-dot"></span>
-            Recorded as unpaid
-          </div>
-        </article>
-
-        <article class="metric" style="--accent:#A5B4FC;--icon-bg:rgba(165,180,252,.08)">
-          <div class="metric-top">
-            <div class="metric-label">Returning Customers</div>
-            <div class="metric-icon">↻</div>
-          </div>
-          <div class="metric-value loading" id="returningCustomers">—</div>
-          <div class="metric-foot">
-            <span class="foot-dot"></span>
-            Multiple orders in available history
-          </div>
-        </article>
-
-        <article class="metric" style="--accent:#5DEFFF">
-          <div class="metric-top">
-            <div class="metric-label">Repeat Buyer Rate</div>
-            <div class="metric-icon">%</div>
-          </div>
-          <div class="metric-value loading" id="repeatBuyerRate">—</div>
-          <div class="metric-foot">
-            <span class="foot-dot"></span>
-            2+ orders in selected period
-          </div>
-        </article>
-
-      </div>
-
-      <div class="section-head">
-        <div>
-          <div class="section-title">Performance Breakdown</div>
-          <div class="caption">Recorded order value and customer mix.</div>
-        </div>
-      </div>
-
-      <div class="charts">
-
+      <div class="charts overview-charts">
         <article class="panel">
           <div class="panel-head">
-            <div class="panel-title">Order Value by Payment Status</div>
-            <div class="panel-sub">
-              Recorded value, not independently verified collections.
-            </div>
+            <div class="panel-title">Orders by Hour</div>
+            <div class="panel-sub">Order creation activity across the selected period Â· Cairo time</div>
           </div>
           <div class="panel-body">
-            <div class="chart">
-              <canvas id="paymentValueChart"></canvas>
-            </div>
+            <div class="chart chart-large"><canvas id="ordersByHourChart"></canvas></div>
           </div>
         </article>
 
         <article class="panel">
           <div class="panel-head">
-            <div class="panel-title">Order Distribution</div>
-            <div class="panel-sub">
-              Completed orders grouped by recorded payment status.
-            </div>
+            <div class="panel-title">Today's Customer Mix</div>
+            <div class="panel-sub">Unique customers ordering today, classified by available order history</div>
           </div>
           <div class="panel-body">
-            <div class="chart small">
-              <canvas id="paymentCountChart"></canvas>
-            </div>
+            <div class="chart chart-donut"><canvas id="customerMixChart"></canvas><div class="donut-center"><strong id="todayCustomerTotal">â</strong><span>Customers today</span></div></div>
             <div class="legend">
-              <div class="legend-item">
-                <span class="legend-dot" style="background:#4ADE80"></span>
-                Paid
-              </div>
-              <div class="legend-item">
-                <span class="legend-dot" style="background:#FBBF24"></span>
-                Unpaid
-              </div>
-              <div class="legend-item">
-                <span class="legend-dot" style="background:#64748B"></span>
-                Other status
-              </div>
+              <div class="legend-item"><span class="legend-dot" style="background:#5DEFFF"></span>New customers <strong id="todayNewCustomers">â</strong></div>
+              <div class="legend-item"><span class="legend-dot" style="background:#A5B4FC"></span>Returning customers <strong id="todayReturningCustomers">â</strong></div>
             </div>
+            <div class="data-note" id="customerMixNote">Classification uses available HighLevel order history.</div>
           </div>
         </article>
-
       </div>
 
-      <div class="section-head">
-        <div>
-          <div class="section-title">Customer Intelligence</div>
-          <div class="caption">Customer activity and repeat purchasing behavior.</div>
-        </div>
-        <span class="tag">CUSTOMERS</span>
-      </div>
-
-      <div class="charts">
-
+      <div class="charts overview-bottom">
         <article class="panel">
           <div class="panel-head">
-            <div class="panel-title">Customer Segmentation</div>
-            <div class="panel-sub">
-              New and returning customers in available order history.
-            </div>
+            <div class="panel-title">Recent Activity</div>
+            <div class="panel-sub">Verified activity events from connected sources</div>
           </div>
           <div class="panel-body">
-            <div class="chart small">
-              <canvas id="customerChart"></canvas>
-            </div>
-            <div class="legend">
-              <div class="legend-item">
-                <span class="legend-dot" style="background:#5DEFFF"></span>
-                New customers
-              </div>
-              <div class="legend-item">
-                <span class="legend-dot" style="background:#A5B4FC"></span>
-                Returning customers
-              </div>
+            <div class="activity-empty">
+              <span class="activity-empty-icon">â·</span>
+              <div><strong>Activity feed not connected yet</strong><p>We won't infer historical events from current order status. This panel will activate when a reliable event source is connected.</p></div>
             </div>
           </div>
         </article>
 
         <article class="panel">
-          <div class="panel-head">
-            <div class="panel-title">Customer Metrics</div>
-            <div class="panel-sub">Key behavior indicators.</div>
+          <div class="panel-head fulfillment-head">
+            <div><div class="panel-title">Order Fulfillment</div><div class="panel-sub">Current opportunity counts by Orders Pipeline stage</div></div>
+            <span class="tag" id="fulfillmentStatus">LOADING</span>
           </div>
-          <div class="panel-body insights">
-            <div class="insight">
-              <div class="insight-label">Returning Customer Rate</div>
-              <div class="insight-value" id="returningCustomerRate">—</div>
+          <div class="panel-body">
+            <div class="fulfillment-summary"><strong id="fulfillmentTotal">â</strong><span>opportunities in pipeline</span></div>
+            <div id="fulfillmentStages" class="fulfillment-stages">
+              <div class="fulfillment-loading">Loading fulfillment stagesâ¦</div>
             </div>
-            <div class="insight">
-              <div class="insight-label">Average Orders per Customer</div>
-              <div class="insight-value" id="ordersPerCustomer">—</div>
-            </div>
-            <div class="insight">
-              <div class="insight-label">New Customers</div>
-              <div class="insight-value" id="newCustomers">—</div>
-            </div>
-            <div class="insight">
-              <div class="insight-label">Other Payment Status</div>
-              <div class="insight-value" id="otherPaymentStatus">—</div>
-            </div>
+            <div class="data-note" id="fulfillmentNote">Operational stage counts come from the Orders Opportunity Pipeline.</div>
           </div>
         </article>
-
       </div>
 
       <div class="notice">
-        <div class="notice-icon">ⓘ</div>
-        <div>
-          <div class="notice-title">Data context</div>
-          <div class="notice-text">
-            Metrics are calculated from order records available in HighLevel.
-            Order value does not independently verify payment collection.
-            New and returning customer classifications depend on available
-            order history. Real-time fulfillment, customer happiness, and
-            test-order exclusion are not yet verified.
-          </div>
-        </div>
+        <div class="notice-icon">â</div>
+        <div><div class="notice-title">Data context</div><div class="notice-text">Order value and payment status come from HighLevel Payments Orders. Fulfillment counts come from the Orders Opportunity Pipeline and are not used to calculate revenue. Customer classification depends on available order history; it may not represent a customer's complete lifetime history.</div></div>
       </div>
-
     </section>
 
     <section id="placeholderPage" class="page" hidden>
       <div class="placeholder">
-        <div class="placeholder-icon" id="placeholderIcon">◈</div>
+        <div class="placeholder-icon" id="placeholderIcon">â</div>
         <div>
           <h2 id="placeholderTitle">Module planned</h2>
           <p id="placeholderDescription">
             This module will be enabled after its data source,
             calculation rules, and workflows are verified.
           </p>
-          <span class="planned">PLANNED · NOT CONNECTED</span>
+          <span class="planned">PLANNED Â· NOT CONNECTED</span>
         </div>
       </div>
     </section>
 
     <footer class="footer">
-      <div><strong>RxGrowth</strong> · Restaurant OS</div>
+      <div><strong>RxGrowth</strong> Â· Restaurant OS</div>
       <div>Data source: HighLevel Payments Orders API</div>
     </footer>
 
@@ -1428,8 +1311,7 @@ const currencyFormat = new Intl.NumberFormat("en-US", {
 });
 
 let charts = {
-  value: null,
-  count: null,
+  hourly: null,
   customers: null
 };
 
@@ -1441,84 +1323,84 @@ const pages = {
     "Overview",
     "Overview",
     "A clear view of today's restaurant performance.",
-    "◫"
+    "â«"
   ],
   orders: [
     "Orders",
     "Orders & Operations",
     "Orders",
     "Order records and payment status from HighLevel.",
-    "▤"
+    "â¤"
   ],
   abandoned: [
     "Abandoned Checkouts",
     "Orders & Operations",
     "Abandoned Checkouts",
     "Checkout recovery will be available after checkout events are connected.",
-    "◷"
+    "â·"
   ],
   customers: [
     "Customer Analytics",
     "Customers",
     "Customers",
     "Customer activity and repeat purchasing behavior.",
-    "♧"
+    "â§"
   ],
   segments: [
     "Customer Segments",
     "Customers",
     "Customer Segments",
     "Lifecycle segments will be calculated from verified order history.",
-    "◎"
+    "â"
   ],
   birthday: [
     "Birthday Campaign",
     "Campaigns & QR",
     "Birthday",
     "Birthday campaign performance and coupon attribution.",
-    "✳"
+    "â³"
   ],
   winback: [
     "Win-Back Campaign",
     "Campaigns & QR",
     "Win-Back",
     "Reactivation campaign performance and attributed orders.",
-    "↻"
+    "â»"
   ],
   slowtime: [
     "Slow-Time Campaign",
     "Campaigns & QR",
     "Slow-Time",
     "Slow-day offers, redemptions, and attributed order value.",
-    "◷"
+    "â·"
   ],
   qr: [
     "QR Ecosystem",
     "Campaigns & QR",
     "QR Ecosystem",
     "QR analytics will appear when a reliable analytics source is connected.",
-    "▦"
+    "â¦"
   ],
   retention: [
     "Retention",
     "Retention & Loyalty",
     "Retention",
     "Retention trends and lapsed-customer analysis.",
-    "⟳"
+    "â³"
   ],
   loyalty: [
     "Loyalty & Rewards",
     "Retention & Loyalty",
     "Loyalty & Rewards",
     "Loyalty program activity and reward redemptions.",
-    "☆"
+    "â"
   ],
   reviews: [
     "Reviews Overview",
     "Reviews & Reputation",
     "Reviews Overview",
     "Review trends and unanswered feedback from a verified source.",
-    "☆"
+    "â"
   ],
   attention: [
     "Needs Attention",
@@ -1532,52 +1414,62 @@ const pages = {
     "Management",
     "Reports",
     "Reporting and export tools will be added after core metrics are validated.",
-    "▥"
+    "â¥"
   ],
   settings: [
     "Settings",
     "Settings",
     "Settings",
     "Restaurant connection and dashboard settings will be available here.",
-    "⚙"
+    "â"
   ]
 };
 
 function formatNumber(value) {
   const n = Number(value);
-  return Number.isFinite(n) ? numberFormat.format(n) : "—";
+  return Number.isFinite(n) ? numberFormat.format(n) : "â";
 }
 
 function formatMoney(value) {
   const n = Number(value);
-  return Number.isFinite(n) ? currencyFormat.format(n) : "—";
+  return Number.isFinite(n) ? currencyFormat.format(n) : "â";
 }
 
 function formatPercent(value) {
   const n = Number(value);
-  return Number.isFinite(n) ? `${numberFormat.format(n)}%` : "—";
+  return Number.isFinite(n) ? `${numberFormat.format(n)}%` : "â";
 }
 
-function localDateString(date) {
+const RESTAURANT_TIME_ZONE = "Africa/Cairo";
+
+function restaurantDateString(date = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: RESTAURANT_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function shiftDateString(dateString, days) {
+  const [year, month, day] = dateString.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day + days, 12));
   return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, "0"),
-    String(date.getDate()).padStart(2, "0")
+    date.getUTCFullYear(),
+    String(date.getUTCMonth() + 1).padStart(2, "0"),
+    String(date.getUTCDate()).padStart(2, "0")
   ].join("-");
 }
 
 function getDateRange() {
   const selected = $("period").value;
-  const end = new Date();
-  const start = new Date(end);
-
-  if (selected !== "today") {
-    start.setDate(start.getDate() - (Number(selected) - 1));
-  }
-
+  const endDate = restaurantDateString();
+  const days = selected === "today" ? 1 : Number(selected);
   return {
-    startDate: localDateString(start),
-    endDate: localDateString(end),
+    startDate: shiftDateString(endDate, -(days - 1)),
+    endDate,
     label: selected === "today" ? "Today" : `Last ${selected} days`
   };
 }
@@ -1606,11 +1498,11 @@ function setLoading(isLoading) {
     button.disabled = isLoading;
   });
 
-  $("refresh").textContent = isLoading ? "…" : "↻";
+  $("refresh").textContent = isLoading ? "â¦" : "â»";
 
   $("refreshMain").innerHTML = isLoading
-    ? "<span>…</span> Loading data"
-    : "<span>↻</span> Refresh data";
+    ? "<span>â¦</span> Loading data"
+    : "<span>â»</span> Refresh data";
 }
 
 function removeLoadingStyles() {
@@ -1623,7 +1515,7 @@ function chartDefaults() {
   return {
     responsive: true,
     maintainAspectRatio: false,
-    animation: { duration: 180 },
+    animation: { duration: 220 },
     plugins: {
       legend: { display: false },
       tooltip: {
@@ -1643,248 +1535,265 @@ function destroyCharts() {
   Object.values(charts).forEach(chart => {
     if (chart) chart.destroy();
   });
-
-  charts = { value: null, count: null, customers: null };
+  charts = { hourly: null, customers: null };
 }
 
-function renderCharts(data) {
-  if (typeof Chart === "undefined") {
-    throw new Error("Chart library could not be loaded.");
-  }
+function renderHourlyChart(hourlyOrders) {
+  if (typeof Chart === "undefined") throw new Error("Chart library could not be loaded.");
+  const buckets = Array.isArray(hourlyOrders) ? hourlyOrders : [];
+  const labels = buckets.map(item => item.label || `${String(item.hour).padStart(2, "0")}:00`);
+  const values = buckets.map(item => Number(item.orders) || 0);
+  const canvas = $("ordersByHourChart");
+  const ctx = canvas.getContext("2d");
+  const gradient = ctx.createLinearGradient(0, 0, 0, 280);
+  gradient.addColorStop(0, "rgba(93,239,255,.30)");
+  gradient.addColorStop(1, "rgba(93,239,255,.015)");
 
-  destroyCharts();
-
-  const orders = data.orders;
-  const values = data.orderValue;
-  const customers = data.customers;
-
-  Chart.defaults.color = "#A9B8CC";
-  Chart.defaults.font.family = "Inter, sans-serif";
-
-  charts.value = new Chart($("paymentValueChart"), {
-    type: "bar",
+  if (charts.hourly) charts.hourly.destroy();
+  charts.hourly = new Chart(canvas, {
+    type: "line",
     data: {
-      labels: ["Paid", "Unpaid"],
+      labels,
       datasets: [{
-        label: "Recorded order value",
-        data: [
-          Number(values.paid) || 0,
-          Number(values.unpaid) || 0
-        ],
-        backgroundColor: [
-          "rgba(74,222,128,.78)",
-          "rgba(251,191,36,.78)"
-        ],
-        borderRadius: 5,
-        maxBarThickness: 54
+        label: "Orders",
+        data: values,
+        borderColor: "#5DEFFF",
+        backgroundColor: gradient,
+        fill: true,
+        borderWidth: 2.5,
+        tension: .38,
+        pointRadius: values.map(value => value > 0 ? 3 : 0),
+        pointHoverRadius: 5,
+        pointBackgroundColor: "#5DEFFF",
+        pointBorderColor: "#101827",
+        pointBorderWidth: 2
       }]
     },
     options: {
       ...chartDefaults(),
+      interaction: { intersect: false, mode: "index" },
       scales: {
         x: {
           grid: { display: false },
-          border: { display: false }
+          border: { display: false },
+          ticks: { maxTicksLimit: 8, maxRotation: 0, autoSkip: true, color: "#8FA0B7", font: { size: 9 } }
         },
         y: {
           beginAtZero: true,
           grid: { color: "rgba(148,163,184,.09)" },
           border: { display: false },
-          ticks: {
-            callback: value => numberFormat.format(value)
-          }
+          ticks: { precision: 0, color: "#8FA0B7", font: { size: 9 }, callback: value => numberFormat.format(value) }
         }
       },
       plugins: {
         ...chartDefaults().plugins,
         tooltip: {
           ...chartDefaults().plugins.tooltip,
-          callbacks: {
-            label: context => formatMoney(context.raw)
-          }
-        }
-      }
-    }
-  });
-
-  charts.count = new Chart($("paymentCountChart"), {
-    type: "doughnut",
-    data: {
-      labels: ["Paid", "Unpaid", "Other status"],
-      datasets: [{
-        data: [
-          Number(orders.paid) || 0,
-          Number(orders.unpaid) || 0,
-          Number(orders.otherPaymentStatus) || 0
-        ],
-        backgroundColor: ["#4ADE80", "#FBBF24", "#64748B"],
-        borderColor: "#101827",
-        borderWidth: 4,
-        hoverOffset: 3
-      }]
-    },
-    options: {
-      ...chartDefaults(),
-      cutout: "73%",
-      plugins: {
-        ...chartDefaults().plugins,
-        tooltip: {
-          ...chartDefaults().plugins.tooltip,
-          callbacks: {
-            label: context =>
-              `${context.label}: ${formatNumber(context.raw)}`
-          }
-        }
-      }
-    }
-  });
-
-  charts.customers = new Chart($("customerChart"), {
-    type: "doughnut",
-    data: {
-      labels: ["New customers", "Returning customers"],
-      datasets: [{
-        data: [
-          Number(customers.new) || 0,
-          Number(customers.returning) || 0
-        ],
-        backgroundColor: ["#5DEFFF", "#A5B4FC"],
-        borderColor: "#101827",
-        borderWidth: 4,
-        hoverOffset: 3
-      }]
-    },
-    options: {
-      ...chartDefaults(),
-      cutout: "73%",
-      plugins: {
-        ...chartDefaults().plugins,
-        tooltip: {
-          ...chartDefaults().plugins.tooltip,
-          callbacks: {
-            label: context =>
-              `${context.label}: ${formatNumber(context.raw)}`
-          }
+          callbacks: { label: context => ` ${formatNumber(context.raw)} orders` }
         }
       }
     }
   });
 }
 
-function renderDashboard(data, period, diagnostics) {
+function renderCustomerMix(customers) {
+  if (typeof Chart === "undefined") return;
+  const fresh = Number(customers?.new) || 0;
+  const returning = Number(customers?.returning) || 0;
+  $("todayNewCustomers").textContent = formatNumber(fresh);
+  $("todayReturningCustomers").textContent = formatNumber(returning);
+  $("todayCustomerTotal").textContent = formatNumber(Number(customers?.unique ?? (fresh + returning)));
+
+  if (charts.customers) charts.customers.destroy();
+  charts.customers = new Chart($("customerMixChart"), {
+    type: "doughnut",
+    data: {
+      labels: ["New customers", "Returning customers"],
+      datasets: [{
+        data: [fresh, returning],
+        backgroundColor: ["#5DEFFF", "#A5B4FC"],
+        borderColor: "#101827",
+        borderWidth: 4,
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      ...chartDefaults(),
+      cutout: "76%",
+      plugins: {
+        ...chartDefaults().plugins,
+        tooltip: {
+          ...chartDefaults().plugins.tooltip,
+          callbacks: { label: context => ` ${context.label}: ${formatNumber(context.raw)}` }
+        }
+      }
+    }
+  });
+
+  $("customerMixNote").textContent =
+    "Unique contacts with orders today. New/returning status uses all available order history.";
+}
+
+function renderFulfillment(result) {
+  const container = $("fulfillmentStages");
+  if (!result?.success || !Array.isArray(result.data?.stages)) {
+    $("fulfillmentStatus").textContent = "UNAVAILABLE";
+    $("fulfillmentTotal").textContent = "â";
+    container.innerHTML = '<div class="fulfillment-empty">Fulfillment data could not be loaded. Refresh to try again.</div>';
+    $("fulfillmentNote").textContent = "The stats dashboard remains available independently.";
+    return;
+  }
+
+  const stages = result.data.stages;
+  const total = Number(result.data.totalOpportunities) || 0;
+  const maxCount = Math.max(1, ...stages.map(stage => Number(stage.count) || 0));
+  $("fulfillmentTotal").textContent = formatNumber(total);
+  $("fulfillmentStatus").textContent = result.validation?.expectedStagesMatch ? "CONNECTED" : "CHECK STAGES";
+
+  if (!stages.length) {
+    container.innerHTML = '<div class="fulfillment-empty">No pipeline stages were returned.</div>';
+  } else {
+    container.innerHTML = stages.map(stage => {
+      const count = Number(stage.count) || 0;
+      const width = Math.max(0, Math.min(100, count / maxCount * 100));
+      const safeName = String(stage.name || "Unnamed stage");
+      return `<div class="fulfillment-stage">
+        <div class="fulfillment-stage-name">${escapeHtml(safeName)}</div>
+        <div class="fulfillment-track"><div class="fulfillment-bar" style="width:${width}%"></div></div>
+        <div class="fulfillment-stage-count">${formatNumber(count)}</div>
+      </div>`;
+    }).join("");
+  }
+
+  const unknown = Number(result.data.opportunitiesWithoutKnownStage) || 0;
+  $("fulfillmentNote").textContent = unknown
+    ? `${formatNumber(unknown)} opportunities have a stage not found in the pipeline stage list.`
+    : "Current stage counts from the Orders Opportunity Pipeline. These are operational records, not financial orders.";
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, character => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[character]);
+}
+
+function renderDashboard(result, period) {
+  const data = result.data;
   const orders = data.orders;
   const values = data.orderValue;
-  const customers = data.customers;
 
   $("totalOrders").textContent = formatNumber(orders.total);
   $("paidOrders").textContent = formatNumber(orders.paid);
-  $("unpaidOrders").textContent = formatNumber(orders.unpaid);
   $("totalOrderValue").textContent = formatMoney(values.total);
-
-  $("averageOrderValue").textContent =
-    Number(orders.total) > 0
-      ? formatMoney(Number(values.total) / Number(orders.total))
-      : "—";
-
-  $("activeCustomers").textContent = formatNumber(customers.active);
-  $("returningCustomers").textContent = formatNumber(customers.returning);
-  $("repeatBuyerRate").textContent = formatPercent(customers.repeatBuyerRate);
-  $("returningCustomerRate").textContent = formatPercent(customers.returningCustomerRate);
-  $("ordersPerCustomer").textContent = formatNumber(customers.ordersPerCustomer);
-  $("newCustomers").textContent = formatNumber(customers.new);
-  $("otherPaymentStatus").textContent = formatNumber(orders.otherPaymentStatus);
+  $("averageOrderValue").textContent = Number(orders.total) > 0
+    ? formatMoney(Number(values.total) / Number(orders.total))
+    : formatMoney(0);
+  $("overviewPeriodTag").textContent = period.label.toUpperCase();
 
   $("lastUpdated").textContent = new Date(
-    diagnostics.calculatedAt || Date.now()
-  ).toLocaleString("en-US", {
-    dateStyle: "medium",
-    timeStyle: "short"
-  });
+    result.diagnostics?.calculatedAt || Date.now()
+  ).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short", timeZone: RESTAURANT_TIME_ZONE });
 
   setConnection(
     true,
     "Connected to HighLevel",
-    `${formatNumber(diagnostics.ordersFetched ?? 0)} orders fetched · ${period.startDate} to ${period.endDate}`
+    `${formatNumber(result.diagnostics?.ordersFetched ?? 0)} orders fetched Â· ${period.startDate} to ${period.endDate}`
   );
 
   removeLoadingStyles();
   clearError();
 
   try {
-    renderCharts(data);
+    renderHourlyChart(data.hourlyOrders);
   } catch (chartError) {
-    console.error("Charts could not be rendered:", chartError);
-    showError(
-      "The metrics loaded successfully, but the charts could not load. Check your internet connection and refresh.",
-      "Charts unavailable"
-    );
+    console.error("Orders-by-hour chart could not be rendered:", chartError);
+    showError("The order metrics loaded, but the hourly chart could not be rendered.", "Chart unavailable");
   }
+}
+
+async function fetchJson(url, signal) {
+  const response = await fetch(url, {
+    method: "GET",
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+    signal
+  });
+  const result = await response.json();
+  if (!response.ok || result.success === false) {
+    throw new Error(result.error || `Request failed (${response.status})`);
+  }
+  return result;
 }
 
 async function loadDashboard() {
   if (controller) controller.abort();
-
   controller = new AbortController();
   const signal = controller.signal;
-
   setLoading(true);
   clearError();
 
   const period = getDateRange();
-
-  const params = new URLSearchParams({
+  const statsParams = new URLSearchParams({
     startDate: period.startDate,
     endDate: period.endDate
   });
+  const today = restaurantDateString();
+  const todayParams = new URLSearchParams({ startDate: today, endDate: today });
 
-  try {
-    const response = await fetch(`/api/stats?${params.toString()}`, {
-      method: "GET",
-      headers: { Accept: "application/json" },
-      cache: "no-store",
-      signal
-    });
+  const statsTask = fetchJson(`/api/stats?${statsParams.toString()}`, signal);
+  const todayTask = fetchJson(`/api/stats?${todayParams.toString()}`, signal);
+  const fulfillmentTask = fetchJson("/api/fulfillment", signal);
 
-    const result = await response.json();
+  const [statsResult, todayResult, fulfillmentResult] = await Promise.allSettled([
+    statsTask, todayTask, fulfillmentTask
+  ]);
 
-    if (!response.ok || !result.success) {
-      throw new Error(result.error || `Request failed (${response.status})`);
+  if (signal.aborted) return;
+
+  let statsLoaded = false;
+
+  if (statsResult.status === "fulfilled") {
+    const result = statsResult.value;
+    if (result.data?.orders && result.data?.orderValue && result.data?.hourlyOrders) {
+      renderDashboard(result, period);
+      statsLoaded = true;
+    } else {
+      showError("The stats API response is missing fields required by the Overview.", "Unexpected stats response");
     }
-
-    if (
-      !result.data?.orders ||
-      !result.data?.orderValue ||
-      !result.data?.customers
-    ) {
-      throw new Error("The API response is missing required dashboard data.");
-    }
-
-    renderDashboard(
-      result.data,
-      result.period || period,
-      result.diagnostics || {}
-    );
-
-  } catch (err) {
-    if (err.name === "AbortError") return;
-
-    console.error("Dashboard loading failed:", err);
-
-    setConnection(
-      false,
-      "Connection issue",
-      "Dashboard data could not be loaded."
-    );
-
-    showError(
-      "We couldn't retrieve the latest metrics. Check the deployment and API connection, then try refreshing."
-    );
-
-  } finally {
-    if (controller && controller.signal === signal) {
-      setLoading(false);
-    }
+  } else {
+    console.error("Stats API failed:", statsResult.reason);
+    setConnection(false, "Connection issue", "Order metrics could not be loaded.");
+    showError("We couldn't retrieve order metrics. Check the deployment and API connection, then refresh.");
   }
+
+  if (todayResult.status === "fulfilled" && todayResult.value.data?.customers) {
+    try {
+      renderCustomerMix(todayResult.value.data.customers);
+    } catch (error) {
+      console.error("Customer mix chart failed:", error);
+      $("customerMixNote").textContent = "Customer mix could not be rendered.";
+    }
+  } else {
+    console.error("Today's customer mix failed:", todayResult.status === "rejected" ? todayResult.reason : "Missing customers data");
+    $("todayCustomerTotal").textContent = "â";
+    $("todayNewCustomers").textContent = "â";
+    $("todayReturningCustomers").textContent = "â";
+    $("customerMixNote").textContent = "Today's customer mix could not be loaded.";
+  }
+
+  if (fulfillmentResult.status === "fulfilled") {
+    renderFulfillment(fulfillmentResult.value);
+  } else {
+    console.error("Fulfillment API failed:", fulfillmentResult.reason);
+    renderFulfillment(null);
+  }
+
+  if (!statsLoaded && statsResult.status === "fulfilled") {
+    setConnection(false, "Incomplete response", "The stats API returned an unexpected response.");
+  }
+
+  removeLoadingStyles();
+  if (controller && controller.signal === signal) setLoading(false);
 }
 
 function closeSidebar() {
