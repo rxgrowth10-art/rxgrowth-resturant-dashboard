@@ -1010,7 +1010,7 @@ button:disabled .refresh-icon { opacity: .65; }
 /* =====================================================
    ORDERS WORKSPACE
 ===================================================== */
-.orders-page { display:flex; flex-direction:column; gap:16px; }
+.orders-page { display:flex; flex-direction:column; gap:16px; width:100%; max-width:1200px; margin:0 auto; }
 .orders-kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
 .orders-kpi { min-width:0; padding:17px 18px; border-radius:11px; border:1px solid var(--border); background:linear-gradient(145deg,rgba(16,24,39,.98),rgba(12,20,33,.98)); position:relative; overflow:hidden; }
 .orders-kpi:after { content:""; position:absolute; width:90px; height:90px; border-radius:50%; right:-38px; top:-45px; background:rgba(93,239,255,.055); pointer-events:none; }
@@ -1022,7 +1022,7 @@ button:disabled .refresh-icon { opacity: .65; }
 .orders-toolbar-top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
 .orders-toolbar-title { color:#F5F9FF; font-size:12px; font-weight:700; }
 .orders-toolbar-sub { color:#8292A9; font-size:10px; margin-top:5px; }
-.orders-filter-grid { display:grid; grid-template-columns:minmax(210px,1.8fr) repeat(5,minmax(115px,1fr)); gap:9px; align-items:end; }
+.orders-filter-grid { display:grid; grid-template-columns:minmax(240px,1.8fr) repeat(3,minmax(135px,1fr)); gap:10px; align-items:end; }
 .orders-field { min-width:0; display:flex; flex-direction:column; gap:6px; }
 .orders-field label { color:#A9B8CC; font-size:10px; }
 .orders-field input,.orders-field select { width:100%; min-width:0; height:38px; border:1px solid #2A3A50; border-radius:7px; background:#0B1320; color:#E6EDF7; padding:0 10px; font:inherit; font-size:11px; outline:none; }
@@ -1099,7 +1099,7 @@ button:disabled .refresh-icon { opacity: .65; }
 .order-detail-total-line strong { color:#E6EDF7; font-weight:600; }
 .order-detail-total-line.final { border-top:1px solid var(--border); padding-top:12px; margin-top:5px; color:#F5F9FF; font-weight:800; }
 .order-detail-total-line.final strong { color:#5DEFFF; font-size:13px; }
-@media(max-width:1200px) { .orders-filter-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .orders-kpis { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:1200px) { .orders-filter-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .orders-kpis { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:650px) { .orders-kpis { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; } .orders-kpi { padding:13px; } .orders-kpi-value { font-size:20px; } .orders-filter-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .orders-search-field { grid-column:1/-1; } .orders-toolbar { padding:12px; } .orders-toolbar-top,.orders-table-head { align-items:flex-start; } .orders-filter-actions { justify-content:stretch; } .orders-filter-actions .orders-btn { flex:1; } .orders-table-foot { align-items:flex-start; flex-direction:column; } .orders-pagination { align-self:flex-end; } .order-drawer-header { padding:18px 16px 15px; } .order-drawer-body { padding:15px 16px 24px; } .order-detail-grid { gap:7px; } }
 
 </style>
@@ -1438,15 +1438,13 @@ button:disabled .refresh-icon { opacity: .65; }
         </div>
 
         <section class="orders-toolbar">
-          <div class="orders-toolbar-top"><div><div class="orders-toolbar-title">Search &amp; filters</div><div class="orders-toolbar-sub">Narrow the order list by customer, date, payment or fulfillment.</div></div><button class="orders-btn" id="ordersRefresh" type="button">â» Refresh</button></div>
+          <div class="orders-toolbar-top"><div><div class="orders-toolbar-title">Search &amp; filters</div><div class="orders-toolbar-sub">Narrow the order list by customer, date and payment status.</div></div><button class="orders-btn" id="ordersRefresh" type="button">â» Refresh</button></div>
           <form id="ordersFilterForm">
             <div class="orders-filter-grid">
               <div class="orders-field orders-search-field"><label for="ordersSearch">Search customer or Order ID</label><input id="ordersSearch" type="search" placeholder="Name, email, phone or order IDâ¦" autocomplete="off"></div>
               <div class="orders-field"><label for="ordersStartDate">From date</label><input id="ordersStartDate" type="date"></div>
               <div class="orders-field"><label for="ordersEndDate">To date</label><input id="ordersEndDate" type="date"></div>
               <div class="orders-field"><label for="ordersPaymentFilter">Payment status</label><select id="ordersPaymentFilter"><option value="">All payment statuses</option><option value="paid">Paid</option><option value="unpaid">Unpaid</option><option value="partially_paid">Partially paid</option><option value="refunded">Refunded</option></select></div>
-              <div class="orders-field"><label for="ordersFulfillmentFilter">Fulfillment</label><select id="ordersFulfillmentFilter"><option value="">All fulfillment statuses</option><option value="fulfilled">Fulfilled</option><option value="unfulfilled">Unfulfilled</option><option value="partially_fulfilled">Partially fulfilled</option></select></div>
-              <div class="orders-field"><label for="ordersMethodFilter">Payment method</label><select id="ordersMethodFilter"><option value="">All payment methods</option><option value="Cash on Delivery">Cash on Delivery</option><option value="COD">COD</option><option value="card">Card</option><option value="cash">Cash</option></select></div>
             </div>
             <div class="orders-filter-actions"><button class="orders-btn" id="ordersClearFilters" type="button">Clear filters</button><button class="orders-btn primary" type="submit">Apply filters&nbsp; â</button></div>
           </form>
@@ -1456,8 +1454,8 @@ button:disabled .refresh-icon { opacity: .65; }
           <div class="orders-table-head"><div><div class="orders-table-heading">All orders</div><div class="orders-table-caption" id="ordersTableCaption">Loading orders from HighLevelâ¦</div></div><span class="tag" id="ordersTableStatus">LOADING</span></div>
           <div class="orders-table-wrap">
             <table class="orders-table">
-              <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Order value</th><th>Payment</th><th>Payment method</th><th>Fulfillment</th><th>Date</th><th aria-label="Actions"></th></tr></thead>
-              <tbody id="ordersTableBody"><tr><td colspan="9" class="orders-table-state"><strong>Loading ordersâ¦</strong>Connecting to HighLevel Payments Orders.</td></tr></tbody>
+              <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Order value</th><th>Date</th><th aria-label="Actions"></th></tr></thead>
+              <tbody id="ordersTableBody"><tr><td colspan="6" class="orders-table-state"><strong>Loading ordersâ¦</strong>Connecting to HighLevel Payments Orders.</td></tr></tbody>
             </table>
           </div>
           <div class="orders-table-foot"><div id="ordersRangeText">Waiting for ordersâ¦</div><div class="orders-page-size"><label for="ordersPageSize">Rows</label><select id="ordersPageSize"><option value="10" selected>10</option><option value="25">25</option><option value="50">50</option></select></div><div class="orders-pagination"><button id="ordersPrev" type="button" aria-label="Previous page" disabled>â¹</button><span id="ordersPageLabel">Page 1 of 1</span><button id="ordersNext" type="button" aria-label="Next page" disabled>âº</button></div></div>
@@ -1474,7 +1472,7 @@ button:disabled .refresh-icon { opacity: .65; }
 
     <section id="placeholderPage" class="page" hidden>
       <div class="placeholder">
-        <div class="placeholder-icon" id="placeholderIcon">Ã¢âË</div>
+        <div class="placeholder-icon" id="placeholderIcon">ÃÂ¢âÃÂ</div>
         <div>
           <h2 id="placeholderTitle">Module planned</h2>
           <p id="placeholderDescription">
@@ -1521,49 +1519,49 @@ const pages = {
     "Overview",
     "Overview",
     "A clear view of today's restaurant performance.",
-    "â"
+    "Ã¢ÂÂ"
   ],
   orders: [
     "Orders",
     "Orders & Operations",
     "Orders",
     "Order records and payment status from HighLevel.",
-    "â£"
+    "Ã¢ÂÂ£"
   ],
   orders: [
     "Orders",
     "Orders & Operations",
     "Orders",
     "Manage Native HighLevel orders, payment status, and fulfillment details.",
-    "â£"
+    "Ã¢ÂÂ£"
   ],
   abandoned: [
     "Abandoned Checkouts",
     "Orders & Operations",
     "Abandoned Checkouts",
     "Checkout recovery will be available after checkout events are connected.",
-    "â"
+    "Ã¢ÂÂ"
   ],
   customers: [
     "Customer Analytics",
     "Customers",
     "Customers",
     "Customer activity and repeat purchasing behavior.",
-    "â£"
+    "Ã¢ÂÂ£"
   ],
   segments: [
     "Customer Segments",
     "Customers",
     "Customer Segments",
     "Lifecycle segments will be calculated from verified order history.",
-    "â"
+    "Ã¢ÂÂ"
   ],
   birthday: [
     "Birthday Campaign",
     "Campaigns & QR",
     "Birthday",
     "Birthday campaign performance and coupon attribution.",
-    "â¦"
+    "Ã¢ÂÂ¦"
   ],
   winback: [
     "Win-Back Campaign",
@@ -1577,35 +1575,35 @@ const pages = {
     "Campaigns & QR",
     "Slow-Time",
     "Slow-day offers, redemptions, and attributed order value.",
-    "â"
+    "Ã¢ÂÂ"
   ],
   qr: [
     "QR Ecosystem",
     "Campaigns & QR",
     "QR Ecosystem",
     "QR analytics will appear when a reliable analytics source is connected.",
-    "â¦"
+    "Ã¢ÂÂ¦"
   ],
   retention: [
     "Retention",
     "Retention & Loyalty",
     "Retention",
     "Retention trends and lapsed-customer analysis.",
-    "â³"
+    "Ã¢ÂÂ³"
   ],
   loyalty: [
     "Loyalty & Rewards",
     "Retention & Loyalty",
     "Loyalty & Rewards",
     "Loyalty program activity and reward redemptions.",
-    "â"
+    "Ã¢ÂÂ"
   ],
   reviews: [
     "Reviews Overview",
     "Reviews & Reputation",
     "Reviews Overview",
     "Review trends and unanswered feedback from a verified source.",
-    "â"
+    "Ã¢ÂÂ"
   ],
   attention: [
     "Needs Attention",
@@ -1619,14 +1617,14 @@ const pages = {
     "Management",
     "Reports",
     "Reporting and export tools will be added after core metrics are validated.",
-    "â¥"
+    "Ã¢ÂÂ¥"
   ],
   settings: [
     "Settings",
     "Settings",
     "Settings",
     "Restaurant connection and dashboard settings will be available here.",
-    "â"
+    "Ã¢ÂÂ"
   ]
 };
 
@@ -1704,11 +1702,11 @@ function setLoading(isLoading) {
   });
 
   $("refresh").innerHTML = isLoading
-? '<span class="loading-dots">⠋</span>'
+? '<span class="loading-dots">â </span>'
     : '<svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg>';
 
   $("refreshMain").innerHTML = isLoading
-? '<span class="loading-dots">⠋</span> Loading data'  
+? '<span class="loading-dots">â </span> Loading data'  
     : '<span class="refresh-label-icon"><svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg></span> Refresh data';
 }
 
@@ -2153,7 +2151,7 @@ function prettyStatus(value) {
 
 function setOrdersTableState(title, message, status = "ERROR") {
   $("ordersTableStatus").textContent = status;
-  $("ordersTableBody").innerHTML = `<tr><td colspan="9" class="orders-table-state"><strong>${escapeHtml(title)}</strong>${escapeHtml(message)}</td></tr>`;
+  $("ordersTableBody").innerHTML = `<tr><td colspan="6" class="orders-table-state"><strong>${escapeHtml(title)}</strong>${escapeHtml(message)}</td></tr>`;
 }
 
 function renderOrdersSummary(summary) {
@@ -2179,15 +2177,11 @@ function renderOrdersTable(orders) {
     const name = order.customerName || "Unknown Customer";
     const initials = name.split(/\s+/).filter(Boolean).slice(0,2).map(part => part[0]).join("").toUpperCase() || "?";
     const itemCount = Number(order.raw?.totalProducts ?? order.items?.length ?? 0);
-    const method = order.paymentMethod && order.paymentMethod !== "Unknown" ? order.paymentMethod : "Not provided";
     return `<tr>
       <td><button type="button" class="order-id-button" data-order-details="${escapeHtml(id)}" title="Open order details">#${escapeHtml(id.slice(-8).toUpperCase())}</button></td>
       <td><div class="order-customer"><div class="order-avatar">${escapeHtml(initials)}</div><div><div class="order-customer-name" title="${escapeHtml(name)}">${escapeHtml(name)}</div><div class="order-customer-sub">${escapeHtml(order.email || order.raw?.contactEmail || order.phone || "Customer")}</div></div></div></td>
       <td>${itemCount > 0 ? `${itemCount} item${itemCount === 1 ? "" : "s"}` : "â"}</td>
       <td class="order-amount">${escapeHtml(formatMoney(order.amount))}</td>
-      <td><span class="order-status ${statusClass(order.paymentStatus)}">${escapeHtml(prettyStatus(order.paymentStatus))}</span></td>
-      <td>${escapeHtml(method)}</td>
-      <td><span class="order-status ${statusClass(order.fulfillmentStatus)}">${escapeHtml(prettyStatus(order.fulfillmentStatus))}</span></td>
       <td>${escapeHtml(displayDate(order.createdAt))}</td>
       <td><button class="order-row-action" type="button" data-order-details="${escapeHtml(id)}" aria-label="View order details" title="View details">â</button></td>
     </tr>`;
@@ -2261,9 +2255,7 @@ function applyOrdersFilters() {
     search: $("ordersSearch").value.trim(),
     startDate: $("ordersStartDate").value,
     endDate: $("ordersEndDate").value,
-    paymentStatus: $("ordersPaymentFilter").value,
-    fulfillmentStatus: $("ordersFulfillmentFilter").value,
-    paymentMethod: $("ordersMethodFilter").value
+    paymentStatus: $("ordersPaymentFilter").value
   };
   if (ordersState.applied.startDate && ordersState.applied.endDate && ordersState.applied.startDate > ordersState.applied.endDate) {
     showError("The start date must be on or before the end date.", "Check your date range");
@@ -2417,9 +2409,7 @@ $("ordersClearFilters").addEventListener("click", () => {
   $("ordersStartDate").value = "";
   $("ordersEndDate").value = "";
   $("ordersPaymentFilter").value = "";
-  $("ordersFulfillmentFilter").value = "";
-  $("ordersMethodFilter").value = "";
-  ordersState.applied = { search:"", startDate:"", endDate:"", paymentStatus:"", fulfillmentStatus:"", paymentMethod:"" };
+  ordersState.applied = { search:"", startDate:"", endDate:"", paymentStatus:"" };
   clearError();
   loadOrders(true);
 });
@@ -2449,3 +2439,4 @@ loadDashboard();
 
 </body>
 </html>
+
