@@ -39,6 +39,73 @@ async function ghlRequest(path, params = {}) {
     }
   }
 
+  let response;
+
+  try {
+    console.log("Fulfillment: starting HighLevel request", {
+      endpoint: path,
+      query: Object.fromEntries(url.searchParams.entries()),
+    });
+
+    response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Version: API_VERSION,
+        Accept: "application/json",
+      },
+      signal: AbortSignal.timeout(20000),
+    });
+  } catch (error) {
+    console.error("Fulfillment: network request failed", {
+      endpoint: path,
+      errorName: error.name,
+      errorMessage: error.message,
+      cause: error.cause
+        ? {
+            name: error.cause.name,
+            code: error.cause.code,
+            message: error.cause.message,
+          }
+        : null,
+    });
+
+    throw new Error(
+      `HighLevel network request failed for ${path}`
+    );
+  }
+
+  const responseText = await response.text();
+
+  console.log("Fulfillment: HighLevel response received", {
+    endpoint: path,
+    status: response.status,
+  });
+
+  if (!response.ok) {
+    console.error("Fulfillment: HighLevel API error", {
+      endpoint: path,
+      status: response.status,
+      response: responseText.slice(0, 500),
+    });
+
+    throw new Error(
+      `HighLevel API returned HTTP ${response.status}`
+    );
+  }
+
+  try {
+    return JSON.parse(responseText);
+  } catch {
+    console.error("Fulfillment: invalid JSON response", {
+      endpoint: path,
+      response: responseText.slice(0, 300),
+    });
+
+    throw new Error("HighLevel API returned invalid JSON");
+  }
+}
+
   const response = await fetch(url, {
     method: "GET",
     headers: {
