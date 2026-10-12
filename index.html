@@ -1102,6 +1102,14 @@ button:disabled .refresh-icon { opacity: .65; }
 @media(max-width:1200px) { .orders-filter-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .orders-kpis { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:650px) { .orders-kpis { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; } .orders-kpi { padding:13px; } .orders-kpi-value { font-size:20px; } .orders-filter-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .orders-search-field { grid-column:1/-1; } .orders-toolbar { padding:12px; } .orders-toolbar-top,.orders-table-head { align-items:flex-start; } .orders-filter-actions { justify-content:stretch; } .orders-filter-actions .orders-btn { flex:1; } .orders-table-foot { align-items:flex-start; flex-direction:column; } .orders-pagination { align-self:flex-end; } .order-drawer-header { padding:18px 16px 15px; } .order-drawer-body { padding:15px 16px 24px; } .order-detail-grid { gap:7px; } }
 
+
+.orders-toolbar .refresh-icon { width: 13px; height: 13px; flex: 0 0 auto; }
+.orders-toolbar #ordersRefresh { display: inline-flex; align-items: center; justify-content: center; gap: 7px; }
+.orders-info-icon { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border: 1px solid currentColor; border-radius: 50%; font-size: 10px; font-weight: 700; line-height: 1; }
+.orders-pagination button { min-width: 44px; padding: 0 8px; font-size: 10px; }
+.order-row-action svg { display: block; }
+.order-drawer-close { font-family: Arial, sans-serif; }
+
 </style>
 </head>
 
@@ -1438,36 +1446,36 @@ button:disabled .refresh-icon { opacity: .65; }
         </div>
 
         <section class="orders-toolbar">
-          <div class="orders-toolbar-top"><div><div class="orders-toolbar-title">Search &amp; filters</div><div class="orders-toolbar-sub">Narrow the order list by customer, date and payment status.</div></div><button class="orders-btn" id="ordersRefresh" type="button">â» Refresh</button></div>
+          <div class="orders-toolbar-top"><div><div class="orders-toolbar-title">Search &amp; filters</div><div class="orders-toolbar-sub">Narrow the order list by customer, date and payment status.</div></div><button class="orders-btn" id="ordersRefresh" type="button"><svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg><span>Refresh</span></button></div>
           <form id="ordersFilterForm">
             <div class="orders-filter-grid">
-              <div class="orders-field orders-search-field"><label for="ordersSearch">Search customer or Order ID</label><input id="ordersSearch" type="search" placeholder="Name, email, phone or order IDâ¦" autocomplete="off"></div>
+              <div class="orders-field orders-search-field"><label for="ordersSearch">Search customer or Order ID</label><input id="ordersSearch" type="search" placeholder="Name, email, phone or order ID..." autocomplete="off"></div>
               <div class="orders-field"><label for="ordersStartDate">From date</label><input id="ordersStartDate" type="date"></div>
               <div class="orders-field"><label for="ordersEndDate">To date</label><input id="ordersEndDate" type="date"></div>
               <div class="orders-field"><label for="ordersPaymentFilter">Payment status</label><select id="ordersPaymentFilter"><option value="">All payment statuses</option><option value="paid">Paid</option><option value="unpaid">Unpaid</option><option value="partially_paid">Partially paid</option><option value="refunded">Refunded</option></select></div>
             </div>
-            <div class="orders-filter-actions"><button class="orders-btn" id="ordersClearFilters" type="button">Clear filters</button><button class="orders-btn primary" type="submit">Apply filters&nbsp; â</button></div>
+            <div class="orders-filter-actions"><button class="orders-btn" id="ordersClearFilters" type="button">Clear filters</button><button class="orders-btn primary" type="submit">Apply filters</button></div>
           </form>
         </section>
 
         <section class="orders-table-panel">
-          <div class="orders-table-head"><div><div class="orders-table-heading">All orders</div><div class="orders-table-caption" id="ordersTableCaption">Loading orders from HighLevelâ¦</div></div><span class="tag" id="ordersTableStatus">LOADING</span></div>
+          <div class="orders-table-head"><div><div class="orders-table-heading">All orders</div><div class="orders-table-caption" id="ordersTableCaption">Loading orders from HighLevel...</div></div><span class="tag" id="ordersTableStatus">LOADING</span></div>
           <div class="orders-table-wrap">
             <table class="orders-table">
               <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Order value</th><th>Date</th><th aria-label="Actions"></th></tr></thead>
-              <tbody id="ordersTableBody"><tr><td colspan="6" class="orders-table-state"><strong>Loading ordersâ¦</strong>Connecting to HighLevel Payments Orders.</td></tr></tbody>
+              <tbody id="ordersTableBody"><tr><td colspan="6" class="orders-table-state"><strong>Loading orders...</strong>Connecting to HighLevel Payments Orders.</td></tr></tbody>
             </table>
           </div>
-          <div class="orders-table-foot"><div id="ordersRangeText">Waiting for ordersâ¦</div><div class="orders-page-size"><label for="ordersPageSize">Rows</label><select id="ordersPageSize"><option value="10" selected>10</option><option value="25">25</option><option value="50">50</option></select></div><div class="orders-pagination"><button id="ordersPrev" type="button" aria-label="Previous page" disabled>â¹</button><span id="ordersPageLabel">Page 1 of 1</span><button id="ordersNext" type="button" aria-label="Next page" disabled>âº</button></div></div>
+          <div class="orders-table-foot"><div id="ordersRangeText">Waiting for orders...</div><div class="orders-page-size"><label for="ordersPageSize">Rows</label><select id="ordersPageSize"><option value="10" selected>10</option><option value="25">25</option><option value="50">50</option></select></div><div class="orders-pagination"><button id="ordersPrev" type="button" aria-label="Previous page" disabled>Prev</button><span id="ordersPageLabel">Page 1 of 1</span><button id="ordersNext" type="button" aria-label="Next page" disabled>Next</button></div></div>
         </section>
-        <div class="orders-api-note"><span>â</span><div>Order and payment figures come from HighLevel Native Orders. The list is paginated for display; KPI totals are calculated across all matching results returned by the API. Item and payment-method details are loaded from the order details endpoint when available.</div></div>
+        <div class="orders-api-note"><span class="orders-info-icon" aria-hidden="true">i</span><div>Order and payment figures come from HighLevel Native Orders. The list is paginated for display; KPI totals are calculated across all matching results returned by the API. Item and payment-method details are loaded from the order details endpoint when available.</div></div>
       </div>
     </section>
 
     <div class="order-drawer-backdrop" id="orderDrawerBackdrop"></div>
     <aside class="order-drawer" id="orderDrawer" aria-label="Order details" aria-hidden="true">
-      <div class="order-drawer-header"><div><div class="order-drawer-eyebrow">Order details</div><div class="order-drawer-title" id="orderDrawerTitle">Loading orderâ¦</div><div class="order-drawer-date" id="orderDrawerDate">Retrieving order details</div></div><button class="order-drawer-close" id="orderDrawerClose" type="button" aria-label="Close order details">Ã</button></div>
-      <div class="order-drawer-body" id="orderDrawerBody"><div class="order-detail-empty">Loading details from HighLevelâ¦</div></div>
+      <div class="order-drawer-header"><div><div class="order-drawer-eyebrow">Order details</div><div class="order-drawer-title" id="orderDrawerTitle">Loading order...</div><div class="order-drawer-date" id="orderDrawerDate">Retrieving order details</div></div><button class="order-drawer-close" id="orderDrawerClose" type="button" aria-label="Close order details">X</button></div>
+      <div class="order-drawer-body" id="orderDrawerBody"><div class="order-detail-empty">Loading details from HighLevel...</div></div>
     </aside>
 
     <section id="placeholderPage" class="page" hidden>
@@ -1893,7 +1901,7 @@ async function loadWeeklyOrders(signal) {
   }
 
   renderWeeklyOrders(dailyResults);
-  $("weeklyOrdersNote").textContent = `Daily order counts Â· ${dailyResults[0].date} to ${dailyResults[6].date} Â· Cairo time`;
+  $("weeklyOrdersNote").textContent = `Daily order counts - ${dailyResults[0].date} to ${dailyResults[6].date} - Cairo time`;
 }
 
 function renderCustomerMix(customers) {
@@ -1997,7 +2005,7 @@ function renderDashboard(result, period) {
   setConnection(
     true,
     "Connected to HighLevel",
-    `${formatNumber(result.diagnostics?.ordersFetched ?? 0)} orders fetched Â· ${period.startDate} to ${period.endDate}`
+    `${formatNumber(result.diagnostics?.ordersFetched ?? 0)} orders fetched - ${period.startDate} to ${period.endDate}`
   );
 
   removeLoadingStyles();
@@ -2180,10 +2188,10 @@ function renderOrdersTable(orders) {
     return `<tr>
       <td><button type="button" class="order-id-button" data-order-details="${escapeHtml(id)}" title="Open order details">#${escapeHtml(id.slice(-8).toUpperCase())}</button></td>
       <td><div class="order-customer"><div class="order-avatar">${escapeHtml(initials)}</div><div><div class="order-customer-name" title="${escapeHtml(name)}">${escapeHtml(name)}</div><div class="order-customer-sub">${escapeHtml(order.email || order.raw?.contactEmail || order.phone || "Customer")}</div></div></div></td>
-      <td>${itemCount > 0 ? `${itemCount} item${itemCount === 1 ? "" : "s"}` : "â"}</td>
+      <td>${itemCount > 0 ? `${itemCount} item${itemCount === 1 ? "" : "s"}` : "-"}</td>
       <td class="order-amount">${escapeHtml(formatMoney(order.amount))}</td>
       <td>${escapeHtml(displayDate(order.createdAt))}</td>
-      <td><button class="order-row-action" type="button" data-order-details="${escapeHtml(id)}" aria-label="View order details" title="View details">â</button></td>
+      <td><button class="order-row-action" type="button" data-order-details="${escapeHtml(id)}" aria-label="View order details" title="View details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></button></td>
     </tr>`;
   }).join("");
 }
@@ -2198,10 +2206,10 @@ function renderOrdersResponse(result) {
   renderOrdersSummary(ordersState.summary);
   renderOrdersTable(orders);
   $("ordersTableStatus").textContent = "CONNECTED";
-  $("ordersTableCaption").textContent = `${formatNumber(ordersState.totalCount)} matching orders Â· Sorted by ${ordersState.sortBy === "createdAt" ? "date" : ordersState.sortBy}`;
+  $("ordersTableCaption").textContent = `${formatNumber(ordersState.totalCount)} matching orders - Sorted by ${ordersState.sortBy === "createdAt" ? "date" : ordersState.sortBy}`;
   const first = ordersState.totalCount ? ((ordersState.page - 1) * ordersState.pageSize) + 1 : 0;
   const last = Math.min(ordersState.page * ordersState.pageSize, ordersState.totalCount);
-  $("ordersRangeText").textContent = ordersState.totalCount ? `Showing ${formatNumber(first)}â${formatNumber(last)} of ${formatNumber(ordersState.totalCount)} orders` : "No orders to display";
+  $("ordersRangeText").textContent = ordersState.totalCount ? `Showing ${formatNumber(first)} - ${formatNumber(last)} of ${formatNumber(ordersState.totalCount)} orders` : "No orders to display";
   $("ordersPageLabel").textContent = `Page ${ordersState.page} of ${ordersState.totalPages}`;
   $("ordersPrev").disabled = ordersState.page <= 1 || ordersState.loading;
   $("ordersNext").disabled = ordersState.page >= ordersState.totalPages || ordersState.loading;
@@ -2215,11 +2223,11 @@ async function loadOrders(resetPage = false) {
   ordersState.request = request;
   ordersState.loading = true;
   $("ordersRefresh").disabled = true;
-  $("ordersRefresh").textContent = "Loadingâ¦";
+  $("ordersRefresh").innerHTML = '<span class="loading-dots" aria-hidden="true"></span><span>Loading...</span>';
   $("ordersPrev").disabled = true;
   $("ordersNext").disabled = true;
   $("ordersTableStatus").textContent = "LOADING";
-  if (!ordersState.loaded) setOrdersTableState("Loading ordersâ¦", "Connecting to HighLevel Payments Orders.", "LOADING");
+  if (!ordersState.loaded) setOrdersTableState("Loading orders...", "Connecting to HighLevel Payments Orders.", "LOADING");
 
   const params = new URLSearchParams({
     page: String(ordersState.page),
@@ -2243,7 +2251,7 @@ async function loadOrders(resetPage = false) {
     if (!request.signal.aborted) {
       ordersState.loading = false;
       $("ordersRefresh").disabled = false;
-      $("ordersRefresh").textContent = "â» Refresh";
+      $("ordersRefresh").innerHTML = '<svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg><span>Refresh</span>';
       $("ordersPrev").disabled = ordersState.page <= 1;
       $("ordersNext").disabled = ordersState.page >= ordersState.totalPages;
     }
@@ -2275,7 +2283,7 @@ function closeOrderDrawer() {
 function openOrderDrawerShell(order) {
   $("orderDrawerTitle").textContent = `#${order.id || "Order"}`;
   $("orderDrawerDate").textContent = displayDate(order.createdAt);
-  $("orderDrawerBody").innerHTML = '<div class="order-detail-empty">Loading full order details from HighLevelâ¦</div>';
+  $("orderDrawerBody").innerHTML = '<div class="order-detail-empty">Loading full order details from HighLevel...</div>';
   $("orderDrawer").classList.add("open");
   $("orderDrawerBackdrop").classList.add("open");
   $("orderDrawer").setAttribute("aria-hidden", "false");
@@ -2300,7 +2308,7 @@ function renderOrderDetails(order) {
   const itemMarkup = items.length ? items.map(item => {
     const qty = Number(item.quantity) || 1;
     const price = Number(item.price) || 0;
-    return `<div class="order-detail-item"><div><div class="order-detail-item-name">${escapeHtml(item.name)}</div><div class="order-detail-item-sub">Qty ${formatNumber(qty)} Ã ${formatMoney(price)}</div></div><div class="order-detail-item-price">${escapeHtml(formatMoney(qty * price))}</div></div>`;
+    return `<div class="order-detail-item"><div><div class="order-detail-item-name">${escapeHtml(item.name)}</div><div class="order-detail-item-sub">Qty ${formatNumber(qty)} x ${formatMoney(price)}</div></div><div class="order-detail-item-price">${escapeHtml(formatMoney(qty * price))}</div></div>`;
   }).join("") : '<div class="order-detail-empty">No item details were returned by the order details endpoint.</div>';
   const email = order.email || raw.contactEmail || contact.email || "";
   const phone = order.phone || contact.phone || "";
@@ -2310,7 +2318,7 @@ function renderOrderDetails(order) {
     <div class="order-detail-total"><div><span>Order value</span><div style="margin-top:6px"><strong>${escapeHtml(formatMoney(order.amount))}</strong></div></div><div style="text-align:right"><span>Payment</span><div style="margin-top:8px"><span class="order-status ${statusClass(order.paymentStatus)}">${escapeHtml(prettyStatus(order.paymentStatus))}</span></div></div></div>
     <section class="order-detail-section"><div class="order-detail-section-title">Order overview</div><div class="order-detail-grid">${detailField("Order ID", order.id)}${detailField("Order status", prettyStatus(order.orderStatus))}${detailField("Fulfillment", prettyStatus(order.fulfillmentStatus))}${detailField("Order date", displayDate(order.createdAt))}${detailField("Source", order.source)}${detailField("Payment method", method)}</div></section>
     <section class="order-detail-section"><div class="order-detail-section-title">Customer information</div><div class="order-detail-grid">${detailField("Customer", order.customerName)}${detailField("Email", email)}${detailField("Phone", phone)}${detailField("Address", address)}</div></section>
-    <section class="order-detail-section"><div class="order-detail-section-title">Order items Â· ${formatNumber(items.length)} line items</div>${itemMarkup}</section>
+    <section class="order-detail-section"><div class="order-detail-section-title">Order items - ${formatNumber(items.length)} line items</div>${itemMarkup}</section>
     <section class="order-detail-section"><div class="order-detail-section-title">Financial summary</div><div class="order-detail-field">${subtotal ? `<div class="order-detail-total-line"><span>Subtotal</span><strong>${escapeHtml(formatMoney(subtotal))}</strong></div>` : ""}${discount ? `<div class="order-detail-total-line"><span>Discount</span><strong>â${escapeHtml(formatMoney(discount))}</strong></div>` : ""}${tax ? `<div class="order-detail-total-line"><span>Tax</span><strong>${escapeHtml(formatMoney(tax))}</strong></div>` : ""}${shipping ? `<div class="order-detail-total-line"><span>Shipping</span><strong>${escapeHtml(formatMoney(shipping))}</strong></div>` : ""}<div class="order-detail-total-line final"><span>Total order value</span><strong>${escapeHtml(formatMoney(order.amount))}</strong></div></div></section>
     <section class="order-detail-section"><div class="order-detail-section-title">Payment &amp; fulfillment</div><div class="order-detail-grid">${detailField("Payment status", prettyStatus(order.paymentStatus))}${detailField("Fulfillment status", prettyStatus(order.fulfillmentStatus))}${detailField("Live order", order.liveMode === true ? "Yes" : order.liveMode === false ? "No" : "Unknown")}${detailField("Test order", order.markAsTest === true ? "Yes" : order.markAsTest === false ? "No" : "Unknown")}</div></section>`;
 }
@@ -2439,4 +2447,3 @@ loadDashboard();
 
 </body>
 </html>
-
