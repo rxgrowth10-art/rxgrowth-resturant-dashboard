@@ -34,7 +34,7 @@ async function ghlRequest(path, params = {}) {
   const url = new URL(`${GHL_BASE_URL}${path}`);
 
   for (const [key, value] of Object.entries(params)) {
-    if (value !== undefined && value !== null) {
+    if (value !== undefined && value !== null && value !== "") {
       url.searchParams.set(key, String(value));
     }
   }
@@ -42,12 +42,11 @@ async function ghlRequest(path, params = {}) {
   let response;
 
   try {
-    console.log("Fulfillment: starting HighLevel request", {
+    console.log("Fulfillment: requesting HighLevel API", {
       endpoint: path,
-      query: Object.fromEntries(url.searchParams.entries()),
     });
 
-    response = await fetch(url, {
+    response = await fetch(url.toString(), {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -71,55 +70,14 @@ async function ghlRequest(path, params = {}) {
     });
 
     throw new Error(
-      `HighLevel network request failed for ${path}`
+      `HighLevel network request failed: ${path}`
     );
   }
-
-  const responseText = await response.text();
-
-  console.log("Fulfillment: HighLevel response received", {
-    endpoint: path,
-    status: response.status,
-  });
-
-  if (!response.ok) {
-    console.error("Fulfillment: HighLevel API error", {
-      endpoint: path,
-      status: response.status,
-      response: responseText.slice(0, 500),
-    });
-
-    throw new Error(
-      `HighLevel API returned HTTP ${response.status}`
-    );
-  }
-
-  try {
-    return JSON.parse(responseText);
-  } catch {
-    console.error("Fulfillment: invalid JSON response", {
-      endpoint: path,
-      response: responseText.slice(0, 300),
-    });
-
-    throw new Error("HighLevel API returned invalid JSON");
-  }
-}
-
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Version: API_VERSION,
-      Accept: "application/json",
-    },
-    signal: AbortSignal.timeout(15000),
-  });
 
   const responseText = await response.text();
 
   if (!response.ok) {
-    console.error("HighLevel API request failed:", {
+    console.error("Fulfillment: HighLevel API error", {
       endpoint: path,
       status: response.status,
       response: responseText.slice(0, 500),
@@ -135,12 +93,14 @@ async function ghlRequest(path, params = {}) {
   try {
     result = JSON.parse(responseText);
   } catch {
-    console.error("HighLevel API returned invalid JSON:", {
+    console.error("Fulfillment: invalid JSON response", {
       endpoint: path,
       response: responseText.slice(0, 300),
     });
 
-    throw new Error("HighLevel API returned invalid JSON");
+    throw new Error(
+      "HighLevel API returned invalid JSON"
+    );
   }
 
   return result;
@@ -155,7 +115,9 @@ async function fetchPipelines() {
   );
 
   if (!Array.isArray(result.pipelines)) {
-    throw new Error("Unexpected Pipelines API response");
+    throw new Error(
+      "Unexpected Pipelines API response"
+    );
   }
 
   return result.pipelines;
@@ -177,7 +139,7 @@ function findOrdersPipeline(pipelines) {
 
   if (matches.length > 1) {
     throw new Error(
-      "Multiple Orders pipelines found; configuration is ambiguous"
+      "Multiple Orders pipelines found"
     );
   }
 
@@ -188,31 +150,33 @@ async function fetchPipelineOpportunities(pipelineId) {
   const opportunities = [];
   const seenIds = new Set();
 
-  let expectedTotal = null;
-  let page = 1;
+  let reportedTotal = null;
   let pagesFetched = 0;
 
-  while (
-    expectedTotal === null ||
-    opportunities.length < expectedTotal
-  ) {
+  let page = 1;
+  let startAfter = null;
+  let startAfterId = null;
+
+  while (pagesFetched < MAX_PAGES) {
     pagesFetched += 1;
 
-    if (pagesFetched > MAX_PAGES) {
-      throw new Error(
-        "Opportunities pagination limit exceeded"
-      );
+    const params = {
+      locationId: LOCATION_ID,
+      pipelineId,
+      status: "all",
+      limit: PAGE_SIZE,
+    };
+
+    if (startAfter !== null && startAfterId !== null) {
+      params.startAfter = startAfter;
+      params.startAfterId = startAfterId;
+    } else {
+      params.page = page;
     }
 
     const result = await ghlRequest(
       "/opportunities/search",
-      {
-        locationId: LOCATION_ID,
-        pipelineId,
-        status: "all",
-        page,
-        limit: PAGE_SIZE,
-      }
+      params
     );
 
     if (!Array.isArray(result.opportunities)) {
@@ -221,45 +185,82 @@ async function fetchPipelineOpportunities(pipelineId) {
       );
     }
 
-    const reportedTotal = result.meta?.total;
+    if (reportedTotal === null) {
+      const total = Number(result.meta?.total);
 
-    if (!Number.isFinite(reportedTotal)) {
-      throw new Error(
-        "Opportunities API total is missing or invalid"
-      );
-    }
+      if (!Number.isFinite(total)) {
+        throw new Error(
+          "Opportunities API total is missing or invalid"
+        );
+      }
 
-    if (expectedTotal === null) {
-      expectedTotal = reportedTotal;
+      reportedTotal = total;
     }
 
     for (const opportunity of result.opportunities) {
-      if (!opportunity.id) {
-        continue;
-      }
-
-      if (seenIds.has(opportunity.id)) {
-        continue;
-      }
-
-      if (opportunity.pipelineId !== pipelineId) {
-        continue;
-      }
+      if (!opportunity.id) continue;
+      if (seenIds.has(opportunity.id)) continue;
+      if (opportunity.pipelineId !== pipelineId) continue;
 
       seenIds.add(opportunity.id);
       opportunities.push(opportunity);
     }
 
-    if (result.opportunities.length === 0) {
+    if (opportunities.length >= reportedTotal) {
+      break;
+    }
+
+    const nextPageUrl = result.meta?.nextPageUrl;
+
+    if (nextPageUrl) {
+      let nextUrl;
+
+      try {
+        nextUrl = new URL(
+          nextPageUrl,
+          GHL_BASE_URL
+        );
+      } catch {
+        throw new Error(
+          "Invalid nextPageUrl in Opportunities response"
+        );
+      }
+
+      const nextStartAfter =
+        nextUrl.searchParams.get("startAfter");
+
+      const nextStartAfterId =
+        nextUrl.searchParams.get("startAfterId");
+
+      if (nextStartAfter && nextStartAfterId) {
+        startAfter = nextStartAfter;
+        startAfterId = nextStartAfterId;
+        continue;
+      }
+    }
+
+    if (
+      result.opportunities.length === 0 ||
+      result.opportunities.length < PAGE_SIZE
+    ) {
       break;
     }
 
     page += 1;
+    startAfter = null;
+    startAfterId = null;
+  }
+
+  if (pagesFetched >= MAX_PAGES &&
+      opportunities.length < reportedTotal) {
+    throw new Error(
+      "Opportunities pagination limit exceeded"
+    );
   }
 
   return {
     opportunities,
-    reportedTotal: expectedTotal,
+    reportedTotal,
     pagesFetched,
   };
 }
@@ -358,7 +359,8 @@ export default async function handler(req, res) {
       },
 
       validation: {
-        expectedStagesMatch: metrics.expectedStagesMatch,
+        expectedStagesMatch:
+          metrics.expectedStagesMatch,
         expectedStages: metrics.expectedStages,
         actualStageNames: metrics.stages.map(
           (stage) => stage.name
@@ -373,10 +375,10 @@ export default async function handler(req, res) {
       },
     });
   } catch (error) {
-    console.error(
-      "Fulfillment API failed:",
-      error.message
-    );
+    console.error("Fulfillment API failed:", {
+      message: error.message,
+      stack: error.stack,
+    });
 
     return res.status(500).json({
       success: false,
