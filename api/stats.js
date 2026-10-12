@@ -2,13 +2,14 @@ const GHL_BASE_URL = "https://services.leadconnectorhq.com";
 const API_VERSION = "2021-07-28";
 
 const LOCATION_ID = "A0gpQEZUjXc6m3mzsCUH";
+const TIME_ZONE = "Africa/Cairo";
 
 const PAGE_SIZE = 100;
 const MAX_PAGES = 200;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 /**
- * Validate a YYYY-MM-DD date and parse it as UTC midnight.
+ * Validate a YYYY-MM-DD date.
  */
 function parseDate(value, fieldName) {
   if (!value) return null;
@@ -26,11 +27,121 @@ function parseDate(value, fieldName) {
     throw new Error(`Invalid ${fieldName}`);
   }
 
-  return date;
+  return value;
 }
 
 /**
- * Send an authenticated request to HighLevel.
+ * Format a date using the restaurant's timezone.
+ */
+function getZonedParts(date, timeZone = TIME_ZONE) {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  });
+
+  const parts = formatter.formatToParts(date);
+  const result = {};
+
+  for (const part of parts) {
+    if (part.type !== "literal") {
+      result[part.type] = part.value;
+    }
+  }
+
+  return {
+    year: Number(result.year),
+    month: Number(result.month),
+    day: Number(result.day),
+    hour: Number(result.hour),
+    minute: Number(result.minute),
+    second: Number(result.second),
+  };
+}
+
+/**
+ * Return YYYY-MM-DD in the restaurant's timezone.
+ */
+function getZonedDateString(date) {
+  const parts = getZonedParts(date);
+
+  return [
+    parts.year,
+    String(parts.month).padStart(2, "0"),
+    String(parts.day).padStart(2, "0"),
+  ].join("-");
+}
+
+/**
+ * Add calendar days to a YYYY-MM-DD date.
+ *
+ * UTC is used here only for calendar arithmetic.
+ * The result is interpreted later in Africa/Cairo.
+ */
+function addCalendarDays(dateString, days) {
+  const date = new Date(`${dateString}T00:00:00.000Z`);
+
+  date.setUTCDate(date.getUTCDate() + days);
+
+  return date.toISOString().slice(0, 10);
+}
+
+/**
+ * Convert a local date/time in a timezone to a UTC Date.
+ *
+ * Iterative conversion avoids assuming Cairo always has
+ * the same UTC offset throughout the year.
+ */
+function zonedDateTimeToUtc(
+  dateString,
+  hour = 0,
+  minute = 0,
+  second = 0
+) {
+  const [year, month, day] = dateString.split("-").map(Number);
+
+  const targetUtc = Date.UTC(
+    year,
+    month - 1,
+    day,
+    hour,
+    minute,
+    second
+  );
+
+  let candidate = targetUtc;
+
+  for (let i = 0; i < 4; i++) {
+    const parts = getZonedParts(new Date(candidate));
+
+    const representedUtc = Date.UTC(
+      parts.year,
+      parts.month - 1,
+      parts.day,
+      parts.hour,
+      parts.minute,
+      parts.second
+    );
+
+    const difference = targetUtc - representedUtc;
+
+    if (difference === 0) {
+      break;
+    }
+
+    candidate += difference;
+  }
+
+  return new Date(candidate);
+}
+
+/**
+ * Send an authenticated GET request to HighLevel.
  */
 async function ghlRequest(path, params = {}) {
   const token = process.env.GHL_API_KEY;
@@ -71,6 +182,10 @@ async function ghlRequest(path, params = {}) {
 
 /**
  * Fetch all available orders using pagination.
+ *
+ * We retain full available history because customer
+ * classification requires checking previous orders.
+ *
  * Duplicate order IDs are ignored.
  */
 async function fetchAllOrders() {
@@ -141,137 +256,189 @@ function getValidCreatedAt(order) {
 }
 
 /**
- * Return orders with completed status.
+ * Safely convert a monetary amount to a number.
  */
-function getCompletedOrders(orders) {
-  return orders.filter(
-    (order) => order.status === "completed"
-  );
+function getAmount(order) {
+  const amount = Number(order.amount);
+
+  return Number.isFinite(amount) ? amount : 0;
 }
 
 /**
- * Sum order amounts safely.
+ * Sum monetary amounts.
  */
 function sumAmount(orders) {
   return Number(
     orders
-      .reduce((total, order) => {
-        const amount = Number(order.amount);
-
-        return (
-          total +
-          (Number.isFinite(amount) ? amount : 0)
-        );
-      }, 0)
+      .reduce((total, order) => total + getAmount(order), 0)
       .toFixed(2)
   );
 }
 
 /**
- * Calculate order and customer analytics.
+ * Count orders by payment status.
  *
- * Customer behavior metrics use completed orders.
- * Historical comparisons use all available fetched orders.
+ * These counts do not depend on order completion status.
  */
-function calculateMetrics(orders, startDate, endDate) {
-  const endExclusive = new Date(
-    endDate.getTime() + DAY_MS
+function getPaymentMetrics(orders) {
+  const paid = orders.filter(
+    order => order.paymentStatus === "paid"
   );
 
-  const validDatedOrders = orders
-    .map((order) => ({
+  const unpaid = orders.filter(
+    order => order.paymentStatus === "unpaid"
+  );
+
+  const refunded = orders.filter(
+    order => order.paymentStatus === "refunded"
+  );
+
+  const partiallyPaid = orders.filter(
+    order => order.paymentStatus === "partially_paid"
+  );
+
+  const knownStatuses = new Set([
+    "paid",
+    "unpaid",
+    "refunded",
+    "partially_paid",
+  ]);
+
+  const otherPaymentStatus = orders.filter(
+    order => !knownStatuses.has(order.paymentStatus)
+  );
+
+  return {
+    paid,
+    unpaid,
+    refunded,
+    partiallyPaid,
+    otherPaymentStatus,
+  };
+}
+
+/**
+ * Calculate the start of a selected date in Cairo time.
+ *
+ * Date query parameters represent calendar dates in
+ * Africa/Cairo, not UTC dates.
+ */
+function getPeriodBoundaries(startDate, endDate) {
+  const start = zonedDateTimeToUtc(startDate);
+
+  const endExclusiveDate = addCalendarDays(endDate, 1);
+  const endExclusive = zonedDateTimeToUtc(endExclusiveDate);
+
+  return {
+    start,
+    endExclusive,
+    endExclusiveDate,
+  };
+}
+
+/**
+ * Calculate dashboard metrics.
+ */
+function calculateMetrics(orders, startDate, endDate) {
+  const {
+    start,
+    endExclusive,
+  } = getPeriodBoundaries(startDate, endDate);
+
+  const validEntries = orders
+    .map(order => ({
       order,
       createdAt: getValidCreatedAt(order),
     }))
-    .filter((entry) => entry.createdAt !== null);
+    .filter(entry => entry.createdAt !== null);
 
-  // Orders created inside the selected date range.
-  const filteredEntries = validDatedOrders.filter(
+  const invalidDateCount = orders.length - validEntries.length;
+
+  const periodEntries = validEntries.filter(
     ({ createdAt }) =>
-      createdAt >= startDate &&
+      createdAt >= start &&
       createdAt < endExclusive
   );
 
-  const filteredOrders = filteredEntries.map(
-    ({ order }) => order
-  );
-
-  const completedOrders = getCompletedOrders(
-    filteredOrders
-  );
-
-  const paidOrders = completedOrders.filter(
-    (order) => order.paymentStatus === "paid"
-  );
-
-  const unpaidOrders = completedOrders.filter(
-    (order) => order.paymentStatus === "unpaid"
-  );
-
-  const unknownPaymentOrders = completedOrders.filter(
-    (order) =>
-      order.paymentStatus !== "paid" &&
-      order.paymentStatus !== "unpaid"
-  );
-
-  // ----------------------------------------
-  // 1. ORDER ANALYTICS
-  // ----------------------------------------
-
-  const orderMetrics = {
-    orders: {
-      total: completedOrders.length,
-      paid: paidOrders.length,
-      unpaid: unpaidOrders.length,
-      otherPaymentStatus: unknownPaymentOrders.length,
-      otherOrderStatuses:
-        filteredOrders.length - completedOrders.length,
-    },
-
-    orderValue: {
-      total: sumAmount(completedOrders),
-      paid: sumAmount(paidOrders),
-      unpaid: sumAmount(unpaidOrders),
-      currency: "EGP",
-    },
-
-    dataQuality: {
-      ordersInSelectedPeriod: filteredOrders.length,
-      completedOrders: completedOrders.length,
-      unknownPaymentStatus:
-        unknownPaymentOrders.length,
-    },
-  };
-
-  // ----------------------------------------
-  // 2. CUSTOMER ANALYTICS
-  // ----------------------------------------
-
-  const allCompletedEntries = validDatedOrders.filter(
-    ({ order }) => order.status === "completed"
+  const periodOrders = periodEntries.map(
+    entry => entry.order
   );
 
   /*
-   * Store order history for each customer.
+   * Main order metrics include every order created
+   * within the selected period, regardless of status.
+   */
+  const totalOrderValue = sumAmount(periodOrders);
+
+  const payment = getPaymentMetrics(periodOrders);
+
+  const completedOrders = periodOrders.filter(
+    order => order.status === "completed"
+  );
+
+  const orderStatusCounts = {};
+
+  for (const order of periodOrders) {
+    const status = order.status || "unknown";
+
+    orderStatusCounts[status] =
+      (orderStatusCounts[status] || 0) + 1;
+  }
+
+  const orderMetrics = {
+    orders: {
+      total: periodOrders.length,
+
+      paid: payment.paid.length,
+      unpaid: payment.unpaid.length,
+      refunded: payment.refunded.length,
+      partiallyPaid: payment.partiallyPaid.length,
+      otherPaymentStatus: payment.otherPaymentStatus.length,
+
+      completed: completedOrders.length,
+
+      otherOrderStatuses:
+        periodOrders.length - completedOrders.length,
+
+      statusCounts: orderStatusCounts,
+    },
+
+    orderValue: {
+      total: totalOrderValue,
+
+      paid: sumAmount(payment.paid),
+      unpaid: sumAmount(payment.unpaid),
+      refunded: sumAmount(payment.refunded),
+      partiallyPaid: sumAmount(payment.partiallyPaid),
+      otherPaymentStatus: sumAmount(
+        payment.otherPaymentStatus
+      ),
+
+      currency: "EGP",
+    },
+  };
+
+  /*
+   * Customer mix:
    *
-   * totalOrders:
-   * All completed orders available for this customer.
+   * Customers must have at least one order in the selected
+   * period and a valid contactId.
    *
-   * ordersInPeriod:
-   * Completed orders within the selected period.
+   * A customer is returning if an order exists before the
+   * beginning of the selected period.
    *
-   * firstOrderAt:
-   * Earliest completed order available in the dataset.
+   * Classification uses all available order statuses.
    */
   const customerHistory = new Map();
 
-  for (const { order, createdAt } of allCompletedEntries) {
+  for (const { order, createdAt } of validEntries) {
     if (!order.contactId) continue;
 
     if (!customerHistory.has(order.contactId)) {
       customerHistory.set(order.contactId, {
         firstOrderAt: createdAt,
         ordersInPeriod: 0,
+        previousOrderCount: 0,
         totalOrders: 0,
       });
     }
@@ -280,15 +447,19 @@ function calculateMetrics(orders, startDate, endDate) {
 
     customer.totalOrders += 1;
 
+    if (createdAt < customer.firstOrderAt) {
+      customer.firstOrderAt = createdAt;
+    }
+
+    if (createdAt < start) {
+      customer.previousOrderCount += 1;
+    }
+
     if (
-      createdAt >= startDate &&
+      createdAt >= start &&
       createdAt < endExclusive
     ) {
       customer.ordersInPeriod += 1;
-    }
-
-    if (createdAt < customer.firstOrderAt) {
-      customer.firstOrderAt = createdAt;
     }
   }
 
@@ -299,31 +470,17 @@ function calculateMetrics(orders, startDate, endDate) {
   let activeCustomerOrderCount = 0;
 
   for (const customer of customerHistory.values()) {
-    // Customers must have at least one completed order
-    // within the selected period to be active.
     if (customer.ordersInPeriod === 0) continue;
 
     activeCustomers += 1;
-
     activeCustomerOrderCount += customer.ordersInPeriod;
 
-    /*
-     * A customer is returning if they have at least one
-     * completed order before another completed order.
-     *
-     * This includes previous orders inside the selected
-     * period or before the selected period.
-     */
-        const hasPreviousOrder =
-      customer.totalOrders > 1;
-
-    if (hasPreviousOrder) {
+    if (customer.previousOrderCount > 0) {
       returningCustomers += 1;
     } else {
       newCustomers += 1;
     }
-    // Repeat buyers have at least two completed orders
-    // within the selected period.
+
     if (customer.ordersInPeriod >= 2) {
       repeatBuyers += 1;
     }
@@ -332,8 +489,7 @@ function calculateMetrics(orders, startDate, endDate) {
   const returningCustomerRate = activeCustomers > 0
     ? Number(
         (
-          (returningCustomers / activeCustomers) *
-          100
+          returningCustomers / activeCustomers * 100
         ).toFixed(2)
       )
     : 0;
@@ -341,8 +497,7 @@ function calculateMetrics(orders, startDate, endDate) {
   const repeatBuyerRate = activeCustomers > 0
     ? Number(
         (
-          (repeatBuyers / activeCustomers) *
-          100
+          repeatBuyers / activeCustomers * 100
         ).toFixed(2)
       )
     : 0;
@@ -350,8 +505,7 @@ function calculateMetrics(orders, startDate, endDate) {
   const ordersPerCustomer = activeCustomers > 0
     ? Number(
         (
-          activeCustomerOrderCount /
-          activeCustomers
+          activeCustomerOrderCount / activeCustomers
         ).toFixed(2)
       )
     : 0;
@@ -370,9 +524,68 @@ function calculateMetrics(orders, startDate, endDate) {
     },
   };
 
+  /*
+   * Orders by hour in the restaurant's timezone.
+   *
+   * The chart represents the selected period. For Today,
+   * it naturally represents today's hourly distribution.
+   */
+  const hourlyCounts = Array.from(
+    { length: 24 },
+    (_, hour) => ({
+      hour,
+      label: `${String(hour).padStart(2, "0")}:00`,
+      orders: 0,
+    })
+  );
+
+  for (const { createdAt } of periodEntries) {
+    const parts = getZonedParts(createdAt);
+    hourlyCounts[parts.hour].orders += 1;
+  }
+
+  /*
+   * Keep the existing completed-order payment breakdown
+   * available for diagnostics and backward compatibility
+   * while the frontend is being updated.
+   */
+  const completedPayment = getPaymentMetrics(completedOrders);
+
+  const legacyMetrics = {
+    completedOrderValue: {
+      total: sumAmount(completedOrders),
+      paid: sumAmount(completedPayment.paid),
+      unpaid: sumAmount(completedPayment.unpaid),
+    },
+
+    completedOrders: {
+      total: completedOrders.length,
+      paid: completedPayment.paid.length,
+      unpaid: completedPayment.unpaid.length,
+      otherPaymentStatus:
+        completedPayment.otherPaymentStatus.length,
+    },
+  };
+
   return {
     ...orderMetrics,
     ...customerMetrics,
+
+    hourlyOrders: hourlyCounts,
+
+    legacy: legacyMetrics,
+
+    dataQuality: {
+      ordersInSelectedPeriod: periodOrders.length,
+      completedOrders: completedOrders.length,
+      invalidOrderDates: invalidDateCount,
+      ordersWithoutContactId: periodOrders.filter(
+        order => !order.contactId
+      ).length,
+      unknownPaymentStatus:
+        payment.otherPaymentStatus.length,
+      customerHistoryScope: "all_available_orders",
+    },
   };
 }
 
@@ -394,15 +607,9 @@ export default async function handler(req, res) {
   try {
     const now = new Date();
 
-    const defaultEndDate = now.toISOString().slice(0, 10);
-
-    const defaultStart = new Date(now);
-    defaultStart.setUTCDate(
-      defaultStart.getUTCDate() - 29
-    );
-
-    const defaultStartDate =
-      defaultStart.toISOString().slice(0, 10);
+    const today = getZonedDateString(now);
+    const defaultEndDate = today;
+    const defaultStartDate = addCalendarDays(today, -29);
 
     const requestedStart = req.query.startDate;
     const requestedEnd = req.query.endDate;
@@ -438,12 +645,13 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
+
       source: "highlevel_payments_orders",
 
       period: {
-        startDate: requestedStart || defaultStartDate,
-        endDate: requestedEnd || defaultEndDate,
-        timezone: "UTC",
+        startDate,
+        endDate,
+        timezone: TIME_ZONE,
       },
 
       data: {
@@ -459,10 +667,7 @@ export default async function handler(req, res) {
       },
     });
   } catch (error) {
-    console.error(
-      "Dashboard API failed:",
-      error.message
-    );
+    console.error("Dashboard API failed:", error.message);
 
     return res.status(500).json({
       success: false,
