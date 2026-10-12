@@ -115,9 +115,17 @@ select:focus-visible {
   text-align: left;
 }
 
-.chev { font-size: 12px; transition: transform .15s; }
+.chev {
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform .18s ease;
+  margin-right: 3px;
+}
+.nav-group.collapsed .chev { transform: rotate(-45deg); }
 
-.nav-group.collapsed .chev { transform: rotate(-90deg); }
 .nav-group.collapsed .group-items { display: none; }
 
 .group-items { display: grid; gap: 3px; }
@@ -612,7 +620,8 @@ select:focus-visible {
   height: 220px;
 }
 
-.chart.small { height: 205px; }\n
+.chart.small { height: 205px; }
+
 .chart.chart-large { height: 286px; }
 .chart.chart-donut { height: 210px; max-width: 270px; margin: 0 auto 8px; }
 .donut-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none; }
@@ -948,7 +957,8 @@ select:focus-visible {
   .chart.chart-donut { height: 200px; }
   .fulfillment-stage { grid-template-columns:minmax(92px,.9fr) minmax(45px,1fr) 24px; gap:8px; }
 }
-\n</style>
+
+</style>
 </head>
 
 <body>
@@ -967,116 +977,116 @@ select:focus-visible {
 
   <nav class="nav" aria-label="Main navigation">
 
-    <div class="nav-group">
-      <button class="group-toggle" type="button" aria-expanded="true">
-        <span>OVERVIEW</span><span class="chev">â</span>
+    <div class="nav-group collapsed">
+      <button class="group-toggle" type="button" aria-expanded="false">
+        <span>OVERVIEW</span><span class="chev" aria-hidden="true"></span>
       </button>
       <div class="group-items">
         <button class="nav-item active" type="button" data-page="overview">
-          <span class="nav-icon">â«</span>
+          <span class="nav-icon">&#9673;</span>
           <span class="nav-text">Overview</span>
         </button>
       </div>
     </div>
 
-    <div class="nav-group">
-      <button class="group-toggle" type="button" aria-expanded="true">
-        <span>ORDERS & OPERATIONS</span><span class="chev">â</span>
+    <div class="nav-group collapsed">
+      <button class="group-toggle" type="button" aria-expanded="false">
+        <span>ORDERS & OPERATIONS</span><span class="chev" aria-hidden="true"></span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="orders">
-          <span class="nav-icon">â¤</span>
+          <span class="nav-icon">&#9635;</span>
           <span class="nav-text">Orders</span>
           <span class="badge live">V1</span>
         </button>
         <button class="nav-item" type="button" data-page="abandoned">
-          <span class="nav-icon">â·</span>
+          <span class="nav-icon">&#9675;</span>
           <span class="nav-text">Abandoned Checkouts</span>
           <span class="badge">Planned</span>
         </button>
       </div>
     </div>
 
-    <div class="nav-group">
-      <button class="group-toggle" type="button" aria-expanded="true">
-        <span>CUSTOMERS</span><span class="chev">â</span>
+    <div class="nav-group collapsed">
+      <button class="group-toggle" type="button" aria-expanded="false">
+        <span>CUSTOMERS</span><span class="chev" aria-hidden="true"></span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="customers">
-          <span class="nav-icon">â§</span>
+          <span class="nav-icon">&#9827;</span>
           <span class="nav-text">Customer Analytics</span>
           <span class="badge live">V1</span>
         </button>
         <button class="nav-item" type="button" data-page="segments">
-          <span class="nav-icon">â</span>
+          <span class="nav-icon">&#9678;</span>
           <span class="nav-text">Customer Segments</span>
           <span class="badge">Planned</span>
         </button>
       </div>
     </div>
 
-    <div class="nav-group">
-      <button class="group-toggle" type="button" aria-expanded="true">
-        <span>CAMPAIGNS & QR</span><span class="chev">â</span>
+    <div class="nav-group collapsed">
+      <button class="group-toggle" type="button" aria-expanded="false">
+        <span>CAMPAIGNS & QR</span><span class="chev" aria-hidden="true"></span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="birthday">
-          <span class="nav-icon">â³</span>
+          <span class="nav-icon">&#10022;</span>
           <span class="nav-text">Birthday</span>
           <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="winback">
-          <span class="nav-icon">â»</span>
+          <span class="nav-icon">&#8635;</span>
           <span class="nav-text">Win-Back</span>
           <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="slowtime">
-          <span class="nav-icon">â·</span>
+          <span class="nav-icon">&#9675;</span>
           <span class="nav-text">Slow-Time</span>
           <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="qr">
-          <span class="nav-icon">â¦</span>
+          <span class="nav-icon">&#9638;</span>
           <span class="nav-text">QR Ecosystem</span>
           <span class="badge">Planned</span>
         </button>
       </div>
     </div>
 
-    <div class="nav-group">
-      <button class="group-toggle" type="button" aria-expanded="true">
-        <span>RETENTION & LOYALTY</span><span class="chev">â</span>
+    <div class="nav-group collapsed">
+      <button class="group-toggle" type="button" aria-expanded="false">
+        <span>RETENTION & LOYALTY</span><span class="chev" aria-hidden="true"></span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="retention">
-          <span class="nav-icon">â³</span>
+          <span class="nav-icon">&#10227;</span>
           <span class="nav-text">Retention</span>
           <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="loyalty">
-          <span class="nav-icon">â</span>
+          <span class="nav-icon">&#9734;</span>
           <span class="nav-text">Loyalty & Rewards</span>
           <span class="badge">Planned</span>
         </button>
       </div>
     </div>
 
-    <div class="nav-group">
-      <button class="group-toggle" type="button" aria-expanded="true">
-        <span>REVIEWS & REPUTATION</span><span class="chev">â</span>
+    <div class="nav-group collapsed">
+      <button class="group-toggle" type="button" aria-expanded="false">
+        <span>REVIEWS & REPUTATION</span><span class="chev" aria-hidden="true"></span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="reviews">
-          <span class="nav-icon">â</span>
+          <span class="nav-icon">&#9734;</span>
           <span class="nav-text">Reviews Overview</span>
           <span class="badge">Planned</span>
         </button>
       </div>
     </div>
 
-    <div class="nav-group">
-      <button class="group-toggle" type="button" aria-expanded="true">
-        <span>MANAGEMENT</span><span class="chev">â</span>
+    <div class="nav-group collapsed">
+      <button class="group-toggle" type="button" aria-expanded="false">
+        <span>MANAGEMENT</span><span class="chev" aria-hidden="true"></span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="attention">
@@ -1085,12 +1095,12 @@ select:focus-visible {
           <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="reports">
-          <span class="nav-icon">â¥</span>
+          <span class="nav-icon">&#9637;</span>
           <span class="nav-text">Reports</span>
           <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="settings">
-          <span class="nav-icon">â</span>
+          <span class="nav-icon">&#9881;</span>
           <span class="nav-text">Settings</span>
         </button>
       </div>
@@ -1105,7 +1115,7 @@ select:focus-visible {
         <span id="connectionText">Connecting to HighLevel</span>
       </div>
       <div class="connection-text" id="connectionDetails">
-        Checking dashboard data sourceâ¦
+        Checking dashboard data source&#8230;
       </div>
     </div>
   </div>
@@ -1121,7 +1131,7 @@ select:focus-visible {
         id="mobileMenu"
         class="icon-button mobile-menu"
         type="button"
-        aria-label="Open navigation">â°</button>
+        aria-label="Open navigation">&#9776;</button>
     </div>
 
     <div class="top-right">
@@ -1141,7 +1151,7 @@ select:focus-visible {
         class="icon-button"
         type="button"
         aria-label="Refresh dashboard"
-        title="Refresh dashboard">â»</button>
+        title="Refresh dashboard">&#8635;</button>
 
       <!-- SECONDARY LOGO -->
       <div class="profile" title="RxGrowth">
@@ -1167,11 +1177,11 @@ select:focus-visible {
       <div class="heading-actions">
         <div class="updated">
           Last updated
-          <strong id="lastUpdated">Waiting for dataâ¦</strong>
+          <strong id="lastUpdated">Waiting for data&#8230;</strong>
         </div>
 
         <button id="refreshMain" class="primary" type="button">
-          <span>â»</span> Refresh data
+          <span>&#8635;</span> Refresh data
         </button>
       </div>
 
@@ -1187,23 +1197,23 @@ select:focus-visible {
     <section id="overviewPage" class="page">
       <div class="metrics overview-kpis">
         <article class="metric" style="--accent:#5DEFFF">
-          <div class="metric-top"><div class="metric-label">Total Order Value</div><div class="metric-icon">Â¤</div></div>
-          <div class="metric-value loading" id="totalOrderValue">â</div>
+          <div class="metric-top"><div class="metric-label">Total Order Value</div><div class="metric-icon">&#164;</div></div>
+          <div class="metric-value loading" id="totalOrderValue">&#8212;</div>
           <div class="metric-foot"><span class="foot-dot"></span>All orders created in selected period</div>
         </article>
         <article class="metric" style="--accent:#5DEFFF">
-          <div class="metric-top"><div class="metric-label">Total Orders</div><div class="metric-icon">â¤</div></div>
-          <div class="metric-value loading" id="totalOrders">â</div>
+          <div class="metric-top"><div class="metric-label">Total Orders</div><div class="metric-icon">&#9635;</div></div>
+          <div class="metric-value loading" id="totalOrders">&#8212;</div>
           <div class="metric-foot"><span class="foot-dot"></span>All orders created in selected period</div>
         </article>
         <article class="metric" style="--accent:#A5B4FC;--icon-bg:rgba(165,180,252,.08)">
-          <div class="metric-top"><div class="metric-label">Average Order Value</div><div class="metric-icon">â</div></div>
-          <div class="metric-value loading" id="averageOrderValue">â</div>
-          <div class="metric-foot"><span class="foot-dot"></span>Total order value Ã· total orders</div>
+          <div class="metric-top"><div class="metric-label">Average Order Value</div><div class="metric-icon">&#8599;</div></div>
+          <div class="metric-value loading" id="averageOrderValue">&#8212;</div>
+          <div class="metric-foot"><span class="foot-dot"></span>Total order value &#247; total orders</div>
         </article>
         <article class="metric" style="--accent:#4ADE80;--icon-bg:rgba(74,222,128,.08)">
-          <div class="metric-top"><div class="metric-label">Paid Orders</div><div class="metric-icon">â</div></div>
-          <div class="metric-value loading" id="paidOrders">â</div>
+          <div class="metric-top"><div class="metric-label">Paid Orders</div><div class="metric-icon">&#10003;</div></div>
+          <div class="metric-value loading" id="paidOrders">&#8212;</div>
           <div class="metric-foot"><span class="foot-dot"></span>Recorded as paid in HighLevel</div>
         </article>
       </div>
@@ -1217,7 +1227,7 @@ select:focus-visible {
         <article class="panel">
           <div class="panel-head">
             <div class="panel-title">Orders by Hour</div>
-            <div class="panel-sub">Order creation activity across the selected period Â· Cairo time</div>
+            <div class="panel-sub">Order creation activity across the selected period &#183; Cairo time</div>
           </div>
           <div class="panel-body">
             <div class="chart chart-large"><canvas id="ordersByHourChart"></canvas></div>
@@ -1230,10 +1240,10 @@ select:focus-visible {
             <div class="panel-sub">Unique customers ordering today, classified by available order history</div>
           </div>
           <div class="panel-body">
-            <div class="chart chart-donut"><canvas id="customerMixChart"></canvas><div class="donut-center"><strong id="todayCustomerTotal">â</strong><span>Customers today</span></div></div>
+            <div class="chart chart-donut"><canvas id="customerMixChart"></canvas><div class="donut-center"><strong id="todayCustomerTotal">&#8212;</strong><span>Customers today</span></div></div>
             <div class="legend">
-              <div class="legend-item"><span class="legend-dot" style="background:#5DEFFF"></span>New customers <strong id="todayNewCustomers">â</strong></div>
-              <div class="legend-item"><span class="legend-dot" style="background:#A5B4FC"></span>Returning customers <strong id="todayReturningCustomers">â</strong></div>
+              <div class="legend-item"><span class="legend-dot" style="background:#5DEFFF"></span>New customers <strong id="todayNewCustomers">&#8212;</strong></div>
+              <div class="legend-item"><span class="legend-dot" style="background:#A5B4FC"></span>Returning customers <strong id="todayReturningCustomers">&#8212;</strong></div>
             </div>
             <div class="data-note" id="customerMixNote">Classification uses available HighLevel order history.</div>
           </div>
@@ -1243,14 +1253,12 @@ select:focus-visible {
       <div class="charts overview-bottom">
         <article class="panel">
           <div class="panel-head">
-            <div class="panel-title">Recent Activity</div>
-            <div class="panel-sub">Verified activity events from connected sources</div>
+            <div class="panel-title">Weekly Order Trends</div>
+            <div class="panel-sub">Order volume over the last 7 days</div>
           </div>
           <div class="panel-body">
-            <div class="activity-empty">
-              <span class="activity-empty-icon">â·</span>
-              <div><strong>Activity feed not connected yet</strong><p>We won't infer historical events from current order status. This panel will activate when a reliable event source is connected.</p></div>
-            </div>
+            <div class="chart chart-large"><canvas id="weeklyOrdersChart"></canvas></div>
+            <div class="data-note" id="weeklyOrdersNote">Daily order counts use Cairo time.</div>
           </div>
         </article>
 
@@ -1260,9 +1268,9 @@ select:focus-visible {
             <span class="tag" id="fulfillmentStatus">LOADING</span>
           </div>
           <div class="panel-body">
-            <div class="fulfillment-summary"><strong id="fulfillmentTotal">â</strong><span>opportunities in pipeline</span></div>
+            <div class="fulfillment-summary"><strong id="fulfillmentTotal">&#8212;</strong><span>opportunities in pipeline</span></div>
             <div id="fulfillmentStages" class="fulfillment-stages">
-              <div class="fulfillment-loading">Loading fulfillment stagesâ¦</div>
+              <div class="fulfillment-loading">Loading fulfillment stages&#8230;</div>
             </div>
             <div class="data-note" id="fulfillmentNote">Operational stage counts come from the Orders Opportunity Pipeline.</div>
           </div>
@@ -1270,27 +1278,27 @@ select:focus-visible {
       </div>
 
       <div class="notice">
-        <div class="notice-icon">â</div>
+        <div class="notice-icon">&#9432;</div>
         <div><div class="notice-title">Data context</div><div class="notice-text">Order value and payment status come from HighLevel Payments Orders. Fulfillment counts come from the Orders Opportunity Pipeline and are not used to calculate revenue. Customer classification depends on available order history; it may not represent a customer's complete lifetime history.</div></div>
       </div>
     </section>
 
     <section id="placeholderPage" class="page" hidden>
       <div class="placeholder">
-        <div class="placeholder-icon" id="placeholderIcon">â</div>
+        <div class="placeholder-icon" id="placeholderIcon">Ã¢âË</div>
         <div>
           <h2 id="placeholderTitle">Module planned</h2>
           <p id="placeholderDescription">
             This module will be enabled after its data source,
             calculation rules, and workflows are verified.
           </p>
-          <span class="planned">PLANNED Â· NOT CONNECTED</span>
+          <span class="planned">PLANNED &#183; NOT CONNECTED</span>
         </div>
       </div>
     </section>
 
     <footer class="footer">
-      <div><strong>RxGrowth</strong> Â· Restaurant OS</div>
+      <div><strong>RxGrowth</strong> &#183; Restaurant OS</div>
       <div>Data source: HighLevel Payments Orders API</div>
     </footer>
 
@@ -1312,7 +1320,8 @@ const currencyFormat = new Intl.NumberFormat("en-US", {
 
 let charts = {
   hourly: null,
-  customers: null
+  customers: null,
+  weekly: null
 };
 
 let controller = null;
@@ -1323,28 +1332,28 @@ const pages = {
     "Overview",
     "Overview",
     "A clear view of today's restaurant performance.",
-    "â«"
+    "â"
   ],
   orders: [
     "Orders",
     "Orders & Operations",
     "Orders",
     "Order records and payment status from HighLevel.",
-    "â¤"
+    "â£"
   ],
   abandoned: [
     "Abandoned Checkouts",
     "Orders & Operations",
     "Abandoned Checkouts",
     "Checkout recovery will be available after checkout events are connected.",
-    "â·"
+    "â"
   ],
   customers: [
     "Customer Analytics",
     "Customers",
     "Customers",
     "Customer activity and repeat purchasing behavior.",
-    "â§"
+    "â£"
   ],
   segments: [
     "Customer Segments",
@@ -1358,7 +1367,7 @@ const pages = {
     "Campaigns & QR",
     "Birthday",
     "Birthday campaign performance and coupon attribution.",
-    "â³"
+    "â¦"
   ],
   winback: [
     "Win-Back Campaign",
@@ -1372,7 +1381,7 @@ const pages = {
     "Campaigns & QR",
     "Slow-Time",
     "Slow-day offers, redemptions, and attributed order value.",
-    "â·"
+    "â"
   ],
   qr: [
     "QR Ecosystem",
@@ -1535,7 +1544,7 @@ function destroyCharts() {
   Object.values(charts).forEach(chart => {
     if (chart) chart.destroy();
   });
-  charts = { hourly: null, customers: null };
+  charts = { hourly: null, customers: null, weekly: null };
 }
 
 function renderHourlyChart(hourlyOrders) {
@@ -1596,13 +1605,108 @@ function renderHourlyChart(hourlyOrders) {
   });
 }
 
+function renderWeeklyOrders(dailyResults) {
+  if (typeof Chart === "undefined") throw new Error("Chart library could not be loaded.");
+
+  const labels = dailyResults.map(item => item.label);
+  const values = dailyResults.map(item => Number(item.orders) || 0);
+  const canvas = $("weeklyOrdersChart");
+  const ctx = canvas.getContext("2d");
+  const gradient = ctx.createLinearGradient(0, 0, 0, 260);
+  gradient.addColorStop(0, "rgba(0, 210, 230, .78)");
+  gradient.addColorStop(.55, "rgba(0, 170, 195, .42)");
+  gradient.addColorStop(1, "rgba(0, 115, 140, .12)");
+
+  if (charts.weekly) charts.weekly.destroy();
+  charts.weekly = new Chart(canvas, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: "Orders",
+        data: values,
+        backgroundColor: gradient,
+        borderColor: "rgba(93,239,255,.72)",
+        borderWidth: 1,
+        borderRadius: 7,
+        borderSkipped: false,
+        maxBarThickness: 42,
+        categoryPercentage: .72,
+        barPercentage: .82
+      }]
+    },
+    options: {
+      ...chartDefaults(),
+      interaction: { intersect: false, mode: "index" },
+      scales: {
+        x: {
+          grid: { display: false },
+          border: { display: false },
+          ticks: { color: "#AAB8CB", font: { size: 10 }, maxRotation: 0 }
+        },
+        y: {
+          beginAtZero: true,
+          suggestedMax: Math.max(3, ...values),
+          grid: { color: "rgba(148,163,184,.12)" },
+          border: { display: false },
+          ticks: {
+            precision: 0,
+            color: "#8FA0B7",
+            font: { size: 9 },
+            callback: value => numberFormat.format(value)
+          }
+        }
+      },
+      plugins: {
+        ...chartDefaults().plugins,
+        tooltip: {
+          ...chartDefaults().plugins.tooltip,
+          callbacks: {
+            title: items => dailyResults[items[0]?.dataIndex]?.date || "",
+            label: context => ` ${formatNumber(context.raw)} orders`
+          }
+        }
+      }
+    }
+  });
+}
+
+async function loadWeeklyOrders(signal) {
+  const today = restaurantDateString();
+  const dailyResults = [];
+
+  for (let daysAgo = 6; daysAgo >= 0; daysAgo--) {
+    const date = shiftDateString(today, -daysAgo);
+    const params = new URLSearchParams({ startDate: date, endDate: date });
+    const result = await fetchJson(`/api/stats?${params.toString()}`, signal);
+
+    if (!result.data?.orders) {
+      throw new Error(`Daily order data is unavailable for ${date}`);
+    }
+
+    const dayLabel = new Intl.DateTimeFormat("en-US", {
+      timeZone: RESTAURANT_TIME_ZONE,
+      weekday: "short"
+    }).format(new Date(`${date}T12:00:00Z`));
+
+    dailyResults.push({
+      date,
+      label: dayLabel,
+      orders: Number(result.data.orders.total) || 0
+    });
+  }
+
+  renderWeeklyOrders(dailyResults);
+  $("weeklyOrdersNote").textContent = `Daily order counts Â· ${dailyResults[0].date} to ${dailyResults[6].date} Â· Cairo time`;
+}
+
 function renderCustomerMix(customers) {
   if (typeof Chart === "undefined") return;
   const fresh = Number(customers?.new) || 0;
   const returning = Number(customers?.returning) || 0;
   $("todayNewCustomers").textContent = formatNumber(fresh);
   $("todayReturningCustomers").textContent = formatNumber(returning);
-  $("todayCustomerTotal").textContent = formatNumber(Number(customers?.unique ?? (fresh + returning)));
+  $("todayCustomerTotal").textContent = formatNumber(fresh + returning);
 
   if (charts.customers) charts.customers.destroy();
   charts.customers = new Chart($("customerMixChart"), {
@@ -1743,9 +1847,10 @@ async function loadDashboard() {
   const statsTask = fetchJson(`/api/stats?${statsParams.toString()}`, signal);
   const todayTask = fetchJson(`/api/stats?${todayParams.toString()}`, signal);
   const fulfillmentTask = fetchJson("/api/fulfillment", signal);
+  const weeklyTask = loadWeeklyOrders(signal);
 
-  const [statsResult, todayResult, fulfillmentResult] = await Promise.allSettled([
-    statsTask, todayTask, fulfillmentTask
+  const [statsResult, todayResult, fulfillmentResult, weeklyResult] = await Promise.allSettled([
+    statsTask, todayTask, fulfillmentTask, weeklyTask
   ]);
 
   if (signal.aborted) return;
@@ -1788,6 +1893,11 @@ async function loadDashboard() {
     renderFulfillment(null);
   }
 
+  if (weeklyResult.status === "rejected" && !signal.aborted) {
+    console.error("Weekly order trends failed:", weeklyResult.reason);
+    $("weeklyOrdersNote").textContent = "Weekly order trends could not be loaded. Refresh to try again.";
+  }
+
   if (!statsLoaded && statsResult.status === "fulfilled") {
     setConnection(false, "Incomplete response", "The stats API returned an unexpected response.");
   }
@@ -1828,10 +1938,19 @@ function showPage(key) {
 
 document.querySelectorAll(".group-toggle").forEach(button => {
   button.addEventListener("click", () => {
-    const group = button.closest(".nav-group");
-    const collapsed = group.classList.toggle("collapsed");
+    const selectedGroup = button.closest(".nav-group");
+    const shouldOpen = selectedGroup.classList.contains("collapsed");
 
-    button.setAttribute("aria-expanded", String(!collapsed));
+    document.querySelectorAll(".nav-group").forEach(group => {
+      group.classList.add("collapsed");
+      const toggle = group.querySelector(".group-toggle");
+      if (toggle) toggle.setAttribute("aria-expanded", "false");
+    });
+
+    if (shouldOpen) {
+      selectedGroup.classList.remove("collapsed");
+      button.setAttribute("aria-expanded", "true");
+    }
   });
 });
 
