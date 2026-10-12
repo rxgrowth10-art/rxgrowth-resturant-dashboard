@@ -1333,7 +1333,7 @@ button:disabled .refresh-icon { opacity: .65; }
 
     <section id="placeholderPage" class="page" hidden>
       <div class="placeholder">
-        <div class="placeholder-icon" id="placeholderIcon">Ã¢âË</div>
+        <div class="placeholder-icon" id="placeholderIcon">â—ˆ</div>
         <div>
           <h2 id="placeholderTitle">Module planned</h2>
           <p id="placeholderDescription">
@@ -1380,84 +1380,84 @@ const pages = {
     "Overview",
     "Overview",
     "A clear view of today's restaurant performance.",
-    "â"
+    "◉"
   ],
   orders: [
     "Orders",
     "Orders & Operations",
     "Orders",
     "Order records and payment status from HighLevel.",
-    "â£"
+    "▣"
   ],
   abandoned: [
     "Abandoned Checkouts",
     "Orders & Operations",
     "Abandoned Checkouts",
     "Checkout recovery will be available after checkout events are connected.",
-    "â"
+    "○"
   ],
   customers: [
     "Customer Analytics",
     "Customers",
     "Customers",
     "Customer activity and repeat purchasing behavior.",
-    "â£"
+    "♣"
   ],
   segments: [
     "Customer Segments",
     "Customers",
     "Customer Segments",
     "Lifecycle segments will be calculated from verified order history.",
-    "â"
+    "◎"
   ],
   birthday: [
     "Birthday Campaign",
     "Campaigns & QR",
     "Birthday",
     "Birthday campaign performance and coupon attribution.",
-    "â¦"
+    "✦"
   ],
   winback: [
     "Win-Back Campaign",
     "Campaigns & QR",
     "Win-Back",
     "Reactivation campaign performance and attributed orders.",
-    "â»"
+    "↻"
   ],
   slowtime: [
     "Slow-Time Campaign",
     "Campaigns & QR",
     "Slow-Time",
     "Slow-day offers, redemptions, and attributed order value.",
-    "â"
+    "○"
   ],
   qr: [
     "QR Ecosystem",
     "Campaigns & QR",
     "QR Ecosystem",
     "QR analytics will appear when a reliable analytics source is connected.",
-    "â¦"
+    "▦"
   ],
   retention: [
     "Retention",
     "Retention & Loyalty",
     "Retention",
     "Retention trends and lapsed-customer analysis.",
-    "â³"
+    "⟳"
   ],
   loyalty: [
     "Loyalty & Rewards",
     "Retention & Loyalty",
     "Loyalty & Rewards",
     "Loyalty program activity and reward redemptions.",
-    "â"
+    "☆"
   ],
   reviews: [
     "Reviews Overview",
     "Reviews & Reputation",
     "Reviews Overview",
     "Review trends and unanswered feedback from a verified source.",
-    "â"
+    "☆"
   ],
   attention: [
     "Needs Attention",
@@ -1471,30 +1471,30 @@ const pages = {
     "Management",
     "Reports",
     "Reporting and export tools will be added after core metrics are validated.",
-    "â¥"
+    "▥"
   ],
   settings: [
     "Settings",
     "Settings",
     "Settings",
     "Restaurant connection and dashboard settings will be available here.",
-    "â"
+    "⚙"
   ]
 };
 
 function formatNumber(value) {
   const n = Number(value);
-  return Number.isFinite(n) ? numberFormat.format(n) : "â";
+  return Number.isFinite(n) ? numberFormat.format(n) : "—";
 }
 
 function formatMoney(value) {
   const n = Number(value);
-  return Number.isFinite(n) ? currencyFormat.format(n) : "â";
+  return Number.isFinite(n) ? currencyFormat.format(n) : "—";
 }
 
 function formatPercent(value) {
   const n = Number(value);
-  return Number.isFinite(n) ? `${numberFormat.format(n)}%` : "â";
+  return Number.isFinite(n) ? `${numberFormat.format(n)}%` : "—";
 }
 
 const RESTAURANT_TIME_ZONE = "Africa/Cairo";
@@ -1556,11 +1556,11 @@ function setLoading(isLoading) {
   });
 
   $("refresh").innerHTML = isLoading
-    ? "<span class="loading-dots">â¦</span>"
+    ? "<span class=\"loading-dots\">…</span>"
     : '<svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg>';
 
   $("refreshMain").innerHTML = isLoading
-    ? "<span class="loading-dots">â¦</span> Loading data"
+    ? "<span class=\"loading-dots\">…</span> Loading data"
     : '<span class="refresh-label-icon"><svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg></span> Refresh data';
 }
 
@@ -1747,7 +1747,7 @@ async function loadWeeklyOrders(signal) {
   }
 
   renderWeeklyOrders(dailyResults);
-  $("weeklyOrdersNote").textContent = `Daily order counts Â· ${dailyResults[0].date} to ${dailyResults[6].date} Â· Cairo time`;
+  $("weeklyOrdersNote").textContent = `Daily order counts · ${dailyResults[0].date} to ${dailyResults[6].date} · Cairo time`;
 }
 
 function renderCustomerMix(customers) {
@@ -1792,7 +1792,7 @@ function renderFulfillment(result) {
   const container = $("fulfillmentStages");
   if (!result?.success || !Array.isArray(result.data?.stages)) {
     $("fulfillmentStatus").textContent = "UNAVAILABLE";
-    $("fulfillmentTotal").textContent = "â";
+    $("fulfillmentTotal").textContent = "—";
     container.innerHTML = '<div class="fulfillment-empty">Fulfillment data could not be loaded. Refresh to try again.</div>';
     $("fulfillmentNote").textContent = "The stats dashboard remains available independently.";
     return;
@@ -1851,7 +1851,7 @@ function renderDashboard(result, period) {
   setConnection(
     true,
     "Connected to HighLevel",
-    `${formatNumber(result.diagnostics?.ordersFetched ?? 0)} orders fetched Â· ${period.startDate} to ${period.endDate}`
+    `${formatNumber(result.diagnostics?.ordersFetched ?? 0)} orders fetched · ${period.startDate} to ${period.endDate}`
   );
 
   removeLoadingStyles();
@@ -1894,15 +1894,15 @@ async function loadDashboard() {
   const today = restaurantDateString();
   const todayParams = new URLSearchParams({ startDate: today, endDate: today });
 
-  const statsTask = fetchJson(`/api/stats?${statsParams.toString()}`, signal);
-  const todayTask = fetchJson(`/api/stats?${todayParams.toString()}`, signal);
-  const fulfillmentTask = fetchJson("/api/fulfillment", signal);
-  const weeklyTask = loadWeeklyOrders(signal);
+  // Load the core dashboard sources first. The weekly chart makes seven
+  // additional stats requests, so it must not delay the main dashboard render.
+  const coreTasks = [
+    fetchJson(`/api/stats?${statsParams.toString()}`, signal),
+    fetchJson(`/api/stats?${todayParams.toString()}`, signal),
+    fetchJson("/api/fulfillment", signal)
+  ];
 
-  const [statsResult, todayResult, fulfillmentResult, weeklyResult] = await Promise.allSettled([
-    statsTask, todayTask, fulfillmentTask, weeklyTask
-  ]);
-
+  const [statsResult, todayResult, fulfillmentResult] = await Promise.allSettled(coreTasks);
   if (signal.aborted) return;
 
   let statsLoaded = false;
@@ -1930,9 +1930,9 @@ async function loadDashboard() {
     }
   } else {
     console.error("Today's customer mix failed:", todayResult.status === "rejected" ? todayResult.reason : "Missing customers data");
-    $("todayCustomerTotal").textContent = "â";
-    $("todayNewCustomers").textContent = "â";
-    $("todayReturningCustomers").textContent = "â";
+    $("todayCustomerTotal").textContent = "—";
+    $("todayNewCustomers").textContent = "—";
+    $("todayReturningCustomers").textContent = "—";
     $("customerMixNote").textContent = "Today's customer mix could not be loaded.";
   }
 
@@ -1943,19 +1943,21 @@ async function loadDashboard() {
     renderFulfillment(null);
   }
 
-  if (weeklyResult.status === "rejected" && !signal.aborted) {
-    console.error("Weekly order trends failed:", weeklyResult.reason);
-    $("weeklyOrdersNote").textContent = "Weekly order trends could not be loaded. Refresh to try again.";
-  }
-
   if (!statsLoaded && statsResult.status === "fulfilled") {
     setConnection(false, "Incomplete response", "The stats API returned an unexpected response.");
   }
 
   removeLoadingStyles();
   if (controller && controller.signal === signal) setLoading(false);
-}
 
+  // Load the weekly chart after the main widgets have rendered. A slow or
+  // failed weekly query must never keep the whole dashboard in a loading state.
+  loadWeeklyOrders(signal).catch(error => {
+    if (signal.aborted) return;
+    console.error("Weekly order trends failed:", error);
+    $("weeklyOrdersNote").textContent = "Weekly order trends could not be loaded. Refresh to try again.";
+  });
+}
 function closeSidebar() {
   $("sidebar").classList.remove("open");
   $("overlay").classList.remove("open");
