@@ -1,4 +1,4 @@
-const GHL_BASE_URL = "https://services.leadconnectorhq";
+const GHL_BASE_URL = "https://services.leadconnectorhq.com";
 const API_VERSION = "v3";
 const LOCATION_ID = "A0gpQEZUjXc6m3mzsCUH";
 
