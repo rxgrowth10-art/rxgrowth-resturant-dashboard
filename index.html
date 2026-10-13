@@ -1199,6 +1199,50 @@ button:disabled .refresh-icon { opacity: .65; }
 @media(max-width:700px) { .customer-grid { grid-template-columns:1fr; } .customer-toolbar-grid { grid-template-columns:1fr; } .customer-actions { align-items:stretch; } .customer-actions-left,.customer-actions-right { width:100%; } .customer-actions .customer-btn { flex:1; } .customer-table-foot { align-items:flex-start; flex-direction:column; } .customer-pagination { align-self:flex-end; } .customer-tabs { gap:4px; } .customer-tab { padding:9px 10px; } }
 @media(max-width:420px) { .customer-kpis { gap:8px; } .customer-kpi { padding:12px; } .customer-kpi-value { font-size:20px; } .customer-segment-grid { gap:8px; } .customer-segment-card { padding:12px; } .customer-segment-card strong { font-size:21px; } .customer-detail-grid { grid-template-columns:1fr; } }
 
+
+/* =====================================================
+   BIRTHDAY CAMPAIGN WORKSPACE V1
+===================================================== */
+.birthday-page{display:flex;flex-direction:column;gap:14px;width:100%;max-width:1250px;margin:0 auto}
+.birthday-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px;border:1px solid var(--border);background:rgba(16,24,39,.94);border-radius:11px}
+.birthday-toolbar-title,.birthday-table-title{font-size:12px;font-weight:800;color:#F5F9FF}
+.birthday-toolbar-sub,.birthday-table-sub{font-size:10px;line-height:1.6;color:#8292A9;margin-top:5px}
+.birthday-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.birthday-kpi{min-width:0;padding:17px;border:1px solid var(--border);border-radius:11px;background:linear-gradient(145deg,rgba(16,24,39,.98),rgba(12,20,33,.98));position:relative;overflow:hidden}
+.birthday-kpi:before{content:"";position:absolute;inset:0 0 auto;height:2px;background:var(--birthday-accent);opacity:.9}
+.birthday-kpi-label{font-size:10px;line-height:1.5;color:#A9B8CC}
+.birthday-kpi-value{margin-top:13px;font-size:clamp(22px,2vw,29px);font-weight:800;letter-spacing:-.7px;color:#F5F9FF;font-variant-numeric:tabular-nums}
+.birthday-kpi-foot{margin-top:7px;font-size:9px;line-height:1.6;color:#8292A9}
+.birthday-status-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.birthday-status-card{padding:14px;border:1px solid var(--border);border-radius:9px;background:rgba(13,21,35,.88);min-width:0}
+.birthday-status-top{display:flex;align-items:center;gap:8px;color:#A9B8CC;font-size:10px;line-height:1.5}
+.birthday-status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:#94A3B8}
+.birthday-status-dot.converted{background:#4ADE80}.birthday-status-dot.expired{background:#FBBF24}
+.birthday-status-card strong{display:block;margin-top:12px;color:#F5F9FF;font-size:22px;font-weight:800}
+.birthday-status-card small{display:block;margin-top:5px;color:#8292A9;font-size:9px;line-height:1.5}
+.birthday-table-panel{border:1px solid var(--border);background:rgba(16,24,39,.94);border-radius:11px;overflow:hidden;min-width:0}
+.birthday-table-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px;border-bottom:1px solid var(--border)}
+.birthday-filter-row{display:grid;grid-template-columns:auto minmax(180px,1fr) auto minmax(150px,.65fr);align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid rgba(36,50,71,.68)}
+.birthday-search-label{font-size:10px;color:#A9B8CC}
+.birthday-filter-row input,.birthday-filter-row select{width:100%;min-width:0;height:36px;border:1px solid #2A3A50;border-radius:7px;background:#0B1320;color:#E6EDF7;padding:0 10px;font:inherit;font-size:10px;outline:none}
+.birthday-filter-row input:focus,.birthday-filter-row select:focus{border-color:rgba(93,239,255,.65);box-shadow:0 0 0 3px rgba(93,239,255,.07)}
+.birthday-table-wrap{width:100%;overflow-x:auto}.birthday-table{width:100%;border-collapse:collapse;min-width:850px}
+.birthday-table th{background:#0D1523;color:#8FA0B7;text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:12px 14px;white-space:nowrap;border-bottom:1px solid var(--border)}
+.birthday-table td{padding:12px 14px;border-bottom:1px solid rgba(36,50,71,.68);color:#C8D4E4;font-size:10px;white-space:nowrap;vertical-align:middle}
+.birthday-table tbody tr:last-child td{border-bottom:0}.birthday-contact-name{color:#F0F5FC;font-weight:700}.birthday-contact-sub{font-size:9px;color:#8292A9;margin-top:4px}
+.birthday-status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 7px;border-radius:5px;border:1px solid rgba(148,163,184,.15);background:rgba(148,163,184,.06);color:#B8C6D8;font-size:9px}
+.birthday-status-pill:before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.birthday-status-pill.in-progress,.birthday-status-pill.converted{color:#4ADE80;background:rgba(74,222,128,.06);border-color:rgba(74,222,128,.15)}
+.birthday-status-pill.active{color:#5DEFFF;background:rgba(93,239,255,.06);border-color:rgba(93,239,255,.15)}
+.birthday-status-pill.expired{color:#FBBF24;background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.15)}
+.birthday-table-state{text-align:center!important;white-space:normal!important;padding:36px 18px!important;color:#94A3B8!important;line-height:1.7}
+.birthday-table-state strong{display:block;color:#E6EDF7;font-size:12px;margin-bottom:5px}
+.birthday-table-foot{display:flex;justify-content:space-between;gap:12px;padding:13px 16px;border-top:1px solid var(--border);color:#8292A9;font-size:9px;line-height:1.6}
+.birthday-data-note{padding:14px 16px;border:1px solid rgba(93,239,255,.14);border-radius:9px;background:rgba(93,239,255,.025)}
+.birthday-data-note strong{font-size:10px;color:#5DEFFF}.birthday-data-note p{font-size:10px;line-height:1.8;color:#A9B8CC;margin:7px 0 0}
+@media(max-width:1100px){.birthday-kpi-grid,.birthday-status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.birthday-toolbar{align-items:flex-start;flex-direction:column}.birthday-toolbar .customer-btn{width:100%}.birthday-kpi-grid,.birthday-status-grid{gap:8px}.birthday-kpi{padding:13px}.birthday-kpi-value{font-size:22px}.birthday-filter-row{grid-template-columns:1fr 1fr}.birthday-search-label{align-self:end}.birthday-table-head{padding:13px}.birthday-table-foot{flex-direction:column}}
+
 </style>
 </head>
 
@@ -1523,10 +1567,10 @@ button:disabled .refresh-icon { opacity: .65; }
     <section id="ordersPage" class="page" hidden>
       <div class="orders-page">
         <div class="orders-kpis">
-          <article class="orders-kpi" style="--kpi-accent:#5DEFFF"><div class="orders-kpi-label"><i></i>Total Orders</div><div class="orders-kpi-value" id="ordersKpiTotal">â</div><div class="orders-kpi-foot" id="ordersKpiTotalFoot">All matching orders</div></article>
-          <article class="orders-kpi" style="--kpi-accent:#A5B4FC"><div class="orders-kpi-label"><i></i>Total Order Value</div><div class="orders-kpi-value" id="ordersKpiValue">â</div><div class="orders-kpi-foot">Combined value of matching orders</div></article>
-          <article class="orders-kpi" style="--kpi-accent:#4ADE80"><div class="orders-kpi-label"><i></i>Paid Orders</div><div class="orders-kpi-value" id="ordersKpiPaid">â</div><div class="orders-kpi-foot" id="ordersKpiPaidFoot">Paid order value: â</div></article>
-          <article class="orders-kpi" style="--kpi-accent:#FBBF24"><div class="orders-kpi-label"><i></i>Unpaid Orders</div><div class="orders-kpi-value" id="ordersKpiUnpaid">â</div><div class="orders-kpi-foot" id="ordersKpiUnpaidFoot">Unpaid order value: â</div></article>
+          <article class="orders-kpi" style="--kpi-accent:#5DEFFF"><div class="orders-kpi-label"><i></i>Total Orders</div><div class="orders-kpi-value" id="ordersKpiTotal">Ã¢ÂÂ</div><div class="orders-kpi-foot" id="ordersKpiTotalFoot">All matching orders</div></article>
+          <article class="orders-kpi" style="--kpi-accent:#A5B4FC"><div class="orders-kpi-label"><i></i>Total Order Value</div><div class="orders-kpi-value" id="ordersKpiValue">Ã¢ÂÂ</div><div class="orders-kpi-foot">Combined value of matching orders</div></article>
+          <article class="orders-kpi" style="--kpi-accent:#4ADE80"><div class="orders-kpi-label"><i></i>Paid Orders</div><div class="orders-kpi-value" id="ordersKpiPaid">Ã¢ÂÂ</div><div class="orders-kpi-foot" id="ordersKpiPaidFoot">Paid order value: Ã¢ÂÂ</div></article>
+          <article class="orders-kpi" style="--kpi-accent:#FBBF24"><div class="orders-kpi-label"><i></i>Unpaid Orders</div><div class="orders-kpi-value" id="ordersKpiUnpaid">Ã¢ÂÂ</div><div class="orders-kpi-foot" id="ordersKpiUnpaidFoot">Unpaid order value: Ã¢ÂÂ</div></article>
         </div>
 
         <section class="orders-toolbar">
@@ -1574,36 +1618,36 @@ button:disabled .refresh-icon { opacity: .65; }
 
         <div class="customer-view" id="customerViewOverview" data-customer-view="overview">
           <div class="customer-kpis">
-            <article class="customer-kpi"><div class="customer-kpi-label">Total Contacts</div><div class="customer-kpi-value" id="customerTotalContacts">â</div><div class="customer-kpi-foot">Contacts returned by HighLevel</div></article>
-            <article class="customer-kpi"><div class="customer-kpi-label">Customers With Orders</div><div class="customer-kpi-value" id="customerWithOrders">â</div><div class="customer-kpi-foot">Based on M06 Total Orders when available</div></article>
-            <article class="customer-kpi"><div class="customer-kpi-label">Lifetime Customer Value</div><div class="customer-kpi-value" id="customerLifetimeValue">â</div><div class="customer-kpi-foot">Sum of populated M06 Lifetime Value fields</div></article>
-            <article class="customer-kpi"><div class="customer-kpi-label">Average Order Value</div><div class="customer-kpi-value" id="customerAverageOrderValue">â</div><div class="customer-kpi-foot">Average of populated M06 AOV values</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">Total Contacts</div><div class="customer-kpi-value" id="customerTotalContacts">Ã¢ÂÂ</div><div class="customer-kpi-foot">Contacts returned by HighLevel</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">Customers With Orders</div><div class="customer-kpi-value" id="customerWithOrders">Ã¢ÂÂ</div><div class="customer-kpi-foot">Based on M06 Total Orders when available</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">Lifetime Customer Value</div><div class="customer-kpi-value" id="customerLifetimeValue">Ã¢ÂÂ</div><div class="customer-kpi-foot">Sum of populated M06 Lifetime Value fields</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">Average Order Value</div><div class="customer-kpi-value" id="customerAverageOrderValue">Ã¢ÂÂ</div><div class="customer-kpi-foot">Average of populated M06 AOV values</div></article>
           </div>
           <div class="section-head"><div><div class="section-title">Customer Snapshot</div><div class="caption">A read-only view of the customer records and M06 summaries currently available in HighLevel.</div></div><span class="tag" id="customerSnapshotTag">LOADING</span></div>
           <div class="customer-grid">
-            <article class="customer-panel"><div class="customer-panel-head"><div class="customer-panel-title">Customer Type</div><div class="customer-panel-sub">Distribution of the values stored in M06 Customer Type.</div></div><div class="customer-panel-body"><div class="customer-bars" id="customerTypeBars"><div class="loading">Loading customer dataâ¦</div></div></div></article>
-            <article class="customer-panel"><div class="customer-panel-head"><div class="customer-panel-title">Customer Status</div><div class="customer-panel-sub">Distribution of the values stored in M06 Customer Status.</div></div><div class="customer-panel-body"><div class="customer-bars" id="customerStatusBars"><div class="loading">Loading customer dataâ¦</div></div></div></article>
+            <article class="customer-panel"><div class="customer-panel-head"><div class="customer-panel-title">Customer Type</div><div class="customer-panel-sub">Distribution of the values stored in M06 Customer Type.</div></div><div class="customer-panel-body"><div class="customer-bars" id="customerTypeBars"><div class="loading">Loading customer dataÃ¢ÂÂ¦</div></div></div></article>
+            <article class="customer-panel"><div class="customer-panel-head"><div class="customer-panel-title">Customer Status</div><div class="customer-panel-sub">Distribution of the values stored in M06 Customer Status.</div></div><div class="customer-panel-body"><div class="customer-bars" id="customerStatusBars"><div class="loading">Loading customer dataÃ¢ÂÂ¦</div></div></div></article>
           </div>
           <div class="customer-source-note">Data source: HighLevel Contacts API. Customer value, order count, and lifecycle fields are read from M06 Contact fields. This dashboard does not update Contact fields or workflows.</div>
         </div>
 
         <div class="customer-view" id="customerViewAnalytics" data-customer-view="analytics" hidden>
           <div class="customer-kpis">
-            <article class="customer-kpi"><div class="customer-kpi-label">Returning Customers</div><div class="customer-kpi-value" id="customerReturningCount">â</div><div class="customer-kpi-foot">Based on M06 order count greater than one</div></article>
-            <article class="customer-kpi"><div class="customer-kpi-label">New / One-Order Customers</div><div class="customer-kpi-value" id="customerOneOrderCount">â</div><div class="customer-kpi-foot">Exactly one order recorded in M06</div></article>
-            <article class="customer-kpi"><div class="customer-kpi-label">Average Lifetime Value</div><div class="customer-kpi-value" id="customerAverageLifetimeValue">â</div><div class="customer-kpi-foot">Average among contacts with a populated LTV value</div></article>
-            <article class="customer-kpi"><div class="customer-kpi-label">Customers With Order Data</div><div class="customer-kpi-value" id="customerOrderDataCoverage">â</div><div class="customer-kpi-foot">Contacts with a numeric M06 Total Orders value</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">Returning Customers</div><div class="customer-kpi-value" id="customerReturningCount">Ã¢ÂÂ</div><div class="customer-kpi-foot">Based on M06 order count greater than one</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">New / One-Order Customers</div><div class="customer-kpi-value" id="customerOneOrderCount">Ã¢ÂÂ</div><div class="customer-kpi-foot">Exactly one order recorded in M06</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">Average Lifetime Value</div><div class="customer-kpi-value" id="customerAverageLifetimeValue">Ã¢ÂÂ</div><div class="customer-kpi-foot">Average among contacts with a populated LTV value</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">Customers With Order Data</div><div class="customer-kpi-value" id="customerOrderDataCoverage">Ã¢ÂÂ</div><div class="customer-kpi-foot">Contacts with a numeric M06 Total Orders value</div></article>
           </div>
           <div class="customer-grid">
-            <article class="customer-panel"><div class="customer-panel-head"><div class="customer-panel-title">Lifetime Value Distribution</div><div class="customer-panel-sub">Customers grouped by their M06 Lifetime Value.</div></div><div class="customer-panel-body"><div class="customer-bars" id="customerValueBands"><div class="loading">Loading customer dataâ¦</div></div></div></article>
-            <article class="customer-panel"><div class="customer-panel-head"><div class="customer-panel-title">Order Frequency</div><div class="customer-panel-sub">Distribution using M06 Total Orders values.</div></div><div class="customer-panel-body"><div class="customer-bars" id="customerFrequencyBands"><div class="loading">Loading customer dataâ¦</div></div></div></article>
+            <article class="customer-panel"><div class="customer-panel-head"><div class="customer-panel-title">Lifetime Value Distribution</div><div class="customer-panel-sub">Customers grouped by their M06 Lifetime Value.</div></div><div class="customer-panel-body"><div class="customer-bars" id="customerValueBands"><div class="loading">Loading customer dataÃ¢ÂÂ¦</div></div></div></article>
+            <article class="customer-panel"><div class="customer-panel-head"><div class="customer-panel-title">Order Frequency</div><div class="customer-panel-sub">Distribution using M06 Total Orders values.</div></div><div class="customer-panel-body"><div class="customer-bars" id="customerFrequencyBands"><div class="loading">Loading customer dataÃ¢ÂÂ¦</div></div></div></article>
           </div>
           <div class="customer-source-note">Analytics use populated M06 Contact fields. Empty values are excluded from averages and are not silently treated as verified zeroes. Monetary values are displayed in EGP as configured for this restaurant dashboard.</div>
         </div>
 
         <div class="customer-view" id="customerViewSegments" data-customer-view="segments" hidden>
           <div class="section-head" style="margin-top:4px"><div><div class="section-title">Customer Segments</div><div class="caption">Click a segment to open its matching customer list. Rules are explicit and read-only.</div></div><span class="tag">M06 + DATE RULES</span></div>
-          <div class="customer-segment-grid" id="customerSegmentCards"><div class="customer-panel-body loading">Loading segmentsâ¦</div></div>
+          <div class="customer-segment-grid" id="customerSegmentCards"><div class="customer-panel-body loading">Loading segmentsÃ¢ÂÂ¦</div></div>
           <div class="customer-source-note">Segment rules: New = exactly 1 M06 Total Orders; Returning = 2 or more; High Value = top 20% of customers with numeric LTV; Inactive = last order date more than 90 days ago. Contacts with missing values are not automatically classified as zero or inactive.</div>
         </div>
 
@@ -1615,13 +1659,13 @@ button:disabled .refresh-icon { opacity: .65; }
                 <div class="customer-field"><label for="customerTypeFilter">Customer type</label><select id="customerTypeFilter"><option value="">All types</option></select></div>
                 <div class="customer-field"><label for="customerStatusFilter">Customer status</label><select id="customerStatusFilter"><option value="">All statuses</option></select></div>
               </div>
-              <div class="customer-actions"><div class="customer-actions-left"><button class="customer-btn primary" type="submit">Apply filters</button><button class="customer-btn" id="customerClearFilters" type="button">Clear filters</button></div><div class="customer-actions-right"><span id="customerDirectoryCount" class="customer-table-caption">Loading contactsâ¦</span><button class="customer-btn" id="customerRefresh" type="button">â» Refresh customers</button></div></div>
+              <div class="customer-actions"><div class="customer-actions-left"><button class="customer-btn primary" type="submit">Apply filters</button><button class="customer-btn" id="customerClearFilters" type="button">Clear filters</button></div><div class="customer-actions-right"><span id="customerDirectoryCount" class="customer-table-caption">Loading contactsÃ¢ÂÂ¦</span><button class="customer-btn" id="customerRefresh" type="button">Ã¢ÂÂ» Refresh customers</button></div></div>
             </form>
           </div>
           <div class="customer-table-panel">
             <div class="customer-table-head"><div><div class="customer-table-heading">Customer Directory</div><div class="customer-table-caption">Search, filter, and inspect customer records.</div></div><span class="tag" id="customerDirectoryTag">CONTACTS</span></div>
-            <div class="customer-table-wrap"><table class="customer-table"><thead><tr><th>Customer</th><th>Customer Type</th><th>Status</th><th>Total Orders</th><th>Lifetime Value</th><th>Last Order</th><th>Details</th></tr></thead><tbody id="customerTableBody"><tr><td colspan="7" class="customer-table-state"><strong>Loading customers</strong>Retrieving contacts and M06 fields from HighLevelâ¦</td></tr></tbody></table></div>
-            <div class="customer-table-foot"><span id="customerTableSummary">Waiting for dataâ¦</span><div class="customer-pagination"><button id="customerPrev" type="button" disabled>Previous</button><span id="customerPageLabel">Page 1</span><button id="customerNext" type="button" disabled>Next</button></div></div>
+            <div class="customer-table-wrap"><table class="customer-table"><thead><tr><th>Customer</th><th>Customer Type</th><th>Status</th><th>Total Orders</th><th>Lifetime Value</th><th>Last Order</th><th>Details</th></tr></thead><tbody id="customerTableBody"><tr><td colspan="7" class="customer-table-state"><strong>Loading customers</strong>Retrieving contacts and M06 fields from HighLevelÃ¢ÂÂ¦</td></tr></tbody></table></div>
+            <div class="customer-table-foot"><span id="customerTableSummary">Waiting for dataÃ¢ÂÂ¦</span><div class="customer-pagination"><button id="customerPrev" type="button" disabled>Previous</button><span id="customerPageLabel">Page 1</span><button id="customerNext" type="button" disabled>Next</button></div></div>
           </div>
         </div>
       </div>
@@ -1629,13 +1673,50 @@ button:disabled .refresh-icon { opacity: .65; }
 
     <div class="customer-drawer-backdrop" id="customerDrawerBackdrop"></div>
     <aside class="customer-drawer" id="customerDrawer" aria-label="Customer details" aria-hidden="true">
-      <div class="customer-drawer-head"><div><div class="customer-drawer-title" id="customerDrawerTitle">Customer details</div><div class="customer-drawer-sub" id="customerDrawerSub">Loading customerâ¦</div></div><button class="order-drawer-close" id="customerDrawerClose" type="button" aria-label="Close customer details">X</button></div>
+      <div class="customer-drawer-head"><div><div class="customer-drawer-title" id="customerDrawerTitle">Customer details</div><div class="customer-drawer-sub" id="customerDrawerSub">Loading customerÃ¢ÂÂ¦</div></div><button class="order-drawer-close" id="customerDrawerClose" type="button" aria-label="Close customer details">X</button></div>
       <div class="customer-drawer-body" id="customerDrawerBody"><div class="order-detail-empty">Select a customer to view details.</div></div>
     </aside>
 
+    <section id="birthdayPage" class="page" hidden>
+      <div class="birthday-page">
+        <div class="birthday-toolbar">
+          <div><div class="birthday-toolbar-title">Birthday Campaign Snapshot</div><div class="birthday-toolbar-sub">Current HighLevel contact fields Â· read-only V1</div></div>
+          <button class="customer-btn" id="birthdayRefresh" type="button">â» Refresh birthday data</button>
+        </div>
+
+        <div class="birthday-kpi-grid">
+          <article class="birthday-kpi" style="--birthday-accent:#5DEFFF"><div class="birthday-kpi-label">Active Club Members</div><div class="birthday-kpi-value" id="birthdayKpiMembers">â</div><div class="birthday-kpi-foot">Birthday Club Status = Active</div></article>
+          <article class="birthday-kpi" style="--birthday-accent:#A5B4FC"><div class="birthday-kpi-label">Campaigns Started</div><div class="birthday-kpi-value" id="birthdayKpiStarted">â</div><div class="birthday-kpi-foot">Contacts with a campaign start date</div></article>
+          <article class="birthday-kpi" style="--birthday-accent:#4ADE80"><div class="birthday-kpi-label">Campaigns In Progress</div><div class="birthday-kpi-value" id="birthdayKpiInProgress">â</div><div class="birthday-kpi-foot">Birthday Campaign Status = In Progress</div></article>
+          <article class="birthday-kpi" style="--birthday-accent:#FBBF24"><div class="birthday-kpi-label">Club Members Not Started</div><div class="birthday-kpi-value" id="birthdayKpiNotStarted">â</div><div class="birthday-kpi-foot">Campaign Status = Active</div></article>
+        </div>
+
+        <div class="birthday-status-grid">
+          <article class="birthday-status-card"><div class="birthday-status-top"><span class="birthday-status-dot converted"></span><span>Converted</span></div><strong id="birthdayKpiConverted">â</strong><small>Current status count</small></article>
+          <article class="birthday-status-card"><div class="birthday-status-top"><span class="birthday-status-dot expired"></span><span>Expired</span></div><strong id="birthdayKpiExpired">â</strong><small>Current status count</small></article>
+          <article class="birthday-status-card"><div class="birthday-status-top"><span class="birthday-status-dot neutral"></span><span>Contacts with Campaign Status</span></div><strong id="birthdayKpiStatusCount">â</strong><small>Contacts with a non-empty status</small></article>
+          <article class="birthday-status-card"><div class="birthday-status-top"><span class="birthday-status-dot neutral"></span><span>Contacts with Birthday Data</span></div><strong id="birthdayKpiBirthdayData">â</strong><small>DOB or any tracked birthday field</small></article>
+        </div>
+
+        <section class="birthday-table-panel">
+          <div class="birthday-table-head"><div><div class="birthday-table-title">Birthday Campaign Contacts</div><div class="birthday-table-sub">Current contact-field values returned by HighLevel. This is not historical campaign-cycle reporting.</div></div><span class="tag" id="birthdayConnectionTag">NOT LOADED</span></div>
+          <div class="birthday-filter-row">
+            <label class="birthday-search-label" for="birthdaySearch">Search contacts</label>
+            <input id="birthdaySearch" type="search" placeholder="Name, email, or phone" autocomplete="off">
+            <label class="birthday-search-label" for="birthdayStatusFilter">Campaign status</label>
+            <select id="birthdayStatusFilter"><option value="">All statuses</option><option value="active">Active</option><option value="in progress">In Progress</option><option value="converted">Converted</option><option value="expired">Expired</option><option value="empty">No status</option></select>
+          </div>
+          <div class="birthday-table-wrap"><table class="birthday-table"><thead><tr><th>Contact</th><th>Date of Birth</th><th>Club Status</th><th>Campaign Status</th><th>Campaign Started</th><th>Campaign Completed</th></tr></thead><tbody id="birthdayTableBody"><tr><td colspan="6" class="birthday-table-state"><strong>Birthday data has not loaded</strong>Open this page to retrieve current fields from HighLevel.</td></tr></tbody></table></div>
+          <div class="birthday-table-foot"><span id="birthdayTableSummary">Waiting for dataâ¦</span><span id="birthdayLastUpdated">â</span></div>
+        </section>
+
+        <div class="birthday-data-note"><strong>Data interpretation</strong><p>Club membership and campaign execution are separate. âActiveâ means the campaign is queued after club enrollment; âIn Progressâ means the birthday campaign is running. Conversion, expiry, coupon usage, and revenue are shown only where supported by current source data. Manual test edits may cause status and completion-date fields to disagree until the end-to-end workflow test is completed.</p></div>
+      </div>
+    </section>
+
     <section id="placeholderPage" class="page" hidden>
       <div class="placeholder">
-        <div class="placeholder-icon" id="placeholderIcon">ÃÂ¢âÃÂ</div>
+        <div class="placeholder-icon" id="placeholderIcon">ÃÂÃÂ¢Ã¢ÂÂÃÂÃÂ</div>
         <div>
           <h2 id="placeholderTitle">Module planned</h2>
           <p id="placeholderDescription">
@@ -1682,91 +1763,91 @@ const pages = {
     "Overview",
     "Overview",
     "A clear view of today's restaurant performance.",
-    "Ã¢ÂÂ"
+    "ÃÂ¢ÃÂÃÂ"
   ],
   orders: [
     "Orders",
     "Orders & Operations",
     "Orders",
     "Order records and payment status from HighLevel.",
-    "Ã¢ÂÂ£"
+    "ÃÂ¢ÃÂÃÂ£"
   ],
   orders: [
     "Orders",
     "Orders & Operations",
     "Orders",
     "Manage Native HighLevel orders, payment status, and fulfillment details.",
-    "Ã¢ÂÂ£"
+    "ÃÂ¢ÃÂÃÂ£"
   ],
   abandoned: [
     "Abandoned Checkouts",
     "Orders & Operations",
     "Abandoned Checkouts",
     "Checkout recovery will be available after checkout events are connected.",
-    "Ã¢ÂÂ"
+    "ÃÂ¢ÃÂÃÂ"
   ],
   customers: [
     "Customers",
     "Customers",
     "Customers",
     "Customer intelligence, analytics, segments, and directory.",
-    "â§"
+    "Ã¢ÂÂ§"
   ],
   segments: [
     "Customer Segments",
     "Customers",
     "Customer Segments",
     "Lifecycle segments will be calculated from verified order history.",
-    "Ã¢ÂÂ"
+    "ÃÂ¢ÃÂÃÂ"
   ],
   birthday: [
     "Birthday Campaign",
     "Campaigns & QR",
     "Birthday",
-    "Birthday campaign performance and coupon attribution.",
-    "Ã¢ÂÂ¦"
+    "Birthday Club membership and current campaign execution status.",
+    "ÃÂ¢ÃÂÃÂ¦"
   ],
   winback: [
     "Win-Back Campaign",
     "Campaigns & QR",
     "Win-Back",
     "Reactivation campaign performance and attributed orders.",
-    "â»"
+    "Ã¢ÂÂ»"
   ],
   slowtime: [
     "Slow-Time Campaign",
     "Campaigns & QR",
     "Slow-Time",
     "Slow-day offers, redemptions, and attributed order value.",
-    "Ã¢ÂÂ"
+    "ÃÂ¢ÃÂÃÂ"
   ],
   qr: [
     "QR Ecosystem",
     "Campaigns & QR",
     "QR Ecosystem",
     "QR analytics will appear when a reliable analytics source is connected.",
-    "Ã¢ÂÂ¦"
+    "ÃÂ¢ÃÂÃÂ¦"
   ],
   retention: [
     "Retention",
     "Retention & Loyalty",
     "Retention",
     "Retention trends and lapsed-customer analysis.",
-    "Ã¢ÂÂ³"
+    "ÃÂ¢ÃÂÃÂ³"
   ],
   loyalty: [
     "Loyalty & Rewards",
     "Retention & Loyalty",
     "Loyalty & Rewards",
     "Loyalty program activity and reward redemptions.",
-    "Ã¢ÂÂ"
+    "ÃÂ¢ÃÂÃÂ"
   ],
   reviews: [
     "Reviews Overview",
     "Reviews & Reputation",
     "Reviews Overview",
     "Review trends and unanswered feedback from a verified source.",
-    "Ã¢ÂÂ"
+    "ÃÂ¢ÃÂÃÂ"
   ],
   attention: [
     "Needs Attention",
@@ -1780,30 +1861,30 @@ const pages = {
     "Management",
     "Reports",
     "Reporting and export tools will be added after core metrics are validated.",
-    "Ã¢ÂÂ¥"
+    "ÃÂ¢ÃÂÃÂ¥"
   ],
   settings: [
     "Settings",
     "Settings",
     "Settings",
     "Restaurant connection and dashboard settings will be available here.",
-    "Ã¢ÂÂ"
+    "ÃÂ¢ÃÂÃÂ"
   ]
 };
 
 function formatNumber(value) {
   const n = Number(value);
-  return Number.isFinite(n) ? numberFormat.format(n) : "â";
+  return Number.isFinite(n) ? numberFormat.format(n) : "Ã¢ÂÂ";
 }
 
 function formatMoney(value) {
   const n = Number(value);
-  return Number.isFinite(n) ? currencyFormat.format(n) : "â";
+  return Number.isFinite(n) ? currencyFormat.format(n) : "Ã¢ÂÂ";
 }
 
 function formatPercent(value) {
   const n = Number(value);
-  return Number.isFinite(n) ? `${numberFormat.format(n)}%` : "â";
+  return Number.isFinite(n) ? `${numberFormat.format(n)}%` : "Ã¢ÂÂ";
 }
 
 const RESTAURANT_TIME_ZONE = "Africa/Cairo";
@@ -1865,11 +1946,11 @@ function setLoading(isLoading) {
   });
 
   $("refresh").innerHTML = isLoading
-? '<span class="loading-dots">â </span>'
+? '<span class="loading-dots">Ã¢Â Â</span>'
     : '<svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg>';
 
   $("refreshMain").innerHTML = isLoading
-? '<span class="loading-dots">â </span> Loading data'  
+? '<span class="loading-dots">Ã¢Â Â</span> Loading data'  
     : '<span class="refresh-label-icon"><svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg></span> Refresh data';
 }
 
@@ -2101,7 +2182,7 @@ function renderFulfillment(result) {
   const container = $("fulfillmentStages");
   if (!result?.success || !Array.isArray(result.data?.stages)) {
     $("fulfillmentStatus").textContent = "UNAVAILABLE";
-    $("fulfillmentTotal").textContent = "â";
+    $("fulfillmentTotal").textContent = "Ã¢ÂÂ";
     container.innerHTML = '<div class="fulfillment-empty">Fulfillment data could not be loaded. Refresh to try again.</div>';
     $("fulfillmentNote").textContent = "The stats dashboard remains available independently.";
     return;
@@ -2239,9 +2320,9 @@ async function loadDashboard() {
     }
   } else {
     console.error("Today's customer mix failed:", todayResult.status === "rejected" ? todayResult.reason : "Missing customers data");
-    $("todayCustomerTotal").textContent = "â";
-    $("todayNewCustomers").textContent = "â";
-    $("todayReturningCustomers").textContent = "â";
+    $("todayCustomerTotal").textContent = "Ã¢ÂÂ";
+    $("todayNewCustomers").textContent = "Ã¢ÂÂ";
+    $("todayReturningCustomers").textContent = "Ã¢ÂÂ";
     $("customerMixNote").textContent = "Today's customer mix could not be loaded.";
   }
 
@@ -2291,9 +2372,9 @@ function escapeHtml(value) {
 }
 
 function displayDate(value, includeTime = true) {
-  if (!value) return "â";
+  if (!value) return "Ã¢ÂÂ";
   const date = new Date(value);
-  if (!Number.isFinite(date.getTime())) return "â";
+  if (!Number.isFinite(date.getTime())) return "Ã¢ÂÂ";
   return new Intl.DateTimeFormat("en-US", {
     timeZone: RESTAURANT_TIME_ZONE,
     month: "short", day: "numeric", year: "numeric",
@@ -2474,7 +2555,7 @@ function renderOrderDetails(order) {
     <section class="order-detail-section"><div class="order-detail-section-title">Order overview</div><div class="order-detail-grid">${detailField("Order ID", order.id)}${detailField("Order status", prettyStatus(order.orderStatus))}${detailField("Fulfillment", prettyStatus(order.fulfillmentStatus))}${detailField("Order date", displayDate(order.createdAt))}${detailField("Source", order.source)}${detailField("Payment method", method)}</div></section>
     <section class="order-detail-section"><div class="order-detail-section-title">Customer information</div><div class="order-detail-grid">${detailField("Customer", order.customerName)}${detailField("Email", email)}${detailField("Phone", phone)}${detailField("Address", address)}</div></section>
     <section class="order-detail-section"><div class="order-detail-section-title">Order items - ${formatNumber(items.length)} line items</div>${itemMarkup}</section>
-    <section class="order-detail-section"><div class="order-detail-section-title">Financial summary</div><div class="order-detail-field">${subtotal ? `<div class="order-detail-total-line"><span>Subtotal</span><strong>${escapeHtml(formatMoney(subtotal))}</strong></div>` : ""}${discount ? `<div class="order-detail-total-line"><span>Discount</span><strong>â${escapeHtml(formatMoney(discount))}</strong></div>` : ""}${tax ? `<div class="order-detail-total-line"><span>Tax</span><strong>${escapeHtml(formatMoney(tax))}</strong></div>` : ""}${shipping ? `<div class="order-detail-total-line"><span>Shipping</span><strong>${escapeHtml(formatMoney(shipping))}</strong></div>` : ""}<div class="order-detail-total-line final"><span>Total order value</span><strong>${escapeHtml(formatMoney(order.amount))}</strong></div></div></section>
+    <section class="order-detail-section"><div class="order-detail-section-title">Financial summary</div><div class="order-detail-field">${subtotal ? `<div class="order-detail-total-line"><span>Subtotal</span><strong>${escapeHtml(formatMoney(subtotal))}</strong></div>` : ""}${discount ? `<div class="order-detail-total-line"><span>Discount</span><strong>Ã¢ÂÂ${escapeHtml(formatMoney(discount))}</strong></div>` : ""}${tax ? `<div class="order-detail-total-line"><span>Tax</span><strong>${escapeHtml(formatMoney(tax))}</strong></div>` : ""}${shipping ? `<div class="order-detail-total-line"><span>Shipping</span><strong>${escapeHtml(formatMoney(shipping))}</strong></div>` : ""}<div class="order-detail-total-line final"><span>Total order value</span><strong>${escapeHtml(formatMoney(order.amount))}</strong></div></div></section>
     <section class="order-detail-section"><div class="order-detail-section-title">Payment &amp; fulfillment</div><div class="order-detail-grid">${detailField("Payment status", prettyStatus(order.paymentStatus))}${detailField("Fulfillment status", prettyStatus(order.fulfillmentStatus))}${detailField("Live order", order.liveMode === true ? "Yes" : order.liveMode === false ? "No" : "Unknown")}${detailField("Test order", order.markAsTest === true ? "Yes" : order.markAsTest === false ? "No" : "Unknown")}</div></section>`;
 }
 
@@ -2494,6 +2575,112 @@ async function openOrderDetails(orderId) {
   }
 }
 
+
+const birthdayState = { loading:false, loaded:false, request:null, contacts:[], metrics:null, diagnostics:null };
+
+function birthdayStatus(value) {
+  const normalized = String(value ?? "").trim().toLowerCase().replace(/[ _-]+/g, " ");
+  return normalized || "empty";
+}
+
+function birthdayDate(value) {
+  if (value === null || value === undefined || value === "") return "â";
+  let date;
+  if (typeof value === "number" || /^\d{10,13}$/.test(String(value))) {
+    const n = Number(value);
+    date = new Date(String(value).length === 10 ? n * 1000 : n);
+  } else {
+    date = new Date(value);
+  }
+  if (!Number.isFinite(date.getTime())) return "â";
+  return new Intl.DateTimeFormat("en-US", { timeZone:RESTAURANT_TIME_ZONE, month:"short", day:"numeric", year:"numeric" }).format(date);
+}
+
+function birthdayStatusLabel(value) {
+  const status = birthdayStatus(value);
+  if (status === "empty") return "No status";
+  if (status === "in progress") return "In Progress";
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
+
+function birthdayPill(value) {
+  const status = birthdayStatus(value);
+  if (status === "empty") return '<span class="birthday-status-pill">No status</span>';
+  const safeClass = ["active","in-progress","converted","expired"].includes(status.replace(/ /g,"-")) ? status.replace(/ /g,"-") : "";
+  return `<span class="birthday-status-pill ${safeClass}">${escapeHtml(birthdayStatusLabel(value))}</span>`;
+}
+
+function renderBirthdayContacts() {
+  const search = ($("birthdaySearch").value || "").trim().toLowerCase();
+  const statusFilter = $("birthdayStatusFilter").value;
+  const list = birthdayState.contacts.filter(contact => {
+    const fields = contact.fields || {};
+    const status = birthdayStatus(fields.birthday_campaign_status);
+    const searchable = [contact.name, contact.email, contact.phone].join(" ").toLowerCase();
+    return (!search || searchable.includes(search)) && (!statusFilter || status === statusFilter);
+  }).sort((a,b) => String(a.name || "").localeCompare(String(b.name || "")));
+
+  const body = $("birthdayTableBody");
+  if (!list.length) {
+    body.innerHTML = '<tr><td colspan="6" class="birthday-table-state"><strong>No matching contacts</strong>Try a different search or campaign status.</td></tr>';
+  } else {
+    body.innerHTML = list.map(contact => {
+      const fields = contact.fields || {};
+      const name = contact.name || "Unnamed contact";
+      const sub = contact.email || contact.phone || "No email or phone";
+      return `<tr><td><div class="birthday-contact-name">${escapeHtml(name)}</div><div class="birthday-contact-sub">${escapeHtml(sub)}</div></td><td>${escapeHtml(birthdayDate(contact.birthDate))}</td><td>${birthdayPill(fields.birthday_club_status)}</td><td>${birthdayPill(fields.birthday_campaign_status)}</td><td>${escapeHtml(birthdayDate(fields.birthday_campaign_started_at))}</td><td>${escapeHtml(birthdayDate(fields.birthday_campaign_completed_at))}</td></tr>`;
+    }).join("");
+  }
+  $("birthdayTableSummary").textContent = `Showing ${formatNumber(list.length)} of ${formatNumber(birthdayState.contacts.length)} birthday-related contacts`;
+}
+
+function renderBirthdayDashboard(result) {
+  const metrics = result.metrics || {};
+  birthdayState.contacts = Array.isArray(result.contacts) ? result.contacts : [];
+  birthdayState.metrics = metrics;
+  birthdayState.diagnostics = result.diagnostics || {};
+  $("birthdayKpiMembers").textContent = formatNumber(metrics.activeClubMembers ?? 0);
+  $("birthdayKpiStarted").textContent = formatNumber(metrics.campaignsStarted ?? 0);
+  $("birthdayKpiInProgress").textContent = formatNumber(metrics.activeCampaigns ?? 0);
+  $("birthdayKpiNotStarted").textContent = formatNumber(metrics.clubJoinedNotStarted ?? 0);
+  $("birthdayKpiConverted").textContent = formatNumber(metrics.convertedCampaigns ?? 0);
+  $("birthdayKpiExpired").textContent = formatNumber(metrics.expiredCampaigns ?? 0);
+  $("birthdayKpiStatusCount").textContent = formatNumber(metrics.contactsWithCampaignStatus ?? 0);
+  $("birthdayKpiBirthdayData").textContent = formatNumber(metrics.contactsWithBirthdayData ?? birthdayState.contacts.length);
+  $("birthdayConnectionTag").textContent = birthdayState.diagnostics.partial ? "PARTIAL DATA" : "CONNECTED";
+  $("birthdayLastUpdated").textContent = `Updated ${new Date(birthdayState.diagnostics.calculatedAt || Date.now()).toLocaleString("en-US", { timeZone:RESTAURANT_TIME_ZONE, dateStyle:"medium", timeStyle:"short" })}`;
+  renderBirthdayContacts();
+}
+
+async function loadBirthday(force = false) {
+  if (birthdayState.loading) return;
+  if (birthdayState.loaded && !force) return;
+  if (birthdayState.request) birthdayState.request.abort();
+  const request = new AbortController();
+  birthdayState.request = request;
+  birthdayState.loading = true;
+  $("birthdayRefresh").disabled = true;
+  $("birthdayConnectionTag").textContent = "LOADING";
+  $("birthdayTableBody").innerHTML = '<tr><td colspan="6" class="birthday-table-state"><strong>Loading birthday campaign data</strong>Retrieving current contact fields from HighLevelâ¦</td></tr>';
+  try {
+    const result = await fetchJson("/api/campaigns?campaign=birthday", request.signal);
+    if (request.signal.aborted) return;
+    if (!result.metrics || !Array.isArray(result.contacts)) throw new Error("The Birthday Campaign API response is missing metrics or contacts.");
+    renderBirthdayDashboard(result);
+    birthdayState.loaded = true;
+    if (result.diagnostics?.partial === true) showError("Some HighLevel contacts could not be loaded. Birthday metrics reflect only the records returned.", "Birthday data may be incomplete");
+    else clearError();
+  } catch (error) {
+    if (request.signal.aborted) return;
+    console.error("Birthday Campaign API failed:", error);
+    $("birthdayConnectionTag").textContent = "ERROR";
+    $("birthdayTableBody").innerHTML = `<tr><td colspan="6" class="birthday-table-state"><strong>Unable to load birthday data</strong>${escapeHtml(error.message || "Check the API deployment and try again.")}</td></tr>`;
+    showError(error.message || "We couldn't retrieve Birthday Campaign data from HighLevel.", "Unable to load Birthday Campaign");
+  } finally {
+    if (!request.signal.aborted) birthdayState.loading = false;
+    $("birthdayRefresh").disabled = false;
+  }
+}
 
 function closeSidebar() {
   $("sidebar").classList.remove("open");
@@ -2556,7 +2743,7 @@ function customerDate(value) {
 
 function customerDisplayDate(value) {
   const date = customerDate(value);
-  if (!date) return "â";
+  if (!date) return "Ã¢ÂÂ";
   return new Intl.DateTimeFormat("en-US", { timeZone: RESTAURANT_TIME_ZONE, month: "short", day: "numeric", year: "numeric" }).format(date);
 }
 
@@ -2636,10 +2823,10 @@ function renderCustomerAnalytics() {
   $("customerTotalContacts").textContent = formatNumber(customers.length);
   $("customerWithOrders").textContent = formatNumber(purchasers.length);
   $("customerLifetimeValue").textContent = formatMoney(sumLtv);
-  $("customerAverageOrderValue").textContent = averageAov === null ? "â" : formatMoney(averageAov);
+  $("customerAverageOrderValue").textContent = averageAov === null ? "Ã¢ÂÂ" : formatMoney(averageAov);
   $("customerReturningCount").textContent = formatNumber(returning.length);
   $("customerOneOrderCount").textContent = formatNumber(oneOrder.length);
-  $("customerAverageLifetimeValue").textContent = averageLtv === null ? "â" : formatMoney(averageLtv);
+  $("customerAverageLifetimeValue").textContent = averageLtv === null ? "Ã¢ÂÂ" : formatMoney(averageLtv);
   $("customerOrderDataCoverage").textContent = `${formatNumber(withOrderData.length)} / ${formatNumber(customers.length)}`;
   $("customerSnapshotTag").textContent = `${customers.length} CONTACTS`;
   $("customerDirectoryTag").textContent = `${customers.length} CONTACTS`;
@@ -2650,8 +2837,8 @@ function renderCustomerAnalytics() {
   const valueBands = [
     { label: "No LTV value", count: customers.filter(customer => customerLtv(customer) === null).length },
     { label: "EGP 0", count: customers.filter(customer => customerLtv(customer) === 0).length },
-    { label: "EGP 1â499", count: customers.filter(customer => { const value = customerLtv(customer); return value !== null && value > 0 && value < 500; }).length },
-    { label: "EGP 500â1,499", count: customers.filter(customer => { const value = customerLtv(customer); return value !== null && value >= 500 && value < 1500; }).length },
+    { label: "EGP 1Ã¢ÂÂ499", count: customers.filter(customer => { const value = customerLtv(customer); return value !== null && value > 0 && value < 500; }).length },
+    { label: "EGP 500Ã¢ÂÂ1,499", count: customers.filter(customer => { const value = customerLtv(customer); return value !== null && value >= 500 && value < 1500; }).length },
     { label: "EGP 1,500+", count: customers.filter(customer => { const value = customerLtv(customer); return value !== null && value >= 1500; }).length }
   ];
   renderCustomerBars("customerValueBands", valueBands);
@@ -2659,7 +2846,7 @@ function renderCustomerAnalytics() {
     { label: "No order count", count: customers.filter(customer => customerOrders(customer) === null).length },
     { label: "0 orders", count: customers.filter(customer => customerOrders(customer) === 0).length },
     { label: "1 order", count: oneOrder.length },
-    { label: "2â4 orders", count: customers.filter(customer => { const n = customerOrders(customer); return n !== null && n >= 2 && n <= 4; }).length },
+    { label: "2Ã¢ÂÂ4 orders", count: customers.filter(customer => { const n = customerOrders(customer); return n !== null && n >= 2 && n <= 4; }).length },
     { label: "5+ orders", count: customers.filter(customer => { const n = customerOrders(customer); return n !== null && n >= 5; }).length }
   ];
   renderCustomerBars("customerFrequencyBands", frequencyBands);
@@ -2723,13 +2910,13 @@ function renderCustomerTable() {
       const initials = customerInitials(name);
       const email = customer.email || customer.phone || customer.id;
       const statusClassName = /active|loyal|returning|good/i.test(String(status || "")) ? "good" : /inactive|lapsed|at.?risk/i.test(String(status || "")) ? "warn" : "";
-      return `<tr><td><div class="customer-person"><div class="customer-avatar">${escapeHtml(initials)}</div><div><div class="customer-person-name" title="${escapeHtml(name)}">${escapeHtml(name)}</div><div class="customer-person-sub" title="${escapeHtml(email)}">${escapeHtml(email)}</div></div></div></td><td><span class="customer-pill">${escapeHtml(type || "Not set")}</span></td><td><span class="customer-pill ${statusClassName}">${escapeHtml(status || "Not set")}</span></td><td>${orders === null ? "â" : formatNumber(orders)}</td><td class="customer-value">${ltv === null ? "â" : escapeHtml(formatMoney(ltv))}</td><td>${escapeHtml(customerDisplayDate(lastOrder))}</td><td><button class="customer-row-btn" type="button" data-customer-details="${escapeHtml(customer.id)}">View</button></td></tr>`;
+      return `<tr><td><div class="customer-person"><div class="customer-avatar">${escapeHtml(initials)}</div><div><div class="customer-person-name" title="${escapeHtml(name)}">${escapeHtml(name)}</div><div class="customer-person-sub" title="${escapeHtml(email)}">${escapeHtml(email)}</div></div></div></td><td><span class="customer-pill">${escapeHtml(type || "Not set")}</span></td><td><span class="customer-pill ${statusClassName}">${escapeHtml(status || "Not set")}</span></td><td>${orders === null ? "Ã¢ÂÂ" : formatNumber(orders)}</td><td class="customer-value">${ltv === null ? "Ã¢ÂÂ" : escapeHtml(formatMoney(ltv))}</td><td>${escapeHtml(customerDisplayDate(lastOrder))}</td><td><button class="customer-row-btn" type="button" data-customer-details="${escapeHtml(customer.id)}">View</button></td></tr>`;
     }).join("");
   }
   const from = list.length ? start + 1 : 0;
   const to = Math.min(start + customerState.pageSize, list.length);
   $("customerDirectoryCount").textContent = `${formatNumber(list.length)} matching contacts`;
-  $("customerTableSummary").textContent = `Showing ${formatNumber(from)}â${formatNumber(to)} of ${formatNumber(list.length)} contacts`;
+  $("customerTableSummary").textContent = `Showing ${formatNumber(from)}Ã¢ÂÂ${formatNumber(to)} of ${formatNumber(list.length)} contacts`;
   $("customerPageLabel").textContent = `Page ${customerState.page} of ${totalPages}`;
   $("customerPrev").disabled = customerState.page <= 1;
   $("customerNext").disabled = customerState.page >= totalPages;
@@ -2753,7 +2940,7 @@ function openCustomerDrawer(customerId) {
   if (!customer) return;
   const name = customerName(customer);
   $("customerDrawerTitle").textContent = name;
-  $("customerDrawerSub").textContent = [customer.email, customer.phone, `Contact ID: ${customer.id}`].filter(Boolean).join(" Â· ");
+  $("customerDrawerSub").textContent = [customer.email, customer.phone, `Contact ID: ${customer.id}`].filter(Boolean).join(" ÃÂ· ");
   const field = (label,value) => `<div class="customer-detail-field"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value === null || value === undefined || value === "" ? "Not provided" : value)}</strong></div>`;
   const orders = customerOrders(customer);
   const ltv = customerLtv(customer);
@@ -2782,7 +2969,7 @@ async function loadCustomers(force = false) {
   if (customerState.request) customerState.request.abort();
   customerState.request = new AbortController();
   const signal = customerState.request.signal;
-  $("customerTableBody").innerHTML = '<tr><td colspan="7" class="customer-table-state"><strong>Loading customers</strong>Retrieving contacts and M06 fields from HighLevelâ¦</td></tr>';
+  $("customerTableBody").innerHTML = '<tr><td colspan="7" class="customer-table-state"><strong>Loading customers</strong>Retrieving contacts and M06 fields from HighLevelÃ¢ÂÂ¦</td></tr>';
   try {
     const result = await fetchJson("/api/customers", signal);
     if (signal.aborted) return;
@@ -2837,13 +3024,15 @@ function showPage(key) {
   const isOverview = key === "overview";
   const isOrders = key === "orders";
   const isCustomers = key === "customers";
+  const isBirthday = key === "birthday";
 
   $("overviewPage").hidden = !isOverview;
   $("ordersPage").hidden = !isOrders;
   $("customersPage").hidden = !isCustomers;
-  $("placeholderPage").hidden = isOverview || isOrders || isCustomers;
+  $("birthdayPage").hidden = !isBirthday;
+  $("placeholderPage").hidden = isOverview || isOrders || isCustomers || isBirthday;
 
-  if (!isOverview && !isOrders && !isCustomers) {
+  if (!isOverview && !isOrders && !isCustomers && !isBirthday) {
     $("placeholderTitle").textContent = page[0];
     $("placeholderDescription").textContent = page[3];
     $("placeholderIcon").textContent = page[4];
@@ -2852,6 +3041,7 @@ function showPage(key) {
 
   if (isOrders && !ordersState.loaded) loadOrders(true);
   if (isCustomers) loadCustomers(false);
+  if (isBirthday) loadBirthday(false);
   closeSidebar();
 }
 
@@ -2959,6 +3149,10 @@ $("customerTableBody").addEventListener("click", event => {
 $("customerDrawerClose").addEventListener("click", closeCustomerDrawer);
 $("customerDrawerBackdrop").addEventListener("click", closeCustomerDrawer);
 document.addEventListener("keydown", event => { if (event.key === "Escape") closeCustomerDrawer(); });
+
+$("birthdayRefresh").addEventListener("click", () => loadBirthday(true));
+$("birthdaySearch").addEventListener("input", renderBirthdayContacts);
+$("birthdayStatusFilter").addEventListener("change", renderBirthdayContacts);
 
 loadDashboard();
 </script>
