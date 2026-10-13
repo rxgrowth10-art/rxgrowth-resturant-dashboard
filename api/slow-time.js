@@ -111,9 +111,19 @@ async function fetchAllCampaignRecords() {
   for (let page = 1; page <= MAX_PAGES; page++) {
     const result = await ghlSearchRecords(page);
     if (page === 1 && result.records?.length) {
+  const samples = result.records.slice(0, 5).map(record => {
+    const properties = getProperties(record);
+
+    return {
+      id: record.id || record._id,
+      propertyKeys: Object.keys(properties),
+      properties,
+    };
+  });
+
   console.log(
-    "SLOW_TIME_RAW_RECORD_SAMPLE:",
-    JSON.stringify(result.records[0], null, 2)
+    "SLOW_TIME_RAW_RECORD_SAMPLES:",
+    JSON.stringify(samples, null, 2)
   );
 }
     pagesFetched++;
