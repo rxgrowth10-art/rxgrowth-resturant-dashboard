@@ -1110,6 +1110,95 @@ button:disabled .refresh-icon { opacity: .65; }
 .order-row-action svg { display: block; }
 .order-drawer-close { font-family: Arial, sans-serif; }
 
+
+/* =====================================================
+   CUSTOMERS WORKSPACE
+===================================================== */
+.customers-page { display:flex; flex-direction:column; gap:16px; width:100%; max-width:1250px; margin:0 auto; }
+.customer-tabs { display:flex; flex-wrap:wrap; gap:7px; padding:7px; border:1px solid var(--border); border-radius:10px; background:rgba(13,21,35,.9); }
+.customer-tab { border:1px solid transparent; background:transparent; color:#A9B8CC; border-radius:7px; padding:10px 13px; font-size:10px; font-weight:700; }
+.customer-tab:hover { color:#F5F9FF; background:#152236; }
+.customer-tab.active { color:var(--primary); background:rgba(93,239,255,.09); border-color:rgba(93,239,255,.2); }
+.customer-view[hidden] { display:none!important; }
+.customer-kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+.customer-kpi { min-width:0; padding:17px; border:1px solid var(--border); border-radius:11px; background:linear-gradient(145deg,rgba(16,24,39,.98),rgba(12,20,33,.98)); position:relative; overflow:hidden; }
+.customer-kpi-label { color:#A9B8CC; font-size:10px; line-height:1.5; }
+.customer-kpi-value { margin-top:13px; color:#F5F9FF; font-size:clamp(21px,2vw,28px); font-weight:800; letter-spacing:-.7px; overflow-wrap:anywhere; font-variant-numeric:tabular-nums; }
+.customer-kpi-foot { color:#8292A9; font-size:9px; line-height:1.6; margin-top:7px; }
+.customer-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.customer-panel { min-width:0; border:1px solid var(--border); border-radius:11px; background:rgba(16,24,39,.94); overflow:hidden; }
+.customer-panel-head { padding:16px 17px 13px; border-bottom:1px solid rgba(148,163,184,.11); }
+.customer-panel-title { color:#F0F5FC; font-size:12px; font-weight:700; }
+.customer-panel-sub { color:#8292A9; font-size:10px; line-height:1.65; margin-top:5px; }
+.customer-panel-body { padding:16px; }
+.customer-bars { display:flex; flex-direction:column; gap:13px; }
+.customer-bar-row { display:grid; grid-template-columns:minmax(95px,1fr) minmax(70px,1.6fr) 34px; align-items:center; gap:10px; }
+.customer-bar-label { color:#C8D4E4; font-size:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.customer-bar-track { height:7px; border-radius:99px; background:#202C3E; overflow:hidden; }
+.customer-bar-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,rgba(93,239,255,.4),#5DEFFF); }
+.customer-bar-count { color:#F5F9FF; font-size:10px; text-align:right; font-weight:700; }
+.customer-segment-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+.customer-segment-card { text-align:left; padding:17px; border:1px solid var(--border); border-radius:10px; background:rgba(16,24,39,.94); color:inherit; transition:border-color .15s,transform .15s; }
+.customer-segment-card:hover { border-color:rgba(93,239,255,.45); transform:translateY(-1px); }
+.customer-segment-card.active { border-color:rgba(93,239,255,.65); background:rgba(93,239,255,.06); }
+.customer-segment-card strong { display:block; color:#F5F9FF; font-size:24px; letter-spacing:-.6px; }
+.customer-segment-card span { display:block; color:#C8D4E4; font-size:10px; font-weight:700; margin-top:9px; }
+.customer-segment-card small { display:block; color:#8292A9; font-size:9px; line-height:1.6; margin-top:6px; }
+.customer-toolbar { padding:15px; border:1px solid var(--border); background:rgba(16,24,39,.94); border-radius:11px; }
+.customer-toolbar-grid { display:grid; grid-template-columns:minmax(200px,1.7fr) repeat(2,minmax(150px,1fr)); gap:10px; align-items:end; }
+.customer-field { display:flex; flex-direction:column; gap:6px; min-width:0; }
+.customer-field label { color:#A9B8CC; font-size:10px; }
+.customer-field input,.customer-field select { width:100%; min-width:0; height:38px; border:1px solid #2A3A50; border-radius:7px; background:#0B1320; color:#E6EDF7; padding:0 10px; font:inherit; font-size:11px; outline:none; }
+.customer-field input:focus,.customer-field select:focus { border-color:rgba(93,239,255,.65); box-shadow:0 0 0 3px rgba(93,239,255,.07); }
+.customer-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; justify-content:space-between; align-items:center; }
+.customer-actions-left,.customer-actions-right { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.customer-btn { min-height:34px; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:0 11px; border-radius:7px; border:1px solid #2A3A50; background:#111D2D; color:#D9E4F2; font:inherit; font-size:10px; font-weight:700; cursor:pointer; }
+.customer-btn:hover { background:#17263A; border-color:#3C536E; }
+.customer-btn.primary { color:#07121A; background:#5DEFFF; border-color:#5DEFFF; }
+.customer-table-panel { border:1px solid var(--border); background:rgba(16,24,39,.94); border-radius:11px; overflow:hidden; }
+.customer-table-head { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:15px 16px; border-bottom:1px solid var(--border); }
+.customer-table-heading { color:#F5F9FF; font-size:12px; font-weight:700; }
+.customer-table-caption { color:#8292A9; font-size:10px; margin-top:5px; }
+.customer-table-wrap { width:100%; overflow-x:auto; }
+.customer-table { width:100%; border-collapse:collapse; min-width:790px; }
+.customer-table th { background:#0D1523; color:#8FA0B7; text-align:left; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; padding:12px 14px; white-space:nowrap; border-bottom:1px solid var(--border); }
+.customer-table td { padding:12px 14px; border-bottom:1px solid rgba(36,50,71,.68); color:#C8D4E4; font-size:10px; white-space:nowrap; vertical-align:middle; }
+.customer-table tbody tr:hover { background:rgba(93,239,255,.025); }
+.customer-table tbody tr:last-child td { border-bottom:0; }
+.customer-person { display:flex; align-items:center; gap:9px; min-width:170px; }
+.customer-avatar { width:30px; height:30px; flex-shrink:0; display:grid; place-items:center; border-radius:8px; color:#5DEFFF; background:rgba(93,239,255,.08); border:1px solid rgba(93,239,255,.13); font-size:10px; font-weight:800; }
+.customer-person-name { max-width:200px; overflow:hidden; text-overflow:ellipsis; color:#F0F5FC; font-weight:600; }
+.customer-person-sub { margin-top:4px; color:#8292A9; font-size:9px; }
+.customer-value { color:#F5F9FF!important; font-weight:700; font-variant-numeric:tabular-nums; }
+.customer-pill { display:inline-flex; padding:5px 7px; border-radius:5px; border:1px solid rgba(148,163,184,.15); background:rgba(148,163,184,.06); color:#B8C6D8; font-size:9px; text-transform:capitalize; max-width:160px; overflow:hidden; text-overflow:ellipsis; }
+.customer-pill.good { color:#4ADE80; border-color:rgba(74,222,128,.15); background:rgba(74,222,128,.06); }
+.customer-pill.warn { color:#FBBF24; border-color:rgba(251,191,36,.15); background:rgba(251,191,36,.06); }
+.customer-row-btn { border:1px solid #2A3A50; background:#0D1523; color:#5DEFFF; border-radius:6px; padding:6px 8px; font-size:9px; font-weight:700; cursor:pointer; }
+.customer-table-state { text-align:center!important; white-space:normal!important; padding:35px 18px!important; color:#94A3B8!important; line-height:1.7; }
+.customer-table-state strong { display:block; color:#E6EDF7; font-size:12px; margin-bottom:5px; }
+.customer-table-foot { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:13px 16px; border-top:1px solid var(--border); color:#8292A9; font-size:10px; }
+.customer-pagination { display:flex; align-items:center; gap:7px; }
+.customer-pagination button { min-width:36px; height:30px; border:1px solid #2A3A50; border-radius:6px; background:#0D1523; color:#D9E4F2; cursor:pointer; font-size:10px; }
+.customer-pagination button:disabled { opacity:.35; cursor:not-allowed; }
+.customer-drawer-backdrop { position:fixed; inset:0; z-index:1100; background:rgba(2,6,13,.72); backdrop-filter:blur(5px); opacity:0; pointer-events:none; transition:opacity .2s; }
+.customer-drawer-backdrop.open { opacity:1; pointer-events:auto; }
+.customer-drawer { position:fixed; z-index:1101; top:0; right:0; height:100dvh; width:min(520px,100%); background:#0B1320; border-left:1px solid #2A3A50; box-shadow:-24px 0 70px rgba(0,0,0,.3); transform:translateX(102%); transition:transform .25s ease; display:flex; flex-direction:column; }
+.customer-drawer.open { transform:translateX(0); }
+.customer-drawer-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:21px; border-bottom:1px solid var(--border); }
+.customer-drawer-title { color:#F5F9FF; font-size:17px; font-weight:800; overflow-wrap:anywhere; }
+.customer-drawer-sub { color:#8292A9; font-size:10px; margin-top:7px; overflow-wrap:anywhere; }
+.customer-drawer-body { flex:1; overflow-y:auto; padding:19px 21px 28px; }
+.customer-detail-section { margin-bottom:22px; }
+.customer-detail-section-title { color:#E6EDF7; font-size:11px; font-weight:800; margin-bottom:10px; }
+.customer-detail-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.customer-detail-field { min-width:0; padding:11px; border:1px solid rgba(36,50,71,.9); border-radius:8px; background:rgba(16,24,39,.7); }
+.customer-detail-field span { display:block; color:#8292A9; font-size:9px; margin-bottom:7px; }
+.customer-detail-field strong { display:block; color:#E6EDF7; font-size:10px; line-height:1.6; overflow-wrap:anywhere; font-weight:600; }
+.customer-source-note { color:#8292A9; font-size:9px; line-height:1.7; padding:12px 14px; border:1px solid rgba(93,239,255,.13); border-radius:8px; background:rgba(93,239,255,.035); }
+@media(max-width:1100px) { .customer-kpis { grid-template-columns:repeat(2,minmax(0,1fr)); } .customer-segment-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:700px) { .customer-grid { grid-template-columns:1fr; } .customer-toolbar-grid { grid-template-columns:1fr; } .customer-actions { align-items:stretch; } .customer-actions-left,.customer-actions-right { width:100%; } .customer-actions .customer-btn { flex:1; } .customer-table-foot { align-items:flex-start; flex-direction:column; } .customer-pagination { align-self:flex-end; } .customer-tabs { gap:4px; } .customer-tab { padding:9px 10px; } }
+@media(max-width:420px) { .customer-kpis { gap:8px; } .customer-kpi { padding:12px; } .customer-kpi-value { font-size:20px; } .customer-segment-grid { gap:8px; } .customer-segment-card { padding:12px; } .customer-segment-card strong { font-size:21px; } .customer-detail-grid { grid-template-columns:1fr; } }
+
 </style>
 </head>
 
@@ -1166,13 +1255,8 @@ button:disabled .refresh-icon { opacity: .65; }
       <div class="group-items">
         <button class="nav-item" type="button" data-page="customers">
           <span class="nav-icon">&#9827;</span>
-          <span class="nav-text">Customer Analytics</span>
+          <span class="nav-text">Customers</span>
           <span class="badge live">V1</span>
-        </button>
-        <button class="nav-item" type="button" data-page="segments">
-          <span class="nav-icon">&#9678;</span>
-          <span class="nav-text">Customer Segments</span>
-          <span class="badge">Planned</span>
         </button>
       </div>
     </div>
@@ -1478,6 +1562,77 @@ button:disabled .refresh-icon { opacity: .65; }
       <div class="order-drawer-body" id="orderDrawerBody"><div class="order-detail-empty">Loading details from HighLevel...</div></div>
     </aside>
 
+
+    <section id="customersPage" class="page" hidden>
+      <div class="customers-page">
+        <div class="customer-tabs" role="tablist" aria-label="Customer workspace sections">
+          <button class="customer-tab active" type="button" role="tab" aria-selected="true" data-customer-tab="overview">Customer Overview</button>
+          <button class="customer-tab" type="button" role="tab" aria-selected="false" data-customer-tab="analytics">Analytics</button>
+          <button class="customer-tab" type="button" role="tab" aria-selected="false" data-customer-tab="segments">Segments</button>
+          <button class="customer-tab" type="button" role="tab" aria-selected="false" data-customer-tab="directory">Customer Directory</button>
+        </div>
+
+        <div class="customer-view" id="customerViewOverview" data-customer-view="overview">
+          <div class="customer-kpis">
+            <article class="customer-kpi"><div class="customer-kpi-label">Total Contacts</div><div class="customer-kpi-value" id="customerTotalContacts">â</div><div class="customer-kpi-foot">Contacts returned by HighLevel</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">Customers With Orders</div><div class="customer-kpi-value" id="customerWithOrders">â</div><div class="customer-kpi-foot">Based on M06 Total Orders when available</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">Lifetime Customer Value</div><div class="customer-kpi-value" id="customerLifetimeValue">â</div><div class="customer-kpi-foot">Sum of populated M06 Lifetime Value fields</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">Average Order Value</div><div class="customer-kpi-value" id="customerAverageOrderValue">â</div><div class="customer-kpi-foot">Average of populated M06 AOV values</div></article>
+          </div>
+          <div class="section-head"><div><div class="section-title">Customer Snapshot</div><div class="caption">A read-only view of the customer records and M06 summaries currently available in HighLevel.</div></div><span class="tag" id="customerSnapshotTag">LOADING</span></div>
+          <div class="customer-grid">
+            <article class="customer-panel"><div class="customer-panel-head"><div class="customer-panel-title">Customer Type</div><div class="customer-panel-sub">Distribution of the values stored in M06 Customer Type.</div></div><div class="customer-panel-body"><div class="customer-bars" id="customerTypeBars"><div class="loading">Loading customer dataâ¦</div></div></div></article>
+            <article class="customer-panel"><div class="customer-panel-head"><div class="customer-panel-title">Customer Status</div><div class="customer-panel-sub">Distribution of the values stored in M06 Customer Status.</div></div><div class="customer-panel-body"><div class="customer-bars" id="customerStatusBars"><div class="loading">Loading customer dataâ¦</div></div></div></article>
+          </div>
+          <div class="customer-source-note">Data source: HighLevel Contacts API. Customer value, order count, and lifecycle fields are read from M06 Contact fields. This dashboard does not update Contact fields or workflows.</div>
+        </div>
+
+        <div class="customer-view" id="customerViewAnalytics" data-customer-view="analytics" hidden>
+          <div class="customer-kpis">
+            <article class="customer-kpi"><div class="customer-kpi-label">Returning Customers</div><div class="customer-kpi-value" id="customerReturningCount">â</div><div class="customer-kpi-foot">Based on M06 order count greater than one</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">New / One-Order Customers</div><div class="customer-kpi-value" id="customerOneOrderCount">â</div><div class="customer-kpi-foot">Exactly one order recorded in M06</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">Average Lifetime Value</div><div class="customer-kpi-value" id="customerAverageLifetimeValue">â</div><div class="customer-kpi-foot">Average among contacts with a populated LTV value</div></article>
+            <article class="customer-kpi"><div class="customer-kpi-label">Customers With Order Data</div><div class="customer-kpi-value" id="customerOrderDataCoverage">â</div><div class="customer-kpi-foot">Contacts with a numeric M06 Total Orders value</div></article>
+          </div>
+          <div class="customer-grid">
+            <article class="customer-panel"><div class="customer-panel-head"><div class="customer-panel-title">Lifetime Value Distribution</div><div class="customer-panel-sub">Customers grouped by their M06 Lifetime Value.</div></div><div class="customer-panel-body"><div class="customer-bars" id="customerValueBands"><div class="loading">Loading customer dataâ¦</div></div></div></article>
+            <article class="customer-panel"><div class="customer-panel-head"><div class="customer-panel-title">Order Frequency</div><div class="customer-panel-sub">Distribution using M06 Total Orders values.</div></div><div class="customer-panel-body"><div class="customer-bars" id="customerFrequencyBands"><div class="loading">Loading customer dataâ¦</div></div></div></article>
+          </div>
+          <div class="customer-source-note">Analytics use populated M06 Contact fields. Empty values are excluded from averages and are not silently treated as verified zeroes. Monetary values are displayed in EGP as configured for this restaurant dashboard.</div>
+        </div>
+
+        <div class="customer-view" id="customerViewSegments" data-customer-view="segments" hidden>
+          <div class="section-head" style="margin-top:4px"><div><div class="section-title">Customer Segments</div><div class="caption">Click a segment to open its matching customer list. Rules are explicit and read-only.</div></div><span class="tag">M06 + DATE RULES</span></div>
+          <div class="customer-segment-grid" id="customerSegmentCards"><div class="customer-panel-body loading">Loading segmentsâ¦</div></div>
+          <div class="customer-source-note">Segment rules: New = exactly 1 M06 Total Orders; Returning = 2 or more; High Value = top 20% of customers with numeric LTV; Inactive = last order date more than 90 days ago. Contacts with missing values are not automatically classified as zero or inactive.</div>
+        </div>
+
+        <div class="customer-view" id="customerViewDirectory" data-customer-view="directory" hidden>
+          <div class="customer-toolbar">
+            <form id="customerFilterForm">
+              <div class="customer-toolbar-grid">
+                <div class="customer-field"><label for="customerSearch">Search customers</label><input id="customerSearch" type="search" placeholder="Name, email, phone, or contact ID" autocomplete="off"></div>
+                <div class="customer-field"><label for="customerTypeFilter">Customer type</label><select id="customerTypeFilter"><option value="">All types</option></select></div>
+                <div class="customer-field"><label for="customerStatusFilter">Customer status</label><select id="customerStatusFilter"><option value="">All statuses</option></select></div>
+              </div>
+              <div class="customer-actions"><div class="customer-actions-left"><button class="customer-btn primary" type="submit">Apply filters</button><button class="customer-btn" id="customerClearFilters" type="button">Clear filters</button></div><div class="customer-actions-right"><span id="customerDirectoryCount" class="customer-table-caption">Loading contactsâ¦</span><button class="customer-btn" id="customerRefresh" type="button">â» Refresh customers</button></div></div>
+            </form>
+          </div>
+          <div class="customer-table-panel">
+            <div class="customer-table-head"><div><div class="customer-table-heading">Customer Directory</div><div class="customer-table-caption">Search, filter, and inspect customer records.</div></div><span class="tag" id="customerDirectoryTag">CONTACTS</span></div>
+            <div class="customer-table-wrap"><table class="customer-table"><thead><tr><th>Customer</th><th>Customer Type</th><th>Status</th><th>Total Orders</th><th>Lifetime Value</th><th>Last Order</th><th>Details</th></tr></thead><tbody id="customerTableBody"><tr><td colspan="7" class="customer-table-state"><strong>Loading customers</strong>Retrieving contacts and M06 fields from HighLevelâ¦</td></tr></tbody></table></div>
+            <div class="customer-table-foot"><span id="customerTableSummary">Waiting for dataâ¦</span><div class="customer-pagination"><button id="customerPrev" type="button" disabled>Previous</button><span id="customerPageLabel">Page 1</span><button id="customerNext" type="button" disabled>Next</button></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="customer-drawer-backdrop" id="customerDrawerBackdrop"></div>
+    <aside class="customer-drawer" id="customerDrawer" aria-label="Customer details" aria-hidden="true">
+      <div class="customer-drawer-head"><div><div class="customer-drawer-title" id="customerDrawerTitle">Customer details</div><div class="customer-drawer-sub" id="customerDrawerSub">Loading customerâ¦</div></div><button class="order-drawer-close" id="customerDrawerClose" type="button" aria-label="Close customer details">X</button></div>
+      <div class="customer-drawer-body" id="customerDrawerBody"><div class="order-detail-empty">Select a customer to view details.</div></div>
+    </aside>
+
     <section id="placeholderPage" class="page" hidden>
       <div class="placeholder">
         <div class="placeholder-icon" id="placeholderIcon">ÃÂ¢âÃÂ</div>
@@ -1551,11 +1706,11 @@ const pages = {
     "Ã¢ÂÂ"
   ],
   customers: [
-    "Customer Analytics",
     "Customers",
     "Customers",
-    "Customer activity and repeat purchasing behavior.",
-    "Ã¢ÂÂ£"
+    "Customers",
+    "Customer intelligence, analytics, segments, and directory.",
+    "â§"
   ],
   segments: [
     "Customer Segments",
@@ -2345,6 +2500,330 @@ function closeSidebar() {
   $("overlay").classList.remove("open");
 }
 
+
+/* =====================================================
+   CUSTOMERS WORKSPACE
+===================================================== */
+const customerState = {
+  loaded: false,
+  loading: false,
+  customers: [],
+  filtered: [],
+  page: 1,
+  pageSize: 10,
+  activeTab: "overview",
+  activeSegment: "all",
+  applied: { search: "", type: "", status: "" },
+  request: null
+};
+
+const CUSTOMER_SEGMENTS = [
+  { key: "new", title: "New Customers", description: "Exactly one order recorded in M06." },
+  { key: "returning", title: "Returning Customers", description: "Two or more orders recorded in M06." },
+  { key: "highValue", title: "High-Value Customers", description: "Top 20% by populated M06 Lifetime Value." },
+  { key: "inactive", title: "Inactive 90+ Days", description: "Last order date is more than 90 days ago." }
+];
+
+function customFieldValueMap(contact) {
+  const result = {};
+  const list = Array.isArray(contact.customFields) ? contact.customFields : [];
+  for (const field of list) {
+    if (field && field.fieldKey) result[field.fieldKey] = field.value;
+  }
+  return result;
+}
+
+function customerName(customer) {
+  return customer.name || [customer.firstName, customer.lastName].filter(Boolean).join(" ") || "Unnamed customer";
+}
+
+function customerInitials(name) {
+  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+  return (parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : (parts[0] || "?").slice(0, 2)).toUpperCase();
+}
+
+function customerNumeric(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function customerDate(value) {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) ? date : null;
+}
+
+function customerDisplayDate(value) {
+  const date = customerDate(value);
+  if (!date) return "â";
+  return new Intl.DateTimeFormat("en-US", { timeZone: RESTAURANT_TIME_ZONE, month: "short", day: "numeric", year: "numeric" }).format(date);
+}
+
+function customerValue(customer, key) {
+  return customer.fields ? customer.fields[key] : null;
+}
+
+function customerOrders(customer) {
+  return customerNumeric(customerValue(customer, "total_orders"));
+}
+
+function customerLtv(customer) {
+  return customerNumeric(customerValue(customer, "lifetime_value"));
+}
+
+function customerAov(customer) {
+  return customerNumeric(customerValue(customer, "average_order_value"));
+}
+
+function customerLastOrderDate(customer) {
+  return customerValue(customer, "last_order_date");
+}
+
+function customerSegmentKey(customer) {
+  const orders = customerOrders(customer);
+  const ltv = customerLtv(customer);
+  const ranked = customerState.customers.filter(item => customerLtv(item) !== null).sort((a,b) => customerLtv(b) - customerLtv(a));
+  const thresholdIndex = Math.max(0, Math.ceil(ranked.length * 0.2) - 1);
+  const highValueThreshold = ranked.length ? customerLtv(ranked[thresholdIndex]) : null;
+  const lastOrder = customerDate(customerLastOrderDate(customer));
+  const inactive = lastOrder && (Date.now() - lastOrder.getTime()) > 90 * 24 * 60 * 60 * 1000;
+  return {
+    new: orders === 1,
+    returning: orders !== null && orders >= 2,
+    highValue: ltv !== null && highValueThreshold !== null && ltv >= highValueThreshold,
+    inactive: Boolean(inactive)
+  };
+}
+
+function getCustomerSegmentCount(key) {
+  return customerState.customers.filter(customer => customerSegmentKey(customer)[key]).length;
+}
+
+function renderCustomerBars(containerId, entries, emptyText = "No populated values are available.") {
+  const container = $(containerId);
+  if (!container) return;
+  if (!entries.length || entries.every(entry => !entry.count)) {
+    container.innerHTML = `<div class="order-detail-empty">${escapeHtml(emptyText)}</div>`;
+    return;
+  }
+  const max = Math.max(1, ...entries.map(entry => entry.count));
+  container.innerHTML = entries.map(entry => `<div class="customer-bar-row"><div class="customer-bar-label" title="${escapeHtml(entry.label)}">${escapeHtml(entry.label)}</div><div class="customer-bar-track"><div class="customer-bar-fill" style="width:${Math.max(0,Math.min(100,entry.count/max*100))}%"></div></div><div class="customer-bar-count">${formatNumber(entry.count)}</div></div>`).join("");
+}
+
+function distributionFor(key, labelFallback = "Not set") {
+  const counts = new Map();
+  for (const customer of customerState.customers) {
+    const raw = customerValue(customer, key);
+    const label = raw === null || raw === undefined || String(raw).trim() === "" ? labelFallback : String(raw);
+    counts.set(label, (counts.get(label) || 0) + 1);
+  }
+  return [...counts.entries()].map(([label,count]) => ({ label, count })).sort((a,b) => b.count - a.count || a.label.localeCompare(b.label));
+}
+
+function renderCustomerAnalytics() {
+  const customers = customerState.customers;
+  const withOrderData = customers.filter(customer => customerOrders(customer) !== null);
+  const purchasers = customers.filter(customer => (customerOrders(customer) || 0) > 0);
+  const returning = customers.filter(customer => customerOrders(customer) !== null && customerOrders(customer) >= 2);
+  const oneOrder = customers.filter(customer => customerOrders(customer) === 1);
+  const ltvValues = customers.map(customerLtv).filter(value => value !== null);
+  const aovValues = customers.map(customerAov).filter(value => value !== null);
+  const sumLtv = ltvValues.reduce((sum,value) => sum + value, 0);
+  const averageAov = aovValues.length ? aovValues.reduce((sum,value) => sum + value, 0) / aovValues.length : null;
+  const averageLtv = ltvValues.length ? sumLtv / ltvValues.length : null;
+
+  $("customerTotalContacts").textContent = formatNumber(customers.length);
+  $("customerWithOrders").textContent = formatNumber(purchasers.length);
+  $("customerLifetimeValue").textContent = formatMoney(sumLtv);
+  $("customerAverageOrderValue").textContent = averageAov === null ? "â" : formatMoney(averageAov);
+  $("customerReturningCount").textContent = formatNumber(returning.length);
+  $("customerOneOrderCount").textContent = formatNumber(oneOrder.length);
+  $("customerAverageLifetimeValue").textContent = averageLtv === null ? "â" : formatMoney(averageLtv);
+  $("customerOrderDataCoverage").textContent = `${formatNumber(withOrderData.length)} / ${formatNumber(customers.length)}`;
+  $("customerSnapshotTag").textContent = `${customers.length} CONTACTS`;
+  $("customerDirectoryTag").textContent = `${customers.length} CONTACTS`;
+
+  renderCustomerBars("customerTypeBars", distributionFor("customer_type"));
+  renderCustomerBars("customerStatusBars", distributionFor("customer_status"));
+
+  const valueBands = [
+    { label: "No LTV value", count: customers.filter(customer => customerLtv(customer) === null).length },
+    { label: "EGP 0", count: customers.filter(customer => customerLtv(customer) === 0).length },
+    { label: "EGP 1â499", count: customers.filter(customer => { const value = customerLtv(customer); return value !== null && value > 0 && value < 500; }).length },
+    { label: "EGP 500â1,499", count: customers.filter(customer => { const value = customerLtv(customer); return value !== null && value >= 500 && value < 1500; }).length },
+    { label: "EGP 1,500+", count: customers.filter(customer => { const value = customerLtv(customer); return value !== null && value >= 1500; }).length }
+  ];
+  renderCustomerBars("customerValueBands", valueBands);
+  const frequencyBands = [
+    { label: "No order count", count: customers.filter(customer => customerOrders(customer) === null).length },
+    { label: "0 orders", count: customers.filter(customer => customerOrders(customer) === 0).length },
+    { label: "1 order", count: oneOrder.length },
+    { label: "2â4 orders", count: customers.filter(customer => { const n = customerOrders(customer); return n !== null && n >= 2 && n <= 4; }).length },
+    { label: "5+ orders", count: customers.filter(customer => { const n = customerOrders(customer); return n !== null && n >= 5; }).length }
+  ];
+  renderCustomerBars("customerFrequencyBands", frequencyBands);
+  renderCustomerSegmentCards();
+  populateCustomerFilters();
+  applyCustomerFilters();
+}
+
+function renderCustomerSegmentCards() {
+  const container = $("customerSegmentCards");
+  if (!container) return;
+  container.innerHTML = CUSTOMER_SEGMENTS.map(segment => `<button type="button" class="customer-segment-card ${customerState.activeSegment === segment.key ? "active" : ""}" data-customer-segment="${segment.key}"><strong>${formatNumber(getCustomerSegmentCount(segment.key))}</strong><span>${escapeHtml(segment.title)}</span><small>${escapeHtml(segment.description)}</small></button>`).join("");
+}
+
+function populateCustomerFilters() {
+  const typeSelect = $("customerTypeFilter");
+  const statusSelect = $("customerStatusFilter");
+  const currentType = typeSelect.value;
+  const currentStatus = statusSelect.value;
+  const types = [...new Set(customerState.customers.map(customer => customerValue(customer,"customer_type")).filter(value => value !== null && value !== undefined && String(value).trim() !== "").map(String))].sort((a,b) => a.localeCompare(b));
+  const statuses = [...new Set(customerState.customers.map(customer => customerValue(customer,"customer_status")).filter(value => value !== null && value !== undefined && String(value).trim() !== "").map(String))].sort((a,b) => a.localeCompare(b));
+  typeSelect.innerHTML = '<option value="">All types</option>' + types.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join("");
+  statusSelect.innerHTML = '<option value="">All statuses</option>' + statuses.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join("");
+  if (types.includes(currentType)) typeSelect.value = currentType;
+  if (statuses.includes(currentStatus)) statusSelect.value = currentStatus;
+}
+
+function applyCustomerFilters() {
+  const search = customerState.applied.search.toLowerCase();
+  const type = customerState.applied.type;
+  const status = customerState.applied.status;
+  let list = customerState.customers.filter(customer => {
+    const name = customerName(customer);
+    const searchValues = [name, customer.email, customer.phone, customer.id].filter(Boolean).join(" ").toLowerCase();
+    return (!search || searchValues.includes(search))
+      && (!type || String(customerValue(customer,"customer_type") ?? "") === type)
+      && (!status || String(customerValue(customer,"customer_status") ?? "") === status);
+  });
+  if (customerState.activeSegment !== "all") list = list.filter(customer => customerSegmentKey(customer)[customerState.activeSegment]);
+  customerState.filtered = list;
+  customerState.page = Math.max(1, Math.min(customerState.page, Math.max(1, Math.ceil(list.length / customerState.pageSize))));
+  renderCustomerTable();
+}
+
+function renderCustomerTable() {
+  const tbody = $("customerTableBody");
+  const list = customerState.filtered;
+  const totalPages = Math.max(1, Math.ceil(list.length / customerState.pageSize));
+  const start = (customerState.page - 1) * customerState.pageSize;
+  const visible = list.slice(start, start + customerState.pageSize);
+  if (!visible.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="customer-table-state"><strong>No matching customers</strong>Try clearing filters or selecting another segment.</td></tr>';
+  } else {
+    tbody.innerHTML = visible.map(customer => {
+      const name = customerName(customer);
+      const type = customerValue(customer,"customer_type");
+      const status = customerValue(customer,"customer_status");
+      const orders = customerOrders(customer);
+      const ltv = customerLtv(customer);
+      const lastOrder = customerLastOrderDate(customer);
+      const initials = customerInitials(name);
+      const email = customer.email || customer.phone || customer.id;
+      const statusClassName = /active|loyal|returning|good/i.test(String(status || "")) ? "good" : /inactive|lapsed|at.?risk/i.test(String(status || "")) ? "warn" : "";
+      return `<tr><td><div class="customer-person"><div class="customer-avatar">${escapeHtml(initials)}</div><div><div class="customer-person-name" title="${escapeHtml(name)}">${escapeHtml(name)}</div><div class="customer-person-sub" title="${escapeHtml(email)}">${escapeHtml(email)}</div></div></div></td><td><span class="customer-pill">${escapeHtml(type || "Not set")}</span></td><td><span class="customer-pill ${statusClassName}">${escapeHtml(status || "Not set")}</span></td><td>${orders === null ? "â" : formatNumber(orders)}</td><td class="customer-value">${ltv === null ? "â" : escapeHtml(formatMoney(ltv))}</td><td>${escapeHtml(customerDisplayDate(lastOrder))}</td><td><button class="customer-row-btn" type="button" data-customer-details="${escapeHtml(customer.id)}">View</button></td></tr>`;
+    }).join("");
+  }
+  const from = list.length ? start + 1 : 0;
+  const to = Math.min(start + customerState.pageSize, list.length);
+  $("customerDirectoryCount").textContent = `${formatNumber(list.length)} matching contacts`;
+  $("customerTableSummary").textContent = `Showing ${formatNumber(from)}â${formatNumber(to)} of ${formatNumber(list.length)} contacts`;
+  $("customerPageLabel").textContent = `Page ${customerState.page} of ${totalPages}`;
+  $("customerPrev").disabled = customerState.page <= 1;
+  $("customerNext").disabled = customerState.page >= totalPages;
+}
+
+function showCustomerTab(tab) {
+  customerState.activeTab = tab;
+  document.querySelectorAll("[data-customer-tab]").forEach(button => {
+    const active = button.dataset.customerTab === tab;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-selected", String(active));
+  });
+  document.querySelectorAll("[data-customer-view]").forEach(view => {
+    view.hidden = view.dataset.customerView !== tab;
+  });
+  if (tab === "directory") renderCustomerTable();
+}
+
+function openCustomerDrawer(customerId) {
+  const customer = customerState.customers.find(item => item.id === customerId);
+  if (!customer) return;
+  const name = customerName(customer);
+  $("customerDrawerTitle").textContent = name;
+  $("customerDrawerSub").textContent = [customer.email, customer.phone, `Contact ID: ${customer.id}`].filter(Boolean).join(" Â· ");
+  const field = (label,value) => `<div class="customer-detail-field"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value === null || value === undefined || value === "" ? "Not provided" : value)}</strong></div>`;
+  const orders = customerOrders(customer);
+  const ltv = customerLtv(customer);
+  const aov = customerAov(customer);
+  $("customerDrawerBody").innerHTML = `
+    <section class="customer-detail-section"><div class="customer-detail-section-title">Contact information</div><div class="customer-detail-grid">${field("Email",customer.email)}${field("Phone",customer.phone)}${field("City",customer.city)}${field("Country",customer.country)}${field("Contact source",customer.source)}${field("Date added",customerDisplayDate(customer.dateAdded))}</div></section>
+    <section class="customer-detail-section"><div class="customer-detail-section-title">M06 Customer Intelligence</div><div class="customer-detail-grid">${field("Customer Type",customerValue(customer,"customer_type"))}${field("Customer Status",customerValue(customer,"customer_status"))}${field("Total Orders",orders === null ? null : formatNumber(orders))}${field("Lifetime Value",ltv === null ? null : formatMoney(ltv))}${field("Average Order Value",aov === null ? null : formatMoney(aov))}${field("First Order Date",customerDisplayDate(customerValue(customer,"first_order_date")))}${field("Last Order Date",customerDisplayDate(customerLastOrderDate(customer)))}${field("Last Order Type",customerValue(customer,"last_order_type"))}${field("Last Order Location",customerValue(customer,"last_order_location"))}</div></section>
+    <div class="customer-source-note">Read-only contact detail. M06 remains the owner of customer aggregate fields.</div>`;
+  $("customerDrawer").classList.add("open");
+  $("customerDrawerBackdrop").classList.add("open");
+  $("customerDrawer").setAttribute("aria-hidden","false");
+  document.body.style.overflow = "hidden";
+}
+
+function closeCustomerDrawer() {
+  $("customerDrawer").classList.remove("open");
+  $("customerDrawerBackdrop").classList.remove("open");
+  $("customerDrawer").setAttribute("aria-hidden","true");
+  document.body.style.overflow = "";
+}
+
+async function loadCustomers(force = false) {
+  if (customerState.loading) return;
+  if (customerState.loaded && !force) return;
+  customerState.loading = true;
+  if (customerState.request) customerState.request.abort();
+  customerState.request = new AbortController();
+  const signal = customerState.request.signal;
+  $("customerTableBody").innerHTML = '<tr><td colspan="7" class="customer-table-state"><strong>Loading customers</strong>Retrieving contacts and M06 fields from HighLevelâ¦</td></tr>';
+  try {
+    const result = await fetchJson("/api/customers", signal);
+    if (signal.aborted) return;
+    if (!Array.isArray(result.customers)) throw new Error("The customers API did not return a customer list.");
+    customerState.customers = result.customers;
+    customerState.loaded = true;
+    customerState.activeSegment = "all";
+    customerState.applied = { search: "", type: "", status: "" };
+    $("customerSearch").value = "";
+    $("customerTypeFilter").value = "";
+    $("customerStatusFilter").value = "";
+    renderCustomerAnalytics();
+    $("customerSnapshotTag").textContent = `${formatNumber(result.diagnostics?.contactsFetched ?? result.customers.length)} CONTACTS`;
+    if (result.diagnostics?.partial === true) {
+      showError("Some contacts could not be loaded. Customer metrics reflect the records returned by HighLevel.", "Customer data may be incomplete");
+    } else {
+      clearError();
+    }
+  } catch (error) {
+    if (signal.aborted) return;
+    console.error("Customers API failed:", error);
+    $("customerTableBody").innerHTML = `<tr><td colspan="7" class="customer-table-state"><strong>Unable to load customers</strong>${escapeHtml(error.message || "Please check the deployment and API connection.")}</td></tr>`;
+    showError(error.message || "We couldn't retrieve customer records from HighLevel.", "Unable to load customers");
+  } finally {
+    if (!signal.aborted) customerState.loading = false;
+  }
+}
+
+function applyCustomerFilterForm() {
+  customerState.applied = {
+    search: $("customerSearch").value.trim(),
+    type: $("customerTypeFilter").value,
+    status: $("customerStatusFilter").value
+  };
+  customerState.page = 1;
+  customerState.activeSegment = "all";
+  renderCustomerSegmentCards();
+  applyCustomerFilters();
+}
+
+
 function showPage(key) {
   const page = pages[key] || pages.overview;
 
@@ -2357,12 +2836,14 @@ function showPage(key) {
 
   const isOverview = key === "overview";
   const isOrders = key === "orders";
+  const isCustomers = key === "customers";
 
   $("overviewPage").hidden = !isOverview;
   $("ordersPage").hidden = !isOrders;
-  $("placeholderPage").hidden = isOverview || isOrders;
+  $("customersPage").hidden = !isCustomers;
+  $("placeholderPage").hidden = isOverview || isOrders || isCustomers;
 
-  if (!isOverview && !isOrders) {
+  if (!isOverview && !isOrders && !isCustomers) {
     $("placeholderTitle").textContent = page[0];
     $("placeholderDescription").textContent = page[3];
     $("placeholderIcon").textContent = page[4];
@@ -2370,6 +2851,7 @@ function showPage(key) {
   }
 
   if (isOrders && !ordersState.loaded) loadOrders(true);
+  if (isCustomers) loadCustomers(false);
   closeSidebar();
 }
 
@@ -2441,6 +2923,42 @@ $("orderDrawerBackdrop").addEventListener("click", closeOrderDrawer);
 document.addEventListener("keydown", event => {
   if (event.key === "Escape") closeOrderDrawer();
 });
+
+
+// Customer workspace interactions
+ document.querySelectorAll("[data-customer-tab]").forEach(button => {
+  button.addEventListener("click", () => showCustomerTab(button.dataset.customerTab));
+});
+$("customerFilterForm").addEventListener("submit", event => { event.preventDefault(); applyCustomerFilterForm(); });
+$("customerClearFilters").addEventListener("click", () => {
+  $("customerSearch").value = "";
+  $("customerTypeFilter").value = "";
+  $("customerStatusFilter").value = "";
+  customerState.activeSegment = "all";
+  customerState.applied = { search:"", type:"", status:"" };
+  customerState.page = 1;
+  renderCustomerSegmentCards();
+  applyCustomerFilters();
+});
+$("customerRefresh").addEventListener("click", () => loadCustomers(true));
+$("customerPrev").addEventListener("click", () => { if (customerState.page > 1) { customerState.page--; renderCustomerTable(); } });
+$("customerNext").addEventListener("click", () => { const pages = Math.max(1, Math.ceil(customerState.filtered.length / customerState.pageSize)); if (customerState.page < pages) { customerState.page++; renderCustomerTable(); } });
+$("customerSegmentCards").addEventListener("click", event => {
+  const button = event.target.closest("[data-customer-segment]");
+  if (!button) return;
+  customerState.activeSegment = button.dataset.customerSegment;
+  customerState.page = 1;
+  renderCustomerSegmentCards();
+  applyCustomerFilters();
+  showCustomerTab("directory");
+});
+$("customerTableBody").addEventListener("click", event => {
+  const button = event.target.closest("[data-customer-details]");
+  if (button) openCustomerDrawer(button.dataset.customerDetails);
+});
+$("customerDrawerClose").addEventListener("click", closeCustomerDrawer);
+$("customerDrawerBackdrop").addEventListener("click", closeCustomerDrawer);
+document.addEventListener("keydown", event => { if (event.key === "Escape") closeCustomerDrawer(); });
 
 loadDashboard();
 </script>
