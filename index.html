@@ -1313,7 +1313,7 @@ button:disabled .refresh-icon { opacity: .65; }
         <button class="nav-item" type="button" data-page="birthday">
           <span class="nav-icon">&#10022;</span>
           <span class="nav-text">Birthday</span>
-          <span class="badge">Planned</span>
+          <span class="badge live">V1</span>
         </button>
         <button class="nav-item" type="button" data-page="winback">
           <span class="nav-icon">&#8635;</span>
@@ -2585,15 +2585,31 @@ function birthdayStatus(value) {
 
 function birthdayDate(value) {
   if (value === null || value === undefined || value === "") return "â";
+
+  // HighLevel may return empty or non-date placeholder strings for unset fields.
+  // Accept only numeric timestamps or recognizable date strings so placeholders
+  // such as encoding artifacts never appear in the table.
+  const raw = String(value).trim();
+  if (!raw) return "â";
+
   let date;
-  if (typeof value === "number" || /^\d{10,13}$/.test(String(value))) {
+  if (typeof value === "number" || /^\d{10,13}$/.test(raw)) {
     const n = Number(value);
-    date = new Date(String(value).length === 10 ? n * 1000 : n);
+    date = new Date(raw.length === 10 ? n * 1000 : n);
   } else {
-    date = new Date(value);
+    const looksLikeDate = /^\d{4}-\d{1,2}-\d{1,2}(?:[Tt ].*)?$/.test(raw)
+      || /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(raw);
+    if (!looksLikeDate) return "â";
+    date = new Date(raw);
   }
+
   if (!Number.isFinite(date.getTime())) return "â";
-  return new Intl.DateTimeFormat("en-US", { timeZone:RESTAURANT_TIME_ZONE, month:"short", day:"numeric", year:"numeric" }).format(date);
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: RESTAURANT_TIME_ZONE,
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  }).format(date);
 }
 
 function birthdayStatusLabel(value) {
@@ -3048,8 +3064,22 @@ function showPage(key) {
 document.querySelectorAll(".group-toggle").forEach(button => {
   button.addEventListener("click", () => {
     const selectedGroup = button.closest(".nav-group");
-    const shouldOpen = selectedGroup.classList.contains("collapsed");
+    const groupLabel = selectedGroup.querySelector(".group-label")?.textContent.trim().toUpperCase();
 
+    // These groups are primary destinations: clicking the group title opens the page
+    // directly instead of requiring a second click on its only primary module.
+    const directPages = {
+      "OVERVIEW": "overview",
+      "ORDERS & OPERATIONS": "orders",
+      "CUSTOMERS": "customers"
+    };
+    if (directPages[groupLabel]) {
+      showPage(directPages[groupLabel]);
+      return;
+    }
+
+    // Keep expandable navigation for groups that contain multiple modules.
+    const shouldOpen = selectedGroup.classList.contains("collapsed");
     document.querySelectorAll(".nav-group").forEach(group => {
       group.classList.add("collapsed");
       const toggle = group.querySelector(".group-toggle");
