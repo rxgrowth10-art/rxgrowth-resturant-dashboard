@@ -43,7 +43,7 @@ async function ghlGet(urlOrPath) {
 }
 
 function normalizeFieldKey(key) {
-  return String(key || "").replace(/^contact\./, "");
+  return String(key || "").replace(/^contact\\./, "");
 }
 
 async function fetchFieldDefinitions() {
@@ -139,10 +139,23 @@ function buildResponse(rawContacts, fieldDefinitions, contactResult) {
   const clubActive = birthdayContacts.filter(contact => statusIs(contact.fields.birthday_club_status, "active"));
   const withJoinDate = birthdayContacts.filter(contact => hasValue(contact.fields.birthday_club_joined_at));
   const campaignsStarted = birthdayContacts.filter(contact => hasValue(contact.fields.birthday_campaign_started_at));
-  const activeCampaigns = birthdayContacts.filter(contact => statusIs(contact.fields.birthday_campaign_status, "active"));
-  const convertedCampaigns = birthdayContacts.filter(contact => statusIs(contact.fields.birthday_campaign_status, "converted"));
-  const expiredCampaigns = birthdayContacts.filter(contact => statusIs(contact.fields.birthday_campaign_status, "expired"));
-  const contactsWithCampaignStatus = birthdayContacts.filter(contact => hasValue(contact.fields.birthday_campaign_status));
+
+  // Campaign Status = Active means joined/queued; In Progress means the campaign is running.
+  const clubJoinedNotStarted = birthdayContacts.filter(contact =>
+    statusIs(contact.fields.birthday_campaign_status, "active")
+  );
+  const activeCampaigns = birthdayContacts.filter(contact =>
+    statusIs(contact.fields.birthday_campaign_status, "in progress")
+  );
+  const convertedCampaigns = birthdayContacts.filter(contact =>
+    statusIs(contact.fields.birthday_campaign_status, "converted")
+  );
+  const expiredCampaigns = birthdayContacts.filter(contact =>
+    statusIs(contact.fields.birthday_campaign_status, "expired")
+  );
+  const contactsWithCampaignStatus = birthdayContacts.filter(contact =>
+    hasValue(contact.fields.birthday_campaign_status)
+  );
 
   return {
     success: true,
@@ -153,6 +166,7 @@ function buildResponse(rawContacts, fieldDefinitions, contactResult) {
       contactsWithJoinDate: withJoinDate.length,
       campaignsStarted: campaignsStarted.length,
       activeCampaigns: activeCampaigns.length,
+      clubJoinedNotStarted: clubJoinedNotStarted.length,
       convertedCampaigns: convertedCampaigns.length,
       expiredCampaigns: expiredCampaigns.length,
       contactsWithCampaignStatus: contactsWithCampaignStatus.length,
