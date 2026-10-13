@@ -1725,7 +1725,7 @@ button:disabled .refresh-icon { opacity: .65; }
     <section id="birthdayPage" class="page" hidden>
       <div class="birthday-page">
         <div class="birthday-toolbar">
-          <div><div class="birthday-toolbar-title">Birthday Campaign Snapshot</div><div class="birthday-toolbar-sub">Current HighLevel contact fields ÃÂ· read-only V1</div></div>
+          <div><div class="birthday-toolbar-title">Birthday Campaign Snapshot</div><div class="birthday-toolbar-sub">Current HighLevel contact fields Â· read-only V1</div></div>
           <button class="customer-btn" id="birthdayRefresh" type="button">â» Refresh birthday data</button>
         </div>
 
@@ -3190,7 +3190,7 @@ function openCustomerDrawer(customerId) {
   if (!customer) return;
   const name = customerName(customer);
   $("customerDrawerTitle").textContent = name;
-  $("customerDrawerSub").textContent = [customer.email, customer.phone, `Contact ID: ${customer.id}`].filter(Boolean).join(" ÃÂ· ");
+  $("customerDrawerSub").textContent = [customer.email, customer.phone, `Contact ID: ${customer.id}`].filter(Boolean).join(" Â· ");
   const field = (label,value) => `<div class="customer-detail-field"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value === null || value === undefined || value === "" ? "Not provided" : value)}</strong></div>`;
   const orders = customerOrders(customer);
   const ltv = customerLtv(customer);
@@ -3397,4 +3397,38 @@ $("customerClearFilters").addEventListener("click", () => {
   renderCustomerSegmentCards();
   applyCustomerFilters();
 });
-$("customerRefresh").addEventListener("click", () => loadCus
+$("customerRefresh").addEventListener("click", () => loadCustomers(true));
+$("customerPrev").addEventListener("click", () => { if (customerState.page > 1) { customerState.page--; renderCustomerTable(); } });
+$("customerNext").addEventListener("click", () => { const pages = Math.max(1, Math.ceil(customerState.filtered.length / customerState.pageSize)); if (customerState.page < pages) { customerState.page++; renderCustomerTable(); } });
+$("customerSegmentCards").addEventListener("click", event => {
+  const button = event.target.closest("[data-customer-segment]");
+  if (!button) return;
+  customerState.activeSegment = button.dataset.customerSegment;
+  customerState.page = 1;
+  renderCustomerSegmentCards();
+  applyCustomerFilters();
+  showCustomerTab("directory");
+});
+$("customerTableBody").addEventListener("click", event => {
+  const button = event.target.closest("[data-customer-details]");
+  if (button) openCustomerDrawer(button.dataset.customerDetails);
+});
+$("customerDrawerClose").addEventListener("click", closeCustomerDrawer);
+$("customerDrawerBackdrop").addEventListener("click", closeCustomerDrawer);
+document.addEventListener("keydown", event => { if (event.key === "Escape") closeCustomerDrawer(); });
+
+$("birthdayRefresh").addEventListener("click", () => loadBirthday(true));
+$("birthdaySearch").addEventListener("input", renderBirthdayContacts);
+$("birthdayStatusFilter").addEventListener("change", renderBirthdayContacts);
+
+$("winbackRefresh").addEventListener("click", () => loadWinback(true));
+$("winbackSearch").addEventListener("input", renderWinbackContacts);
+$("winbackEligibilityFilter").addEventListener("change", renderWinbackContacts);
+$("winbackTierFilter").addEventListener("change", renderWinbackContacts);
+$("winbackCycleFilter").addEventListener("change", renderWinbackContacts);
+
+loadDashboard();
+</script>
+
+</body>
+</html>
