@@ -157,8 +157,6 @@ select:focus-visible {
   margin-right: 3px;
 }
 .nav-group.collapsed .chev { transform: rotate(-45deg); }
-/* Single-destination groups navigate directly; hide misleading dropdown arrows. */
-.nav-group.direct-destination .chev { display:none; }
 
 .nav-group.collapsed .group-items { display: none; }
 
@@ -858,46 +856,6 @@ button:disabled .refresh-icon { opacity: .65; }
   50% { opacity: .55; }
 }
 
-
-/* =====================================================
-   WIN-BACK CAMPAIGN WORKSPACE V1
-===================================================== */
-.winback-page{display:flex;flex-direction:column;gap:14px;width:100%;max-width:1250px;margin:0 auto}
-.winback-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px;border:1px solid var(--border);background:rgba(16,24,39,.94);border-radius:11px}
-.winback-toolbar-title,.winback-table-title{font-size:12px;font-weight:800;color:#F5F9FF}
-.winback-toolbar-sub,.winback-table-sub{font-size:10px;line-height:1.6;color:#8292A9;margin-top:5px}
-.winback-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.winback-kpi{min-width:0;padding:17px;border:1px solid var(--border);border-radius:11px;background:linear-gradient(145deg,rgba(16,24,39,.98),rgba(12,20,33,.98));position:relative;overflow:hidden}
-.winback-kpi:before{content:"";position:absolute;inset:0 0 auto;height:2px;background:var(--winback-accent);opacity:.9}
-.winback-kpi-label{font-size:10px;line-height:1.5;color:#A9B8CC}
-.winback-kpi-value{margin-top:13px;font-size:clamp(22px,2vw,29px);font-weight:800;letter-spacing:-.7px;color:#F5F9FF;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.winback-kpi-foot{margin-top:7px;font-size:9px;line-height:1.6;color:#8292A9}
-.winback-table-panel{border:1px solid var(--border);background:rgba(16,24,39,.94);border-radius:11px;overflow:hidden;min-width:0}
-.winback-table-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px;border-bottom:1px solid var(--border)}
-.winback-filter-row{display:grid;grid-template-columns:auto minmax(160px,1.4fr) auto minmax(130px,.8fr) auto minmax(120px,.7fr);align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid rgba(36,50,71,.68)}
-.winback-search-label{font-size:10px;color:#A9B8CC}
-.winback-filter-row input,.winback-filter-row select{width:100%;min-width:0;height:36px;border:1px solid #2A3A50;border-radius:7px;background:#0B1320;color:#E6EDF7;padding:0 10px;font:inherit;font-size:10px;outline:none}
-.winback-filter-row input:focus,.winback-filter-row select:focus{border-color:rgba(93,239,255,.65);box-shadow:0 0 0 3px rgba(93,239,255,.07)}
-.winback-table-wrap{width:100%;overflow-x:auto}
-.winback-table{width:100%;border-collapse:collapse;min-width:1120px}
-.winback-table th{background:#0D1523;color:#8FA0B7;text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:12px 13px;white-space:nowrap;border-bottom:1px solid var(--border)}
-.winback-table td{padding:12px 13px;border-bottom:1px solid rgba(36,50,71,.68);color:#C8D4E4;font-size:10px;white-space:nowrap;vertical-align:middle}
-.winback-table tbody tr:last-child td{border-bottom:0}
-.winback-contact-name{color:#F0F5FC;font-weight:700}.winback-contact-sub{font-size:9px;color:#8292A9;margin-top:4px}
-.winback-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 7px;border-radius:5px;border:1px solid rgba(148,163,184,.15);background:rgba(148,163,184,.06);color:#B8C6D8;font-size:9px}
-.winback-pill:before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
-.winback-pill.eligible,.winback-pill.converted{color:#4ADE80;background:rgba(74,222,128,.06);border-color:rgba(74,222,128,.15)}
-.winback-pill.high{color:#FB7185;background:rgba(251,113,133,.06);border-color:rgba(251,113,133,.15)}
-.winback-pill.medium{color:#FBBF24;background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.15)}
-.winback-pill.in-progress{color:#5DEFFF;background:rgba(93,239,255,.06);border-color:rgba(93,239,255,.15)}
-.winback-table-state{text-align:center!important;white-space:normal!important;padding:36px 18px!important;color:#94A3B8!important;line-height:1.7}
-.winback-table-state strong{display:block;color:#E6EDF7;font-size:12px;margin-bottom:5px}
-.winback-table-foot{display:flex;justify-content:space-between;gap:12px;padding:13px 16px;border-top:1px solid var(--border);color:#8292A9;font-size:9px;line-height:1.6}
-.winback-data-note{padding:14px 16px;border:1px solid rgba(93,239,255,.14);border-radius:9px;background:rgba(93,239,255,.025)}
-.winback-data-note strong{font-size:10px;color:#5DEFFF}.winback-data-note p{font-size:10px;line-height:1.8;color:#A9B8CC;margin:7px 0 0}
-@media(max-width:1100px){.winback-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.winback-filter-row{grid-template-columns:auto minmax(140px,1fr) auto minmax(130px,.8fr)}}
-@media(max-width:650px){.winback-toolbar{align-items:flex-start;flex-direction:column}.winback-toolbar .customer-btn{width:100%}.winback-kpi-grid{gap:8px}.winback-kpi{padding:13px}.winback-filter-row{grid-template-columns:1fr 1fr}.winback-search-label{align-self:end}.winback-filter-row input,.winback-filter-row select{grid-column:span 1}.winback-table-foot{flex-direction:column}}
-
 /* =====================================================
    RESPONSIVE
 ===================================================== */
@@ -1285,6 +1243,51 @@ button:disabled .refresh-icon { opacity: .65; }
 @media(max-width:1100px){.birthday-kpi-grid,.birthday-status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.birthday-toolbar{align-items:flex-start;flex-direction:column}.birthday-toolbar .customer-btn{width:100%}.birthday-kpi-grid,.birthday-status-grid{gap:8px}.birthday-kpi{padding:13px}.birthday-kpi-value{font-size:22px}.birthday-filter-row{grid-template-columns:1fr 1fr}.birthday-search-label{align-self:end}.birthday-table-head{padding:13px}.birthday-table-foot{flex-direction:column}}
 
+
+/* =====================================================
+   WIN-BACK CAMPAIGN WORKSPACE V1
+===================================================== */
+.winback-page{display:flex;flex-direction:column;gap:14px;width:100%;max-width:1250px;margin:0 auto}
+.winback-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px;border:1px solid var(--border);background:rgba(16,24,39,.94);border-radius:11px}
+.winback-toolbar-title,.winback-table-title{font-size:12px;font-weight:800;color:#F5F9FF}
+.winback-toolbar-sub,.winback-table-sub{font-size:10px;line-height:1.6;color:#8292A9;margin-top:5px}
+.winback-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.winback-kpi{min-width:0;padding:17px;border:1px solid var(--border);border-radius:11px;background:linear-gradient(145deg,rgba(16,24,39,.98),rgba(12,20,33,.98));position:relative;overflow:hidden}
+.winback-kpi:before{content:"";position:absolute;inset:0 0 auto;height:2px;background:var(--winback-accent);opacity:.9}
+.winback-kpi-label{font-size:10px;line-height:1.5;color:#A9B8CC}
+.winback-kpi-value{margin-top:13px;font-size:clamp(22px,2vw,29px);font-weight:800;letter-spacing:-.7px;color:#F5F9FF;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.winback-kpi-foot{margin-top:7px;font-size:9px;line-height:1.6;color:#8292A9}
+.winback-status-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.winback-status-card{padding:14px;border:1px solid var(--border);border-radius:9px;background:rgba(13,21,35,.88);min-width:0}
+.winback-status-top{display:flex;align-items:center;gap:8px;color:#A9B8CC;font-size:10px;line-height:1.5}
+.winback-status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:#94A3B8}
+.winback-status-dot.converted{background:#4ADE80}.winback-status-dot.completed{background:#FBBF24}.winback-status-dot.in-progress{background:#5DEFFF}
+.winback-status-card strong{display:block;margin-top:12px;color:#F5F9FF;font-size:22px;font-weight:800}
+.winback-status-card small{display:block;margin-top:5px;color:#8292A9;font-size:9px;line-height:1.5}
+.winback-table-panel{border:1px solid var(--border);background:rgba(16,24,39,.94);border-radius:11px;overflow:hidden;min-width:0}
+.winback-table-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px;border-bottom:1px solid var(--border)}
+.winback-filter-row{display:grid;grid-template-columns:minmax(180px,1.5fr) repeat(3,minmax(130px,1fr));align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid rgba(36,50,71,.68)}
+.winback-filter-row label{display:block;font-size:10px;color:#A9B8CC;margin-bottom:6px}
+.winback-filter-row input,.winback-filter-row select{width:100%;min-width:0;height:36px;border:1px solid #2A3A50;border-radius:7px;background:#0B1320;color:#E6EDF7;padding:0 10px;font:inherit;font-size:10px;outline:none}
+.winback-filter-row input:focus,.winback-filter-row select:focus{border-color:rgba(93,239,255,.65);box-shadow:0 0 0 3px rgba(93,239,255,.07)}
+.winback-table-wrap{width:100%;overflow-x:auto}.winback-table{width:100%;border-collapse:collapse;min-width:1180px}
+.winback-table th{background:#0D1523;color:#8FA0B7;text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:12px 13px;white-space:nowrap;border-bottom:1px solid var(--border)}
+.winback-table td{padding:12px 13px;border-bottom:1px solid rgba(36,50,71,.68);color:#C8D4E4;font-size:10px;white-space:nowrap;vertical-align:middle}
+.winback-table tbody tr:last-child td{border-bottom:0}
+.winback-contact-name{color:#F0F5FC;font-weight:700}.winback-contact-sub{font-size:9px;color:#8292A9;margin-top:4px}
+.winback-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 7px;border-radius:5px;border:1px solid rgba(148,163,184,.15);background:rgba(148,163,184,.06);color:#B8C6D8;font-size:9px}
+.winback-pill:before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.winback-pill.eligible,.winback-pill.high,.winback-pill.converted{color:#4ADE80;background:rgba(74,222,128,.06);border-color:rgba(74,222,128,.15)}
+.winback-pill.medium,.winback-pill.in-progress{color:#5DEFFF;background:rgba(93,239,255,.06);border-color:rgba(93,239,255,.15)}
+.winback-pill.completed,.winback-pill.not-eligible{color:#FBBF24;background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.15)}
+.winback-table-state{text-align:center!important;white-space:normal!important;padding:36px 18px!important;color:#94A3B8!important;line-height:1.7}
+.winback-table-state strong{display:block;color:#E6EDF7;font-size:12px;margin-bottom:5px}
+.winback-table-foot{display:flex;justify-content:space-between;gap:12px;padding:13px 16px;border-top:1px solid var(--border);color:#8292A9;font-size:9px;line-height:1.6}
+.winback-data-note{padding:14px 16px;border:1px solid rgba(93,239,255,.14);border-radius:9px;background:rgba(93,239,255,.025)}
+.winback-data-note strong{font-size:10px;color:#5DEFFF}.winback-data-note p{font-size:10px;line-height:1.8;color:#A9B8CC;margin:7px 0 0}
+@media(max-width:1100px){.winback-kpi-grid,.winback-status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.winback-filter-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.winback-toolbar{align-items:flex-start;flex-direction:column}.winback-toolbar .customer-btn{width:100%}.winback-kpi-grid,.winback-status-grid{gap:8px}.winback-kpi{padding:13px}.winback-kpi-value{font-size:22px}.winback-filter-row{grid-template-columns:1fr}.winback-table-head{padding:13px}.winback-table-foot{flex-direction:column}}
+
 </style>
 </head>
 
@@ -1306,7 +1309,7 @@ button:disabled .refresh-icon { opacity: .65; }
 
     <div class="nav-group collapsed">
       <button class="group-toggle" type="button" aria-expanded="false">
-        <span class="group-leading"><svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="group-label">OVERVIEW</span></span><span class="chev" aria-hidden="true"></span>
+        <span class="group-leading"><svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="group-label">OVERVIEW</span></span>
       </button>
       <div class="group-items">
         <button class="nav-item active" type="button" data-page="overview">
@@ -1318,7 +1321,7 @@ button:disabled .refresh-icon { opacity: .65; }
 
     <div class="nav-group collapsed">
       <button class="group-toggle" type="button" aria-expanded="false">
-        <span class="group-leading"><svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h16"/><circle cx="8" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="10" cy="19" r="1"/></svg><span class="group-label">ORDERS & OPERATIONS</span></span><span class="chev" aria-hidden="true"></span>
+        <span class="group-leading"><svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h16"/><circle cx="8" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="10" cy="19" r="1"/></svg><span class="group-label">ORDERS & OPERATIONS</span></span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="orders">
@@ -1336,7 +1339,7 @@ button:disabled .refresh-icon { opacity: .65; }
 
     <div class="nav-group collapsed">
       <button class="group-toggle" type="button" aria-expanded="false">
-        <span class="group-leading"><svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.5-3.4 2.5-5.2 6-5.2s5.5 1.8 6 5.2"/><path d="M16 5.2a3.1 3.1 0 0 1 0 5.9M17 14.8c2.4.5 3.7 2.1 4 4.7"/></svg><span class="group-label">CUSTOMERS</span></span><span class="chev" aria-hidden="true"></span>
+        <span class="group-leading"><svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.5-3.4 2.5-5.2 6-5.2s5.5 1.8 6 5.2"/><path d="M16 5.2a3.1 3.1 0 0 1 0 5.9M17 14.8c2.4.5 3.7 2.1 4 4.7"/></svg><span class="group-label">CUSTOMERS</span></span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="customers">
@@ -1360,7 +1363,7 @@ button:disabled .refresh-icon { opacity: .65; }
         <button class="nav-item" type="button" data-page="winback">
           <span class="nav-icon">&#8635;</span>
           <span class="nav-text">Win-Back</span>
-          <span class="badge live">V1</span>
+          <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="slowtime">
           <span class="nav-icon">&#9675;</span>
@@ -1701,7 +1704,7 @@ button:disabled .refresh-icon { opacity: .65; }
                 <div class="customer-field"><label for="customerTypeFilter">Customer type</label><select id="customerTypeFilter"><option value="">All types</option></select></div>
                 <div class="customer-field"><label for="customerStatusFilter">Customer status</label><select id="customerStatusFilter"><option value="">All statuses</option></select></div>
               </div>
-              <div class="customer-actions"><div class="customer-actions-left"><button class="customer-btn primary" type="submit">Apply filters</button><button class="customer-btn" id="customerClearFilters" type="button">Clear filters</button></div><div class="customer-actions-right"><span id="customerDirectoryCount" class="customer-table-caption">Loading contactsâ¦</span><button class="customer-btn" id="customerRefresh" type="button">ÃÂ¢ÃÂÃÂ» Refresh customers</button></div></div>
+              <div class="customer-actions"><div class="customer-actions-left"><button class="customer-btn primary" type="submit">Apply filters</button><button class="customer-btn" id="customerClearFilters" type="button">Clear filters</button></div><div class="customer-actions-right"><span id="customerDirectoryCount" class="customer-table-caption">Loading contactsâ¦</span><button class="customer-btn" id="customerRefresh" type="button">â» Refresh customers</button></div></div>
             </form>
           </div>
           <div class="customer-table-panel">
@@ -1760,45 +1763,43 @@ button:disabled .refresh-icon { opacity: .65; }
     <section id="winbackPage" class="page" hidden>
       <div class="winback-page">
         <div class="winback-toolbar">
-          <div><div class="winback-toolbar-title">Win-Back Campaign Snapshot</div><div class="winback-toolbar-sub">Current HighLevel customer-intelligence and cycle fields Â· read-only V1</div></div>
+          <div><div class="winback-toolbar-title">Win-Back Campaign Snapshot</div><div class="winback-toolbar-sub">Current HighLevel contact fields Â· read-only V1. Eligibility and cycle states reflect recorded fields.</div></div>
           <button class="customer-btn" id="winbackRefresh" type="button">â» Refresh Win-Back data</button>
         </div>
 
         <div class="winback-kpi-grid">
           <article class="winback-kpi" style="--winback-accent:#5DEFFF"><div class="winback-kpi-label">Eligible Customers</div><div class="winback-kpi-value" id="winbackKpiEligible">â</div><div class="winback-kpi-foot">Win-Back Eligibility = Eligible</div></article>
-          <article class="winback-kpi" style="--winback-accent:#FBBF24"><div class="winback-kpi-label">Medium Tier Customers</div><div class="winback-kpi-value" id="winbackKpiMedium">â</div><div class="winback-kpi-foot">Win-Back Tier = Medium</div></article>
-          <article class="winback-kpi" style="--winback-accent:#FB7185"><div class="winback-kpi-label">High Tier Customers</div><div class="winback-kpi-value" id="winbackKpiHigh">â</div><div class="winback-kpi-foot">Win-Back Tier = High</div></article>
-          <article class="winback-kpi" style="--winback-accent:#A5B4FC"><div class="winback-kpi-label">Cycles In Progress</div><div class="winback-kpi-value" id="winbackKpiInProgress">â</div><div class="winback-kpi-foot">Cycle Status = In Progress</div></article>
-          <article class="winback-kpi" style="--winback-accent:#FBBF24"><div class="winback-kpi-label">Cycles Completed</div><div class="winback-kpi-value" id="winbackKpiCompleted">â</div><div class="winback-kpi-foot">Completed without conversion</div></article>
-          <article class="winback-kpi" style="--winback-accent:#4ADE80"><div class="winback-kpi-label">Converted Cycles</div><div class="winback-kpi-value" id="winbackKpiConverted">â</div><div class="winback-kpi-foot">Cycle Status = Converted</div></article>
-          <article class="winback-kpi" style="--winback-accent:#5DEFFF"><div class="winback-kpi-label">Contacts with Intelligence</div><div class="winback-kpi-value" id="winbackKpiIntelligence">â</div><div class="winback-kpi-foot">At least one intelligence field populated</div></article>
-          <article class="winback-kpi" style="--winback-accent:#A5B4FC"><div class="winback-kpi-label">Contacts with Win-Back Data</div><div class="winback-kpi-value" id="winbackKpiData">â</div><div class="winback-kpi-foot">At least one tracked Win-Back field populated</div></article>
+          <article class="winback-kpi" style="--winback-accent:#A5B4FC"><div class="winback-kpi-label">High-Tier Customers</div><div class="winback-kpi-value" id="winbackKpiHigh">â</div><div class="winback-kpi-foot">Win-Back Tier = High</div></article>
+          <article class="winback-kpi" style="--winback-accent:#4ADE80"><div class="winback-kpi-label">Medium-Tier Customers</div><div class="winback-kpi-value" id="winbackKpiMedium">â</div><div class="winback-kpi-foot">Win-Back Tier = Medium</div></article>
+          <article class="winback-kpi" style="--winback-accent:#FBBF24"><div class="winback-kpi-label">Cycles In Progress</div><div class="winback-kpi-value" id="winbackKpiInProgress">â</div><div class="winback-kpi-foot">Current recorded cycle status</div></article>
+        </div>
+
+        <div class="winback-status-grid">
+          <article class="winback-status-card"><div class="winback-status-top"><span class="winback-status-dot completed"></span><span>Cycles Completed</span></div><strong id="winbackKpiCompleted">â</strong><small>Current status count</small></article>
+          <article class="winback-status-card"><div class="winback-status-top"><span class="winback-status-dot converted"></span><span>Converted Cycles</span></div><strong id="winbackKpiConverted">â</strong><small>Current status count</small></article>
+          <article class="winback-status-card"><div class="winback-status-top"><span class="winback-status-dot neutral"></span><span>Contacts with Intelligence</span></div><strong id="winbackKpiIntelligence">â</strong><small>At least one Win-Back intelligence field populated</small></article>
+          <article class="winback-status-card"><div class="winback-status-top"><span class="winback-status-dot in-progress"></span><span>Contacts with Win-Back Data</span></div><strong id="winbackKpiData">â</strong><small>At least one tracked Win-Back field populated</small></article>
         </div>
 
         <section class="winback-table-panel">
-          <div class="winback-table-head"><div><div class="winback-table-title">Win-Back Customers</div><div class="winback-table-sub">Current contact-field values from HighLevel; this is not historical cycle or revenue attribution reporting.</div></div><span class="tag" id="winbackConnectionTag">NOT LOADED</span></div>
+          <div class="winback-table-head"><div><div class="winback-table-title">Win-Back Contacts</div><div class="winback-table-sub">Current customer intelligence and recorded cycle fields returned by HighLevel. Blank cycle fields are shown as not recorded, not inferred as a completed or active cycle.</div></div><span class="tag" id="winbackConnectionTag">NOT LOADED</span></div>
           <div class="winback-filter-row">
-            <label class="winback-search-label" for="winbackSearch">Search</label>
-            <input id="winbackSearch" type="search" placeholder="Name, email, or phone" autocomplete="off">
-            <label class="winback-search-label" for="winbackEligibilityFilter">Eligibility</label>
-            <select id="winbackEligibilityFilter"><option value="">All</option><option value="eligible">Eligible</option><option value="not eligible">Not Eligible</option><option value="empty">No status</option></select>
-            <label class="winback-search-label" for="winbackTierFilter">Tier</label>
-            <select id="winbackTierFilter"><option value="">All tiers</option><option value="medium">Medium</option><option value="high">High</option><option value="none">None</option><option value="empty">No status</option></select>
+            <div><label for="winbackSearch">Search contacts</label><input id="winbackSearch" type="search" placeholder="Name, email, or phone" autocomplete="off"></div>
+            <div><label for="winbackEligibilityFilter">Eligibility</label><select id="winbackEligibilityFilter"><option value="">All eligibility states</option><option value="eligible">Eligible</option><option value="not eligible">Not Eligible</option><option value="empty">Not recorded</option></select></div>
+            <div><label for="winbackTierFilter">Tier</label><select id="winbackTierFilter"><option value="">All tiers</option><option value="high">High</option><option value="medium">Medium</option><option value="none">None</option><option value="empty">Not recorded</option></select></div>
+            <div><label for="winbackCycleFilter">Cycle status</label><select id="winbackCycleFilter"><option value="">All cycle statuses</option><option value="not started">Not Started</option><option value="in progress">In Progress</option><option value="completed">Completed</option><option value="converted">Converted</option><option value="empty">Not recorded</option></select></div>
           </div>
-          <div class="winback-filter-row" style="grid-template-columns:auto minmax(180px,.6fr);border-top:0">
-            <label class="winback-search-label" for="winbackCycleFilter">Cycle status</label>
-            <select id="winbackCycleFilter"><option value="">All cycle statuses</option><option value="not started">Not Started</option><option value="in progress">In Progress</option><option value="completed">Completed</option><option value="converted">Converted</option><option value="empty">No status</option></select>
-          </div>
-          <div class="winback-table-wrap"><table class="winback-table"><thead><tr><th>Contact</th><th>Eligibility</th><th>Tier</th><th>Typical Interval</th><th>Days Since Order</th><th>Expected Next Order</th><th>Days Overdue</th><th>Overdue Ratio</th><th>Cycle Status</th><th>Cycle Started</th><th>Last Win-Back</th></tr></thead><tbody id="winbackTableBody"><tr><td colspan="11" class="winback-table-state"><strong>Win-Back data has not loaded</strong>Open this page to retrieve current fields from HighLevel.</td></tr></tbody></table></div>
+          <div class="winback-table-wrap"><table class="winback-table"><thead><tr><th>Contact</th><th>Eligibility</th><th>Tier</th><th>Typical Interval</th><th>Days Since Order</th><th>Days Overdue</th><th>Overdue Ratio</th><th>Expected Next Order</th><th>Cycle Status</th><th>Cycle Started</th><th>Last Win-Back</th></tr></thead><tbody id="winbackTableBody"><tr><td colspan="11" class="winback-table-state"><strong>Win-Back data has not loaded</strong>Open this page to retrieve current fields from HighLevel.</td></tr></tbody></table></div>
           <div class="winback-table-foot"><span id="winbackTableSummary">Waiting for dataâ¦</span><span id="winbackLastUpdated">â</span></div>
         </section>
-        <div class="winback-data-note"><strong>Data interpretation</strong><p>Eligibility and tier come from the existing customer-intelligence fields. Cycle metrics come from the current Win-Back Cycle Status and date fields. Empty values are shown as a dash, not treated as zero. Conversion and completed-cycle counts reflect current stored contact fields only; this V1 does not claim historical order attribution or revenue.</p></div>
+
+        <div class="winback-data-note"><strong>Data interpretation</strong><p>Eligibility and tier are read from the existing Win-Back Contact fields. Cycle counts reflect the current recorded Cycle Status field, not historical campaign events. Missing values remain unclassified and are not silently treated as zero, Not Eligible, or Not Started.</p></div>
       </div>
     </section>
 
     <section id="placeholderPage" class="page" hidden>
       <div class="placeholder">
-        <div class="placeholder-icon" id="placeholderIcon">ÃÂÃÂÃÂÃÂ¢âÃÂÃÂÃÂÃÂ</div>
+        <div class="placeholder-icon" id="placeholderIcon">â</div>
         <div>
           <h2 id="placeholderTitle">Module planned</h2>
           <p id="placeholderDescription">
@@ -1845,91 +1846,91 @@ const pages = {
     "Overview",
     "Overview",
     "A clear view of today's restaurant performance.",
-    "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ"
+    "â"
   ],
   orders: [
     "Orders",
     "Orders & Operations",
     "Orders",
     "Order records and payment status from HighLevel.",
-    "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ£"
+    "â£"
   ],
   orders: [
     "Orders",
     "Orders & Operations",
     "Orders",
     "Manage Native HighLevel orders, payment status, and fulfillment details.",
-    "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ£"
+    "â£"
   ],
   abandoned: [
     "Abandoned Checkouts",
     "Orders & Operations",
     "Abandoned Checkouts",
     "Checkout recovery will be available after checkout events are connected.",
-    "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ"
+    "â"
   ],
   customers: [
     "Customers",
     "Customers",
     "Customers",
     "Customer intelligence, analytics, segments, and directory.",
-    "ÃÂ¢ÃÂÃÂ§"
+    "â§"
   ],
   segments: [
     "Customer Segments",
     "Customers",
     "Customer Segments",
     "Lifecycle segments will be calculated from verified order history.",
-    "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ"
+    "â"
   ],
   birthday: [
     "Birthday Campaign",
     "Campaigns & QR",
     "Birthday",
     "Birthday Club membership and current campaign execution status.",
-    "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¦"
+    "â¦"
   ],
   winback: [
     "Win-Back Campaign",
     "Campaigns & QR",
     "Win-Back",
     "Reactivation campaign performance and attributed orders.",
-    "ÃÂ¢ÃÂÃÂ»"
+    "â»"
   ],
   slowtime: [
     "Slow-Time Campaign",
     "Campaigns & QR",
     "Slow-Time",
     "Slow-day offers, redemptions, and attributed order value.",
-    "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ"
+    "â"
   ],
   qr: [
     "QR Ecosystem",
     "Campaigns & QR",
     "QR Ecosystem",
     "QR analytics will appear when a reliable analytics source is connected.",
-    "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¦"
+    "â¦"
   ],
   retention: [
     "Retention",
     "Retention & Loyalty",
     "Retention",
     "Retention trends and lapsed-customer analysis.",
-    "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ³"
+    "â³"
   ],
   loyalty: [
     "Loyalty & Rewards",
     "Retention & Loyalty",
     "Loyalty & Rewards",
     "Loyalty program activity and reward redemptions.",
-    "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ"
+    "â"
   ],
   reviews: [
     "Reviews Overview",
     "Reviews & Reputation",
     "Reviews Overview",
     "Review trends and unanswered feedback from a verified source.",
-    "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ"
+    "â"
   ],
   attention: [
     "Needs Attention",
@@ -1943,14 +1944,14 @@ const pages = {
     "Management",
     "Reports",
     "Reporting and export tools will be added after core metrics are validated.",
-    "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¥"
+    "â¥"
   ],
   settings: [
     "Settings",
     "Settings",
     "Settings",
     "Restaurant connection and dashboard settings will be available here.",
-    "ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ"
+    "â"
   ]
 };
 
@@ -2028,11 +2029,11 @@ function setLoading(isLoading) {
   });
 
   $("refresh").innerHTML = isLoading
-? '<span class="loading-dots">ÃÂ¢ÃÂ ÃÂ</span>'
+? '<span class="loading-dots">â </span>'
     : '<svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg>';
 
   $("refreshMain").innerHTML = isLoading
-? '<span class="loading-dots">ÃÂ¢ÃÂ ÃÂ</span> Loading data'  
+? '<span class="loading-dots">â </span> Loading data'  
     : '<span class="refresh-label-icon"><svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg></span> Refresh data';
 }
 
@@ -2637,7 +2638,7 @@ function renderOrderDetails(order) {
     <section class="order-detail-section"><div class="order-detail-section-title">Order overview</div><div class="order-detail-grid">${detailField("Order ID", order.id)}${detailField("Order status", prettyStatus(order.orderStatus))}${detailField("Fulfillment", prettyStatus(order.fulfillmentStatus))}${detailField("Order date", displayDate(order.createdAt))}${detailField("Source", order.source)}${detailField("Payment method", method)}</div></section>
     <section class="order-detail-section"><div class="order-detail-section-title">Customer information</div><div class="order-detail-grid">${detailField("Customer", order.customerName)}${detailField("Email", email)}${detailField("Phone", phone)}${detailField("Address", address)}</div></section>
     <section class="order-detail-section"><div class="order-detail-section-title">Order items - ${formatNumber(items.length)} line items</div>${itemMarkup}</section>
-    <section class="order-detail-section"><div class="order-detail-section-title">Financial summary</div><div class="order-detail-field">${subtotal ? `<div class="order-detail-total-line"><span>Subtotal</span><strong>${escapeHtml(formatMoney(subtotal))}</strong></div>` : ""}${discount ? `<div class="order-detail-total-line"><span>Discount</span><strong>ÃÂ¢ÃÂÃÂ${escapeHtml(formatMoney(discount))}</strong></div>` : ""}${tax ? `<div class="order-detail-total-line"><span>Tax</span><strong>${escapeHtml(formatMoney(tax))}</strong></div>` : ""}${shipping ? `<div class="order-detail-total-line"><span>Shipping</span><strong>${escapeHtml(formatMoney(shipping))}</strong></div>` : ""}<div class="order-detail-total-line final"><span>Total order value</span><strong>${escapeHtml(formatMoney(order.amount))}</strong></div></div></section>
+    <section class="order-detail-section"><div class="order-detail-section-title">Financial summary</div><div class="order-detail-field">${subtotal ? `<div class="order-detail-total-line"><span>Subtotal</span><strong>${escapeHtml(formatMoney(subtotal))}</strong></div>` : ""}${discount ? `<div class="order-detail-total-line"><span>Discount</span><strong>â${escapeHtml(formatMoney(discount))}</strong></div>` : ""}${tax ? `<div class="order-detail-total-line"><span>Tax</span><strong>${escapeHtml(formatMoney(tax))}</strong></div>` : ""}${shipping ? `<div class="order-detail-total-line"><span>Shipping</span><strong>${escapeHtml(formatMoney(shipping))}</strong></div>` : ""}<div class="order-detail-total-line final"><span>Total order value</span><strong>${escapeHtml(formatMoney(order.amount))}</strong></div></div></section>
     <section class="order-detail-section"><div class="order-detail-section-title">Payment &amp; fulfillment</div><div class="order-detail-grid">${detailField("Payment status", prettyStatus(order.paymentStatus))}${detailField("Fulfillment status", prettyStatus(order.fulfillmentStatus))}${detailField("Live order", order.liveMode === true ? "Yes" : order.liveMode === false ? "No" : "Unknown")}${detailField("Test order", order.markAsTest === true ? "Yes" : order.markAsTest === false ? "No" : "Unknown")}</div></section>`;
 }
 
@@ -2781,6 +2782,9 @@ async function loadBirthday(force = false) {
 }
 
 
+/* =====================================================
+   WIN-BACK CAMPAIGN WORKSPACE V1
+===================================================== */
 const winbackState = { loading:false, loaded:false, request:null, contacts:[], metrics:null, diagnostics:null };
 
 function winbackStatus(value) {
@@ -2788,9 +2792,24 @@ function winbackStatus(value) {
   return normalized || "empty";
 }
 
-function winbackDisplay(value) {
-  if (value === null || value === undefined || String(value).trim() === "") return "â";
-  return String(value);
+function winbackStatusLabel(value) {
+  const status = winbackStatus(value);
+  if (status === "empty") return "Not recorded";
+  if (status === "in progress") return "In Progress";
+  if (status === "not eligible") return "Not Eligible";
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
+
+function winbackPill(value, kind) {
+  const status = winbackStatus(value);
+  if (status === "empty") return '<span class="winback-pill">Not recorded</span>';
+  const classMap = {
+    eligibility: { "eligible":"eligible", "not eligible":"not-eligible" },
+    tier: { "high":"high", "medium":"medium" },
+    cycle: { "in progress":"in-progress", "completed":"completed", "converted":"converted" }
+  };
+  const safeClass = classMap[kind]?.[status] || "";
+  return `<span class="winback-pill ${safeClass}">${escapeHtml(winbackStatusLabel(value))}</span>`;
 }
 
 function winbackDate(value) {
@@ -2799,23 +2818,25 @@ function winbackDate(value) {
   if (!raw) return "â";
   let date;
   if (typeof value === "number" || /^\d{10,13}$/.test(raw)) {
-    const n = Number(value);
-    date = new Date(raw.length === 10 ? n * 1000 : n);
+    const number = Number(value);
+    date = new Date(raw.length === 10 ? number * 1000 : number);
   } else {
-    const looksLikeDate = /^\d{4}-\d{1,2}-\d{1,2}(?:[Tt ].*)?$/.test(raw) || /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(raw);
+    const looksLikeDate = /^\d{4}-\d{1,2}-\d{1,2}(?:[Tt ].*)?$/.test(raw)
+      || /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(raw);
     if (!looksLikeDate) return "â";
     date = new Date(raw);
   }
   if (!Number.isFinite(date.getTime())) return "â";
-  return new Intl.DateTimeFormat("en-US", { timeZone:RESTAURANT_TIME_ZONE, month:"short", day:"numeric", year:"numeric" }).format(date);
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: RESTAURANT_TIME_ZONE, month:"short", day:"numeric", year:"numeric"
+  }).format(date);
 }
 
-function winbackPill(value, type) {
-  const status = winbackStatus(value);
-  if (status === "empty") return '<span class="winback-pill">No status</span>';
-  const safeClass = ["eligible","not-eligible","medium","high","none","not-started","in-progress","completed","converted"].includes(status.replace(/ /g,"-")) ? status.replace(/ /g,"-") : "";
-  const label = status === "not eligible" ? "Not Eligible" : status === "not started" ? "Not Started" : status === "in progress" ? "In Progress" : status.charAt(0).toUpperCase() + status.slice(1);
-  return `<span class="winback-pill ${safeClass}">${escapeHtml(label)}</span>`;
+function winbackNumber(value, decimals = 0) {
+  if (value === null || value === undefined || String(value).trim() === "") return "â";
+  const number = Number(value);
+  if (!Number.isFinite(number)) return "â";
+  return decimals ? number.toFixed(decimals) : formatNumber(number);
 }
 
 function renderWinbackContacts() {
@@ -2823,12 +2844,13 @@ function renderWinbackContacts() {
   const eligibilityFilter = $("winbackEligibilityFilter").value;
   const tierFilter = $("winbackTierFilter").value;
   const cycleFilter = $("winbackCycleFilter").value;
+
   const list = winbackState.contacts.filter(contact => {
     const fields = contact.fields || {};
+    const searchable = [contact.name, contact.email, contact.phone].join(" ").toLowerCase();
     const eligibility = winbackStatus(fields.winback_eligibility);
     const tier = winbackStatus(fields.winback_tier);
     const cycle = winbackStatus(fields.winback_cycle_status);
-    const searchable = [contact.name, contact.email, contact.phone].join(" ").toLowerCase();
     return (!search || searchable.includes(search))
       && (!eligibilityFilter || eligibility === eligibilityFilter)
       && (!tierFilter || tier === tierFilter)
@@ -2837,7 +2859,7 @@ function renderWinbackContacts() {
 
   const body = $("winbackTableBody");
   if (!list.length) {
-    body.innerHTML = '<tr><td colspan="11" class="winback-table-state"><strong>No matching contacts</strong>Try changing the search or filters.</td></tr>';
+    body.innerHTML = '<tr><td colspan="11" class="winback-table-state"><strong>No matching contacts</strong>Try a different search or filter.</td></tr>';
   } else {
     body.innerHTML = list.map(contact => {
       const fields = contact.fields || {};
@@ -2845,14 +2867,14 @@ function renderWinbackContacts() {
       const sub = contact.email || contact.phone || "No email or phone";
       return `<tr>
         <td><div class="winback-contact-name">${escapeHtml(name)}</div><div class="winback-contact-sub">${escapeHtml(sub)}</div></td>
-        <td>${winbackPill(fields.winback_eligibility)}</td>
-        <td>${winbackPill(fields.winback_tier)}</td>
-        <td>${escapeHtml(winbackDisplay(fields.typical_order_interval_days))}${fields.typical_order_interval_days !== null && fields.typical_order_interval_days !== undefined && fields.typical_order_interval_days !== "" ? " days" : ""}</td>
-        <td>${escapeHtml(winbackDisplay(fields.days_since_last_order))}</td>
+        <td>${winbackPill(fields.winback_eligibility, "eligibility")}</td>
+        <td>${winbackPill(fields.winback_tier, "tier")}</td>
+        <td>${escapeHtml(winbackNumber(fields.typical_order_interval_days))}</td>
+        <td>${escapeHtml(winbackNumber(fields.days_since_last_order))}</td>
+        <td>${escapeHtml(winbackNumber(fields.days_overdue))}</td>
+        <td>${escapeHtml(winbackNumber(fields.overdue_ratio, 2))}</td>
         <td>${escapeHtml(winbackDate(fields.expected_next_order_date))}</td>
-        <td>${escapeHtml(winbackDisplay(fields.days_overdue))}</td>
-        <td>${escapeHtml(winbackDisplay(fields.overdue_ratio))}</td>
-        <td>${winbackPill(fields.winback_cycle_status)}</td>
+        <td>${winbackPill(fields.winback_cycle_status, "cycle")}</td>
         <td>${escapeHtml(winbackDate(fields.winback_cycle_started_at))}</td>
         <td>${escapeHtml(winbackDate(fields.last_winback_date))}</td>
       </tr>`;
@@ -2866,9 +2888,10 @@ function renderWinbackDashboard(result) {
   winbackState.contacts = Array.isArray(result.contacts) ? result.contacts : [];
   winbackState.metrics = metrics;
   winbackState.diagnostics = result.diagnostics || {};
+
   $("winbackKpiEligible").textContent = formatNumber(metrics.eligibleCustomers ?? 0);
-  $("winbackKpiMedium").textContent = formatNumber(metrics.mediumTierCustomers ?? 0);
   $("winbackKpiHigh").textContent = formatNumber(metrics.highTierCustomers ?? 0);
+  $("winbackKpiMedium").textContent = formatNumber(metrics.mediumTierCustomers ?? 0);
   $("winbackKpiInProgress").textContent = formatNumber(metrics.cyclesInProgress ?? 0);
   $("winbackKpiCompleted").textContent = formatNumber(metrics.cyclesCompleted ?? 0);
   $("winbackKpiConverted").textContent = formatNumber(metrics.convertedCycles ?? 0);
@@ -2888,11 +2911,11 @@ async function loadWinback(force = false) {
   winbackState.loading = true;
   $("winbackRefresh").disabled = true;
   $("winbackConnectionTag").textContent = "LOADING";
-  $("winbackTableBody").innerHTML = '<tr><td colspan="11" class="winback-table-state"><strong>Loading Win-Back data</strong>Retrieving current customer-intelligence fields from HighLevelâ¦</td></tr>';
+  $("winbackTableBody").innerHTML = '<tr><td colspan="11" class="winback-table-state"><strong>Loading Win-Back data</strong>Retrieving current contact fields from HighLevelâ¦</td></tr>';
   try {
     const result = await fetchJson("/api/campaigns?campaign=winback", request.signal);
     if (request.signal.aborted) return;
-    if (!result.metrics || !Array.isArray(result.contacts)) throw new Error("The Win-Back API response is missing metrics or contacts.");
+    if (!result.metrics || !Array.isArray(result.contacts)) throw new Error("The Win-Back Campaign API response is missing metrics or contacts.");
     renderWinbackDashboard(result);
     winbackState.loaded = true;
     if (result.diagnostics?.partial === true) showError("Some HighLevel contacts could not be loaded. Win-Back metrics reflect only the records returned.", "Win-Back data may be incomplete");
@@ -2902,7 +2925,7 @@ async function loadWinback(force = false) {
     console.error("Win-Back Campaign API failed:", error);
     $("winbackConnectionTag").textContent = "ERROR";
     $("winbackTableBody").innerHTML = `<tr><td colspan="11" class="winback-table-state"><strong>Unable to load Win-Back data</strong>${escapeHtml(error.message || "Check the API deployment and try again.")}</td></tr>`;
-    showError(error.message || "We couldn't retrieve Win-Back data from HighLevel.", "Unable to load Win-Back Campaign");
+    showError(error.message || "We couldn't retrieve Win-Back Campaign data from HighLevel.", "Unable to load Win-Back Campaign");
   } finally {
     if (!request.signal.aborted) winbackState.loading = false;
     $("winbackRefresh").disabled = false;
@@ -3064,8 +3087,8 @@ function renderCustomerAnalytics() {
   const valueBands = [
     { label: "No LTV value", count: customers.filter(customer => customerLtv(customer) === null).length },
     { label: "EGP 0", count: customers.filter(customer => customerLtv(customer) === 0).length },
-    { label: "EGP 1ÃÂ¢ÃÂÃÂ499", count: customers.filter(customer => { const value = customerLtv(customer); return value !== null && value > 0 && value < 500; }).length },
-    { label: "EGP 500ÃÂ¢ÃÂÃÂ1,499", count: customers.filter(customer => { const value = customerLtv(customer); return value !== null && value >= 500 && value < 1500; }).length },
+    { label: "EGP 1â499", count: customers.filter(customer => { const value = customerLtv(customer); return value !== null && value > 0 && value < 500; }).length },
+    { label: "EGP 500â1,499", count: customers.filter(customer => { const value = customerLtv(customer); return value !== null && value >= 500 && value < 1500; }).length },
     { label: "EGP 1,500+", count: customers.filter(customer => { const value = customerLtv(customer); return value !== null && value >= 1500; }).length }
   ];
   renderCustomerBars("customerValueBands", valueBands);
@@ -3073,7 +3096,7 @@ function renderCustomerAnalytics() {
     { label: "No order count", count: customers.filter(customer => customerOrders(customer) === null).length },
     { label: "0 orders", count: customers.filter(customer => customerOrders(customer) === 0).length },
     { label: "1 order", count: oneOrder.length },
-    { label: "2ÃÂ¢ÃÂÃÂ4 orders", count: customers.filter(customer => { const n = customerOrders(customer); return n !== null && n >= 2 && n <= 4; }).length },
+    { label: "2â4 orders", count: customers.filter(customer => { const n = customerOrders(customer); return n !== null && n >= 2 && n <= 4; }).length },
     { label: "5+ orders", count: customers.filter(customer => { const n = customerOrders(customer); return n !== null && n >= 5; }).length }
   ];
   renderCustomerBars("customerFrequencyBands", frequencyBands);
@@ -3143,7 +3166,7 @@ function renderCustomerTable() {
   const from = list.length ? start + 1 : 0;
   const to = Math.min(start + customerState.pageSize, list.length);
   $("customerDirectoryCount").textContent = `${formatNumber(list.length)} matching contacts`;
-  $("customerTableSummary").textContent = `Showing ${formatNumber(from)}ÃÂ¢ÃÂÃÂ${formatNumber(to)} of ${formatNumber(list.length)} contacts`;
+  $("customerTableSummary").textContent = `Showing ${formatNumber(from)}â${formatNumber(to)} of ${formatNumber(list.length)} contacts`;
   $("customerPageLabel").textContent = `Page ${customerState.page} of ${totalPages}`;
   $("customerPrev").disabled = customerState.page <= 1;
   $("customerNext").disabled = customerState.page >= totalPages;
@@ -3167,7 +3190,7 @@ function openCustomerDrawer(customerId) {
   if (!customer) return;
   const name = customerName(customer);
   $("customerDrawerTitle").textContent = name;
-  $("customerDrawerSub").textContent = [customer.email, customer.phone, `Contact ID: ${customer.id}`].filter(Boolean).join(" ÃÂÃÂ· ");
+  $("customerDrawerSub").textContent = [customer.email, customer.phone, `Contact ID: ${customer.id}`].filter(Boolean).join(" ÃÂ· ");
   const field = (label,value) => `<div class="customer-detail-field"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value === null || value === undefined || value === "" ? "Not provided" : value)}</strong></div>`;
   const orders = customerOrders(customer);
   const ltv = customerLtv(customer);
@@ -3276,10 +3299,6 @@ function showPage(key) {
 }
 
 document.querySelectorAll(".group-toggle").forEach(button => {
-  const label = button.querySelector(".group-label")?.textContent.trim().toUpperCase();
-  if (["OVERVIEW","ORDERS & OPERATIONS","CUSTOMERS"].includes(label)) {
-    button.closest(".nav-group")?.classList.add("direct-destination");
-  }
   button.addEventListener("click", () => {
     const selectedGroup = button.closest(".nav-group");
     const groupLabel = selectedGroup.querySelector(".group-label")?.textContent.trim().toUpperCase();
@@ -3292,7 +3311,6 @@ document.querySelectorAll(".group-toggle").forEach(button => {
       "CUSTOMERS": "customers"
     };
     if (directPages[groupLabel]) {
-      selectedGroup.classList.add("direct-destination");
       showPage(directPages[groupLabel]);
       return;
     }
@@ -3379,37 +3397,4 @@ $("customerClearFilters").addEventListener("click", () => {
   renderCustomerSegmentCards();
   applyCustomerFilters();
 });
-$("customerRefresh").addEventListener("click", () => loadCustomers(true));
-$("customerPrev").addEventListener("click", () => { if (customerState.page > 1) { customerState.page--; renderCustomerTable(); } });
-$("customerNext").addEventListener("click", () => { const pages = Math.max(1, Math.ceil(customerState.filtered.length / customerState.pageSize)); if (customerState.page < pages) { customerState.page++; renderCustomerTable(); } });
-$("customerSegmentCards").addEventListener("click", event => {
-  const button = event.target.closest("[data-customer-segment]");
-  if (!button) return;
-  customerState.activeSegment = button.dataset.customerSegment;
-  customerState.page = 1;
-  renderCustomerSegmentCards();
-  applyCustomerFilters();
-  showCustomerTab("directory");
-});
-$("customerTableBody").addEventListener("click", event => {
-  const button = event.target.closest("[data-customer-details]");
-  if (button) openCustomerDrawer(button.dataset.customerDetails);
-});
-$("customerDrawerClose").addEventListener("click", closeCustomerDrawer);
-$("customerDrawerBackdrop").addEventListener("click", closeCustomerDrawer);
-document.addEventListener("keydown", event => { if (event.key === "Escape") closeCustomerDrawer(); });
-
-$("birthdayRefresh").addEventListener("click", () => loadBirthday(true));
-$("birthdaySearch").addEventListener("input", renderBirthdayContacts);
-$("birthdayStatusFilter").addEventListener("change", renderBirthdayContacts);
-$("winbackRefresh").addEventListener("click", () => loadWinback(true));
-$("winbackSearch").addEventListener("input", renderWinbackContacts);
-$("winbackEligibilityFilter").addEventListener("change", renderWinbackContacts);
-$("winbackTierFilter").addEventListener("change", renderWinbackContacts);
-$("winbackCycleFilter").addEventListener("change", renderWinbackContacts);
-
-loadDashboard();
-</script>
-
-</body>
-</html>
+$("customerRefresh").addEventListener("click", () => loadCus
