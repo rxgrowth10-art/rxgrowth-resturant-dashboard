@@ -43,7 +43,7 @@ async function ghlGet(urlOrPath) {
 }
 
 function normalizeFieldKey(key) {
-  return String(key || "").replace(/^contact\\./, "");
+  return String(key || "").replace(/^contact\./, "");
 }
 
 async function fetchFieldDefinitions() {
