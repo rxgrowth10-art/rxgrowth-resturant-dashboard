@@ -14,7 +14,7 @@ const BIRTHDAY_FIELD_KEYS = [
 
 const WINBACK_FIELD_KEYS = [
   "typical_order_interval_days", "days_since_last_order", "expected_next_order_date",
-  "days_overdue", "order_cycle_ratio", "winback_eligibility", "winback_tier",
+  "days_overdue", "overdue_ratio", "winback_eligibility", "winback_tier",
   "winback_cycle_status", "winback_cycle_started_at", "last_winback_date"
 ];
 
@@ -162,7 +162,7 @@ function buildWinbackResponse(rawContacts, fieldDefinitions, contactResult) {
   const converted = winbackContacts.filter(contact => statusIs(contact.fields.winback_cycle_status, "converted"));
   const contactsWithIntelligence = winbackContacts.filter(contact =>
     ["typical_order_interval_days", "days_since_last_order", "expected_next_order_date",
-      "days_overdue", "order_cycle_ratio", "winback_eligibility", "winback_tier"]
+      "days_overdue", "overdue_ratio", "winback_eligibility", "winback_tier"]
       .some(key => hasValue(contact.fields[key]))
   );
 
