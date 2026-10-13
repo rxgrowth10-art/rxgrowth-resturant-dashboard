@@ -6,17 +6,16 @@ const MAX_PAGES = 100;
 const REQUEST_TIMEOUT_MS = 15000;
 
 const BIRTHDAY_FIELD_KEYS = [
-  "birthday_club_status",
-  "birthday_club_joined_at",
-  "birthday_campaign_status",
-  "birthday_campaign_started_at",
-  "birthday_campaign_completed_at",
-  "birthday_campaign_year",
-  "birthday_reward_code",
-  "birthday_reward_expires_at",
-  "birthday_reward_started_at",
-  "birthday_coupon_discount",
-  "birthday_coupon_id"
+  "birthday_club_status", "birthday_club_joined_at", "birthday_campaign_status",
+  "birthday_campaign_started_at", "birthday_campaign_completed_at", "birthday_campaign_year",
+  "birthday_reward_code", "birthday_reward_expires_at", "birthday_reward_started_at",
+  "birthday_coupon_discount", "birthday_coupon_id"
+];
+
+const WINBACK_FIELD_KEYS = [
+  "typical_order_interval_days", "days_since_last_order", "expected_next_order_date",
+  "days_overdue", "order_cycle_ratio", "winback_eligibility", "winback_tier",
+  "winback_cycle_status", "winback_cycle_started_at", "last_winback_date"
 ];
 
 async function ghlGet(urlOrPath) {
@@ -24,17 +23,11 @@ async function ghlGet(urlOrPath) {
   if (!token) throw new Error("GHL_API_KEY is not configured");
   const url = urlOrPath instanceof URL ? urlOrPath : new URL(urlOrPath, GHL_BASE_URL);
   if (url.origin !== GHL_BASE_URL) throw new Error("Unexpected HighLevel API host");
-
   const response = await fetch(url, {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Version: API_VERSION,
-      Accept: "application/json"
-    },
+    headers: { Authorization: `Bearer ${token}`, Version: API_VERSION, Accept: "application/json" },
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS)
   });
-
   if (!response.ok) {
     console.error("HighLevel campaign request failed", { path: url.pathname, status: response.status });
     throw new Error(`HighLevel Contacts API request failed (${response.status})`);
@@ -75,13 +68,11 @@ async function fetchAllContacts() {
     if (!Array.isArray(data.contacts)) throw new Error("Unexpected Contacts API response");
     const meta = data.meta || {};
     if (reportedTotal === null && Number.isFinite(Number(meta.total))) reportedTotal = Number(meta.total);
-
     for (const contact of data.contacts) {
       if (!contact || !contact.id || seenIds.has(contact.id)) continue;
       seenIds.add(contact.id);
       contacts.push(contact);
     }
-
     if (reportedTotal !== null && contacts.length >= reportedTotal) break;
     if (!meta.nextPageUrl) break;
     const candidate = new URL(meta.nextPageUrl, GHL_BASE_URL);
@@ -97,28 +88,22 @@ async function fetchAllContacts() {
   return { contacts, reportedTotal, pagesFetched, partial };
 }
 
-function normalizeContact(contact, fieldDefinitions) {
+function normalizeContact(contact, fieldDefinitions, selectedKeys) {
   const fields = {};
   for (const item of Array.isArray(contact.customFields) ? contact.customFields : []) {
     if (!item || !item.id) continue;
     const key = fieldDefinitions.byId.get(item.id);
     if (key) fields[key] = item.value ?? null;
   }
-
   const firstName = contact.firstName || "";
   const lastName = contact.lastName || "";
   const name = contact.contactName || [firstName, lastName].filter(Boolean).join(" ") || "";
   const selectedFields = {};
-  for (const key of BIRTHDAY_FIELD_KEYS) selectedFields[key] = fields[key] ?? null;
-
+  for (const key of selectedKeys) selectedFields[key] = fields[key] ?? null;
   return {
-    id: String(contact.id),
-    name,
-    email: contact.email || "",
-    phone: contact.phone || "",
+    id: String(contact.id), name, email: contact.email || "", phone: contact.phone || "",
     birthDate: contact.dateOfBirth || contact.date_of_birth || contact.dob || null,
-    dateAdded: contact.dateAdded || null,
-    fields: selectedFields
+    dateAdded: contact.dateAdded || null, fields: selectedFields
   };
 }
 
@@ -130,58 +115,74 @@ function statusIs(value, target) {
   return String(value ?? "").trim().toLowerCase().replace(/[ _-]+/g, " ") === target;
 }
 
-function buildResponse(rawContacts, fieldDefinitions, contactResult) {
-  const contacts = rawContacts.map(contact => normalizeContact(contact, fieldDefinitions));
+function buildBirthdayResponse(rawContacts, fieldDefinitions, contactResult) {
+  const contacts = rawContacts.map(contact => normalizeContact(contact, fieldDefinitions, BIRTHDAY_FIELD_KEYS));
   const birthdayContacts = contacts.filter(contact =>
     hasValue(contact.birthDate) || BIRTHDAY_FIELD_KEYS.some(key => hasValue(contact.fields[key]))
   );
-
   const clubActive = birthdayContacts.filter(contact => statusIs(contact.fields.birthday_club_status, "active"));
   const withJoinDate = birthdayContacts.filter(contact => hasValue(contact.fields.birthday_club_joined_at));
   const campaignsStarted = birthdayContacts.filter(contact => hasValue(contact.fields.birthday_campaign_started_at));
-
-  // Campaign Status = Active means joined/queued; In Progress means the campaign is running.
-  const clubJoinedNotStarted = birthdayContacts.filter(contact =>
-    statusIs(contact.fields.birthday_campaign_status, "active")
-  );
-  const activeCampaigns = birthdayContacts.filter(contact =>
-    statusIs(contact.fields.birthday_campaign_status, "in progress")
-  );
-  const convertedCampaigns = birthdayContacts.filter(contact =>
-    statusIs(contact.fields.birthday_campaign_status, "converted")
-  );
-  const expiredCampaigns = birthdayContacts.filter(contact =>
-    statusIs(contact.fields.birthday_campaign_status, "expired")
-  );
-  const contactsWithCampaignStatus = birthdayContacts.filter(contact =>
-    hasValue(contact.fields.birthday_campaign_status)
-  );
+  const clubJoinedNotStarted = birthdayContacts.filter(contact => statusIs(contact.fields.birthday_campaign_status, "active"));
+  const activeCampaigns = birthdayContacts.filter(contact => statusIs(contact.fields.birthday_campaign_status, "in progress"));
+  const convertedCampaigns = birthdayContacts.filter(contact => statusIs(contact.fields.birthday_campaign_status, "converted"));
+  const expiredCampaigns = birthdayContacts.filter(contact => statusIs(contact.fields.birthday_campaign_status, "expired"));
+  const contactsWithCampaignStatus = birthdayContacts.filter(contact => hasValue(contact.fields.birthday_campaign_status));
 
   return {
-    success: true,
-    source: "highlevel_contacts_api",
-    mode: "read_only_current_contact_fields",
+    success: true, source: "highlevel_contacts_api", mode: "read_only_current_contact_fields",
     metrics: {
-      activeClubMembers: clubActive.length,
-      contactsWithJoinDate: withJoinDate.length,
-      campaignsStarted: campaignsStarted.length,
-      activeCampaigns: activeCampaigns.length,
-      clubJoinedNotStarted: clubJoinedNotStarted.length,
-      convertedCampaigns: convertedCampaigns.length,
-      expiredCampaigns: expiredCampaigns.length,
-      contactsWithCampaignStatus: contactsWithCampaignStatus.length,
+      activeClubMembers: clubActive.length, contactsWithJoinDate: withJoinDate.length,
+      campaignsStarted: campaignsStarted.length, activeCampaigns: activeCampaigns.length,
+      clubJoinedNotStarted: clubJoinedNotStarted.length, convertedCampaigns: convertedCampaigns.length,
+      expiredCampaigns: expiredCampaigns.length, contactsWithCampaignStatus: contactsWithCampaignStatus.length,
       contactsWithBirthdayData: birthdayContacts.length
     },
     contacts: birthdayContacts,
     diagnostics: {
-      contactsFetched: contacts.length,
-      apiReportedTotal: contactResult.reportedTotal,
-      pagesFetched: contactResult.pagesFetched,
-      customFieldDefinitions: fieldDefinitions.count,
+      contactsFetched: contacts.length, apiReportedTotal: contactResult.reportedTotal,
+      pagesFetched: contactResult.pagesFetched, customFieldDefinitions: fieldDefinitions.count,
       birthdayFieldDefinitionsFound: BIRTHDAY_FIELD_KEYS.filter(key => fieldDefinitions.byKey.has(key)).length,
-      birthdayFieldDefinitionsExpected: BIRTHDAY_FIELD_KEYS.length,
-      partial: contactResult.partial,
+      birthdayFieldDefinitionsExpected: BIRTHDAY_FIELD_KEYS.length, partial: contactResult.partial,
       calculatedAt: new Date().toISOString()
+    }
+  };
+}
+
+function buildWinbackResponse(rawContacts, fieldDefinitions, contactResult) {
+  const contacts = rawContacts.map(contact => normalizeContact(contact, fieldDefinitions, WINBACK_FIELD_KEYS));
+  const winbackContacts = contacts.filter(contact =>
+    WINBACK_FIELD_KEYS.some(key => hasValue(contact.fields[key]))
+  );
+  const eligible = winbackContacts.filter(contact => statusIs(contact.fields.winback_eligibility, "eligible"));
+  const mediumTier = winbackContacts.filter(contact => statusIs(contact.fields.winback_tier, "medium"));
+  const highTier = winbackContacts.filter(contact => statusIs(contact.fields.winback_tier, "high"));
+  const inProgress = winbackContacts.filter(contact => statusIs(contact.fields.winback_cycle_status, "in progress"));
+  const completed = winbackContacts.filter(contact => statusIs(contact.fields.winback_cycle_status, "completed"));
+  const converted = winbackContacts.filter(contact => statusIs(contact.fields.winback_cycle_status, "converted"));
+  const contactsWithIntelligence = winbackContacts.filter(contact =>
+    ["typical_order_interval_days", "days_since_last_order", "expected_next_order_date",
+      "days_overdue", "order_cycle_ratio", "winback_eligibility", "winback_tier"]
+      .some(key => hasValue(contact.fields[key]))
+  );
+
+  return {
+    success: true, source: "highlevel_contacts_api", mode: "read_only_current_contact_fields",
+    campaign: "winback",
+    metrics: {
+      eligibleCustomers: eligible.length, mediumTierCustomers: mediumTier.length,
+      highTierCustomers: highTier.length, cyclesInProgress: inProgress.length,
+      cyclesCompleted: completed.length, convertedCycles: converted.length,
+      contactsWithIntelligence: contactsWithIntelligence.length, contactsWithWinbackData: winbackContacts.length
+    },
+    contacts: winbackContacts,
+    diagnostics: {
+      contactsFetched: contacts.length, apiReportedTotal: contactResult.reportedTotal,
+      pagesFetched: contactResult.pagesFetched, customFieldDefinitions: fieldDefinitions.count,
+      winbackFieldDefinitionsFound: WINBACK_FIELD_KEYS.filter(key => fieldDefinitions.byKey.has(key)).length,
+      winbackFieldDefinitionsExpected: WINBACK_FIELD_KEYS.length,
+      missingWinbackFieldKeys: WINBACK_FIELD_KEYS.filter(key => !fieldDefinitions.byKey.has(key)),
+      partial: contactResult.partial, calculatedAt: new Date().toISOString()
     }
   };
 }
@@ -192,15 +193,24 @@ export default async function handler(req, res) {
     res.setHeader("Allow", "GET");
     return res.status(405).json({ success: false, error: "Method not allowed" });
   }
-  if (req.query?.campaign && req.query.campaign !== "birthday") {
-    return res.status(400).json({ success: false, error: "Unsupported campaign. Only birthday is available in this V1 endpoint." });
+  const campaign = String(req.query?.campaign || "birthday").trim().toLowerCase();
+  if (!["birthday", "winback"].includes(campaign)) {
+    return res.status(400).json({
+      success: false, error: "Unsupported campaign. Use campaign=birthday or campaign=winback."
+    });
   }
 
   try {
     const [fieldDefinitions, contactResult] = await Promise.all([fetchFieldDefinitions(), fetchAllContacts()]);
-    return res.status(200).json(buildResponse(contactResult.contacts, fieldDefinitions, contactResult));
+    const response = campaign === "winback"
+      ? buildWinbackResponse(contactResult.contacts, fieldDefinitions, contactResult)
+      : buildBirthdayResponse(contactResult.contacts, fieldDefinitions, contactResult);
+    return res.status(200).json(response);
   } catch (error) {
-    console.error("Birthday campaign API failed:", error.message);
-    return res.status(500).json({ success: false, error: "Unable to retrieve Birthday campaign data from HighLevel" });
+    console.error(`${campaign} campaign API failed:`, error.message);
+    return res.status(500).json({
+      success: false,
+      error: `Unable to retrieve ${campaign === "winback" ? "Win-Back" : "Birthday"} campaign data from HighLevel`
+    });
   }
 }
