@@ -124,6 +124,16 @@ select:focus-visible {
   background: rgba(17,27,42,.72);
 }
 
+.group-toggle.active {
+  background: rgba(93,239,255,.085);
+  border-color: rgba(93,239,255,.23);
+  color: var(--primary);
+}
+
+.group-toggle.active .group-icon {
+  color: var(--primary);
+}
+
 .group-leading {
   min-width: 0;
   display: flex;
@@ -186,6 +196,10 @@ select:focus-visible {
   background: rgba(93,239,255,.085);
   border-color: rgba(93,239,255,.23);
   color: var(--primary);
+}
+
+.standalone-nav-item {
+  margin-top: 12px;
 }
 
 .nav-icon {
@@ -877,6 +891,7 @@ button:disabled .refresh-icon { opacity: .65; }
 .reports-note{margin:12px 0 18px;padding:14px 16px;background:rgba(93,239,255,.045);border:1px solid rgba(93,239,255,.16);border-radius:10px;color:var(--muted);font-size:12px;line-height:1.65}
 .reports-note strong{color:var(--text)}
 .reports-state{padding:24px;text-align:center;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:12px}
+.reports-data-notice{padding:10px 13px;margin-bottom:12px;text-align:left;font-size:11px;line-height:1.55;border-color:rgba(251,191,36,.28);background:rgba(251,191,36,.045);color:#D6E0EE}
 @media(max-width:1000px){.reports-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.reports-chart-grid{grid-template-columns:1fr}.reports-chart{height:250px}.reports-toolbar{align-items:stretch}.reports-month-control input{width:100%}}
 
@@ -1505,7 +1520,7 @@ button:disabled .refresh-icon { opacity: .65; }
 
     <div class="nav-group collapsed">
       <button class="group-toggle" type="button" aria-expanded="false">
-        <span class="group-leading"><svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M4.7 9a7.5 7.5 0 0 1 12.6-2L20 12M4 17v-5h5"/><path d="M19.3 15a7.5 7.5 0 0 1-12.6 2L4 12"/></svg><span class="group-label">RETENTION & LOYALTY</span></span><span class="chev" aria-hidden="true"></span>
+        <span class="group-leading"><svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M4.7 9a7.5 7.5 0 0 1 12.6-2L20 12M4 17v-5h5"/><path d="M19.3 15a7.5 7.5 0 0 1-12.6 2L4 12"/></svg><span class="group-label">RETENTION & LOYALTY</span><span class="badge">Planned</span></span><span class="chev" aria-hidden="true"></span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="retention">
@@ -1523,7 +1538,7 @@ button:disabled .refresh-icon { opacity: .65; }
 
     <div class="nav-group collapsed">
       <button class="group-toggle" type="button" aria-expanded="false">
-        <span class="group-leading"><svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><span class="group-label">REVIEWS & REPUTATION</span></span><span class="chev" aria-hidden="true"></span>
+        <span class="group-leading"><svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><span class="group-label">REVIEWS & REPUTATION</span><span class="badge">Planned</span></span><span class="chev" aria-hidden="true"></span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="reviews">
@@ -1534,26 +1549,11 @@ button:disabled .refresh-icon { opacity: .65; }
       </div>
     </div>
 
-    <div class="nav-group collapsed">
-      <button class="group-toggle" type="button" aria-expanded="false">
-        <span class="group-leading"><svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.1 1.8-1.8 3.1-2.1-.5a7.8 7.8 0 0 1-1.7 1l-.4 2h-3.6l-.4-2a7.8 7.8 0 0 1-1.7-1l-2.1.5L5 17l1.1-1.9a7.7 7.7 0 0 1 0-2.1L5 11.1 6.8 8l2.1.5a7.8 7.8 0 0 1 1.7-1l.4-2h3.6l.4 2a7.8 7.8 0 0 1 1.7 1l2.1-.5 1.8 3.1-1.1 1.9a7.7 7.7 0 0 1-.1 2z" transform="translate(-1 -1) scale(.95)"/></svg><span class="group-label">MANAGEMENT</span></span><span class="chev" aria-hidden="true"></span>
-      </button>
-      <div class="group-items">
-        <button class="nav-item" type="button" data-page="attention">
-          <span class="nav-icon">!</span>
-          <span class="nav-text">Needs Attention</span>
-          <span class="badge">Planned</span>
-        </button>
-        <button class="nav-item" type="button" data-page="reports">
-          <span class="nav-icon">&#9637;</span>
-          <span class="nav-text">Reports</span>
-        </button>
-        <button class="nav-item" type="button" data-page="settings">
-          <span class="nav-icon">&#9881;</span>
-          <span class="nav-text">Settings</span>
-        </button>
-      </div>
-    </div>
+    <button class="nav-item standalone-nav-item" type="button" data-page="reports">
+      <span class="nav-icon">&#9637;</span>
+      <span class="nav-text">Reports</span>
+    </button>
+
 
   </nav>
 
@@ -1974,6 +1974,7 @@ button:disabled .refresh-icon { opacity: .65; }
       </div>
       <div id="reportsState" class="reports-state">Choose a month to load report data.</div>
       <div id="reportsContent" hidden>
+        <div id="reportsComparisonNotice" class="reports-state reports-data-notice" hidden></div>
         <div class="reports-kpis">
           <article class="reports-kpi" style="--report-accent:#5DEFFF"><div class="reports-kpi-label">Total Order Value</div><div class="reports-kpi-value" id="reportOrderValue">â</div><div class="reports-kpi-foot" id="reportOrderValueCompare">Comparison off</div></article>
           <article class="reports-kpi" style="--report-accent:#A5B4FC"><div class="reports-kpi-label">Total Orders</div><div class="reports-kpi-value" id="reportOrders">â</div><div class="reports-kpi-foot" id="reportOrdersCompare">Comparison off</div></article>
@@ -2701,7 +2702,7 @@ function setReportCompare(id, currentValue, comparisonValue, money = false, comp
   const difference = currentValue - comparisonValue;
   const percent = comparisonValue ? (difference / comparisonValue) * 100 : null;
   const deltaText = percent === null ? (currentValue === 0 ? "No activity in either month" : "No baseline in comparison month") : `${difference > 0 ? "+" : ""}${formatPercent(percent)} vs ${comparisonLabel}`;
-  $(id).textContent = `${money ? formatMoney(comparisonValue) : formatNumber(comparisonValue)} in ${comparisonLabel} Â· ${deltaText}`;
+  $(id).textContent = `${money ? formatMoney(comparisonValue) : formatNumber(comparisonValue)} in ${comparisonLabel} | ${deltaText}`;
 }
 async function loadReports(force = false) {
   const input = $("reportsMonth");
@@ -2729,9 +2730,10 @@ async function loadReports(force = false) {
   reportsRequest = new AbortController();
   const signal = reportsRequest.signal;
   const selectedEnd = selectedMonth === currentMonth ? nowDate : monthEnd(selectedMonth);
-  const comparisonEnd = compareEnabled ? monthEnd(comparisonMonth) : "";
+  const comparisonEnd = compareEnabled ? compareEndForMonth(comparisonMonth, currentMonth, selectedEnd) : "";
   $("reportsState").hidden = false;
   $("reportsState").textContent = "Loading report data from HighLevelâ¦";
+  $("reportsComparisonNotice").hidden = true;
   $("reportsContent").hidden = true;
   try {
     const currentPromise = fetchJson(`/api/stats?${new URLSearchParams({startDate:monthStart(selectedMonth),endDate:selectedEnd})}`, signal);
@@ -2748,6 +2750,13 @@ async function loadReports(force = false) {
     const comparisonValue = Number(comparison.orderValue?.total)||0;
     const comparisonOrders = Number(comparison.orders?.total)||0;
     const comparisonNew = Number(comparison.customers?.new)||0;
+    const comparisonOrdersFetched = Number(comparisonResult.diagnostics?.ordersFetched ?? comparison.dataQuality?.ordersInSelectedPeriod ?? comparison.orders?.total ?? 0);
+    const hasComparisonHistory = !compareEnabled || comparisonOrdersFetched > 0;
+    const comparisonNotice = $("reportsComparisonNotice");
+    comparisonNotice.hidden = !compareEnabled || hasComparisonHistory;
+    comparisonNotice.textContent = compareEnabled && !hasComparisonHistory
+      ? `No orders were returned by HighLevel for ${monthLabel(comparisonMonth)}. The comparison baseline is unavailable in the currently available history; zero values should not be interpreted as confirmed zero performance.`
+      : "";
     $("reportOrderValue").textContent = formatMoney(currentValue);
     $("reportOrders").textContent = formatNumber(currentOrders);
     $("reportAov").textContent = formatMoney(currentOrders ? currentValue/currentOrders : 0);
@@ -2760,12 +2769,12 @@ async function loadReports(force = false) {
       $("reportOrdersCompare").hidden = false;
       $("reportNewCustomersCompare").hidden = false;
     } else {
-      $("reportOrderValueCompare").textContent = "Selected month only";
-      $("reportOrdersCompare").textContent = "Selected month only";
-      $("reportNewCustomersCompare").textContent = "First observed order in available history Â· selected month only";
-      $("reportOrderValueCompare").hidden = false;
-      $("reportOrdersCompare").hidden = false;
-      $("reportNewCustomersCompare").hidden = false;
+      $("reportOrderValueCompare").textContent = "";
+      $("reportOrdersCompare").textContent = "";
+      $("reportNewCustomersCompare").textContent = "";
+      $("reportOrderValueCompare").hidden = true;
+      $("reportOrdersCompare").hidden = true;
+      $("reportNewCustomersCompare").hidden = true;
     }
     renderReportCharts(current,comparison,selectedMonth,comparisonMonth,compareEnabled);
     $("reportsState").hidden = true;
@@ -3728,6 +3737,15 @@ function showPage(key) {
 
   document.querySelectorAll(".nav-item").forEach(button => {
     button.classList.toggle("active", button.dataset.page === key);
+  });
+  const directGroupPages = {
+    "OVERVIEW": "overview",
+    "ORDERS & OPERATIONS": "orders",
+    "CUSTOMERS": "customers"
+  };
+  document.querySelectorAll(".group-toggle").forEach(button => {
+    const label = button.querySelector(".group-label")?.textContent.trim().toUpperCase();
+    button.classList.toggle("active", directGroupPages[label] === key);
   });
 
   $("pageTitle").textContent = page[1];
