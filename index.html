@@ -1011,7 +1011,7 @@ button:disabled .refresh-icon { opacity: .65; }
 /* =====================================================
    ORDERS WORKSPACE
 ===================================================== */
-.orders-page { display:flex; flex-direction:column; gap:16px; width:100%; max-width:1200px; margin:0 auto; }
+.orders-page { display:flex; flex-direction:column; gap:16px; width:100%; max-width:none; margin:0; }
 .orders-kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
 .orders-kpi { min-width:0; padding:17px 18px; border-radius:11px; border:1px solid var(--border); background:linear-gradient(145deg,rgba(16,24,39,.98),rgba(12,20,33,.98)); position:relative; overflow:hidden; }
 .orders-kpi:after { content:""; position:absolute; width:90px; height:90px; border-radius:50%; right:-38px; top:-45px; background:rgba(93,239,255,.055); pointer-events:none; }
@@ -1115,7 +1115,7 @@ button:disabled .refresh-icon { opacity: .65; }
 /* =====================================================
    CUSTOMERS WORKSPACE
 ===================================================== */
-.customers-page { display:flex; flex-direction:column; gap:16px; width:100%; max-width:1250px; margin:0 auto; }
+.customers-page { display:flex; flex-direction:column; gap:16px; width:100%; max-width:none; margin:0; }
 .customer-tabs { display:flex; flex-wrap:wrap; gap:7px; padding:7px; border:1px solid var(--border); border-radius:10px; background:rgba(13,21,35,.9); }
 .customer-tab { border:1px solid transparent; background:transparent; color:#A9B8CC; border-radius:7px; padding:10px 13px; font-size:10px; font-weight:700; }
 .customer-tab:hover { color:#F5F9FF; background:#152236; }
@@ -1204,7 +1204,7 @@ button:disabled .refresh-icon { opacity: .65; }
 /* =====================================================
    BIRTHDAY CAMPAIGN WORKSPACE V1
 ===================================================== */
-.birthday-page{display:flex;flex-direction:column;gap:14px;width:100%;max-width:1250px;margin:0 auto}
+.birthday-page{display:flex;flex-direction:column;gap:14px;width:100%;max-width:none;margin:0}
 .birthday-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px;border:1px solid var(--border);background:rgba(16,24,39,.94);border-radius:11px}
 .birthday-toolbar-title,.birthday-table-title{font-size:12px;font-weight:800;color:#F5F9FF}
 .birthday-toolbar-sub,.birthday-table-sub{font-size:10px;line-height:1.6;color:#8292A9;margin-top:5px}
@@ -1248,7 +1248,7 @@ button:disabled .refresh-icon { opacity: .65; }
 /* =====================================================
    WIN-BACK CAMPAIGN WORKSPACE V1
 ===================================================== */
-.winback-page{display:flex;flex-direction:column;gap:14px;width:100%;max-width:1250px;margin:0 auto}
+.winback-page{display:flex;flex-direction:column;gap:14px;width:100%;max-width:none;margin:0}
 .winback-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px;border:1px solid var(--border);background:rgba(16,24,39,.94);border-radius:11px}
 .winback-toolbar-title,.winback-table-title{font-size:12px;font-weight:800;color:#F5F9FF}
 .winback-toolbar-sub,.winback-table-sub{font-size:10px;line-height:1.6;color:#8292A9;margin-top:5px}
@@ -1293,7 +1293,7 @@ button:disabled .refresh-icon { opacity: .65; }
 /* =====================================================
    SLOW-TIME CAMPAIGN WORKSPACE V1
 ===================================================== */
-.slowtime-page{display:flex;flex-direction:column;gap:14px;width:100%;max-width:1250px;margin:0 auto}
+.slowtime-page{display:flex;flex-direction:column;gap:14px;width:100%;max-width:none;margin:0}
 .slowtime-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px;border:1px solid var(--border);background:rgba(16,24,39,.94);border-radius:11px}
 .slowtime-toolbar-title,.slowtime-table-title{font-size:12px;font-weight:800;color:#F5F9FF}
 .slowtime-toolbar-sub,.slowtime-table-sub{font-size:10px;line-height:1.6;color:#8292A9;margin-top:5px}
@@ -1338,6 +1338,18 @@ button:disabled .refresh-icon { opacity: .65; }
    READABILITY PASS â full-width pages, stronger card titles, clearer tables
    Scoped as visual overrides to preserve existing data/API behavior.
 ===================================================== */
+/* Full-width workspace fix: Overview keeps its existing layout; all other implemented pages fill the content area. */
+#ordersPage .orders-page,
+#customersPage .customers-page,
+#birthdayPage .birthday-page,
+#winbackPage .winback-page,
+#slowtimePage .slowtime-page {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
 .content { width: 100%; max-width: none; }
 .metric-label,
 .orders-kpi-label,
@@ -1388,6 +1400,9 @@ button:disabled .refresh-icon { opacity: .65; }
   .orders-table td, .customer-table td, .birthday-table td,
   .winback-table td, .slowtime-table td { font-size: 11px; }
 }
+
+
+.customer-btn .refresh-icon { width: 14px; height: 14px; display: inline-block; vertical-align: -2px; margin-right: 5px; }
 
 </style>
 </head>
@@ -1797,7 +1812,7 @@ button:disabled .refresh-icon { opacity: .65; }
                 <div class="customer-field"><label for="customerTypeFilter">Customer type</label><select id="customerTypeFilter"><option value="">All types</option></select></div>
                 <div class="customer-field"><label for="customerStatusFilter">Customer status</label><select id="customerStatusFilter"><option value="">All statuses</option></select></div>
               </div>
-              <div class="customer-actions"><div class="customer-actions-left"><button class="customer-btn primary" type="submit">Apply filters</button><button class="customer-btn" id="customerClearFilters" type="button">Clear filters</button></div><div class="customer-actions-right"><span id="customerDirectoryCount" class="customer-table-caption">Loading contacts...</span><button class="customer-btn" id="customerRefresh" type="button">â» Refresh customers</button></div></div>
+              <div class="customer-actions"><div class="customer-actions-left"><button class="customer-btn primary" type="submit">Apply filters</button><button class="customer-btn" id="customerClearFilters" type="button">Clear filters</button></div><div class="customer-actions-right"><span id="customerDirectoryCount" class="customer-table-caption">Loading contacts...</span><button class="customer-btn" id="customerRefresh" type="button"><svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg> Refresh customers</button></div></div>
             </form>
           </div>
           <div class="customer-table-panel">
@@ -1819,7 +1834,7 @@ button:disabled .refresh-icon { opacity: .65; }
       <div class="birthday-page">
         <div class="birthday-toolbar">
           <div><div class="birthday-toolbar-title">Birthday Campaign Snapshot</div><div class="birthday-toolbar-sub">Current HighLevel contact fields Â· read-only V1</div></div>
-          <button class="customer-btn" id="birthdayRefresh" type="button">â» Refresh birthday data</button>
+          <button class="customer-btn" id="birthdayRefresh" type="button"><svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg> Refresh birthday data</button>
         </div>
 
         <div class="birthday-kpi-grid">
@@ -1857,7 +1872,7 @@ button:disabled .refresh-icon { opacity: .65; }
       <div class="winback-page">
         <div class="winback-toolbar">
           <div><div class="winback-toolbar-title">Win-Back Campaign Snapshot</div><div class="winback-toolbar-sub">Current HighLevel contact fields Â· read-only V1. Eligibility and cycle states reflect recorded fields.</div></div>
-          <button class="customer-btn" id="winbackRefresh" type="button">â» Refresh Win-Back data</button>
+          <button class="customer-btn" id="winbackRefresh" type="button"><svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg> Refresh Win-Back data</button>
         </div>
 
         <div class="winback-kpi-grid">
@@ -1896,7 +1911,7 @@ button:disabled .refresh-icon { opacity: .65; }
       <div class="slowtime-page">
         <div class="slowtime-toolbar">
           <div><div class="slowtime-toolbar-title">Slow-Time Campaign Snapshot</div><div class="slowtime-toolbar-sub">Current Slow-Time Campaign custom-object records Â· read-only V1</div></div>
-          <button class="customer-btn" id="slowtimeRefresh" type="button">â» Refresh campaign data</button>
+          <button class="customer-btn" id="slowtimeRefresh" type="button"><svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 0 0-14.8-4L4 9"/><path d="M4 17v-5h5"/><path d="M4 12a8 8 0 0 0 14.8 4L20 15"/></svg> Refresh campaign data</button>
         </div>
 
         <div class="slowtime-kpi-grid">
