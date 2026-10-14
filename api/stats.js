@@ -567,10 +567,38 @@ function calculateMetrics(orders, startDate, endDate) {
     },
   };
 
+  // Additive daily series for Reports. Existing response fields above remain unchanged.
+  const dailyMap = new Map();
+  for (let cursor = startDate; cursor <= endDate; cursor = addCalendarDays(cursor, 1)) {
+    dailyMap.set(cursor, { date: cursor, orders: 0, orderValue: 0, newCustomers: 0 });
+  }
+
+  for (const { order, createdAt } of periodEntries) {
+    const date = getZonedDateString(createdAt);
+    const day = dailyMap.get(date);
+    if (!day) continue;
+    day.orders += 1;
+    day.orderValue += getAmount(order);
+  }
+
+  // A new customer is counted on their first observed order date in available history.
+  // Customers without a contactId cannot be reliably deduplicated and are excluded.
+  for (const [contactId, customer] of customerHistory.entries()) {
+    const firstOrderDate = getZonedDateString(customer.firstOrderAt);
+    const day = dailyMap.get(firstOrderDate);
+    if (day) day.newCustomers += 1;
+  }
+
+  const dailyMetrics = Array.from(dailyMap.values()).map(day => ({
+    ...day,
+    orderValue: Number(day.orderValue.toFixed(2))
+  }));
+
   return {
     ...orderMetrics,
     ...customerMetrics,
 
+    dailyMetrics,
     hourlyOrders: hourlyCounts,
 
     legacy: legacyMetrics,
