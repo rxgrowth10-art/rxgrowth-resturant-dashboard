@@ -861,6 +861,24 @@ button:disabled .refresh-icon { opacity: .65; }
    RESPONSIVE
 ===================================================== */
 
+/* REPORTS PAGE â additive styles */
+.reports-toolbar{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:14px}
+.reports-toolbar-copy{color:var(--muted);font-size:12px;line-height:1.6;max-width:650px}
+.reports-month-control{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.reports-month-control input{min-height:40px;padding:8px 11px;background:#0b1220;color:var(--text);border:1px solid var(--border);border-radius:8px;color-scheme:dark}
+.reports-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}
+.reports-kpi{min-width:0;padding:18px;background:var(--card);border:1px solid var(--border);border-top:2px solid var(--report-accent,#5DEFFF);border-radius:13px}
+.reports-kpi-label{color:var(--muted);font-size:12px;font-weight:600}
+.reports-kpi-value{margin-top:10px;font-size:clamp(20px,2.2vw,29px);font-weight:800;letter-spacing:-.04em;overflow-wrap:anywhere}
+.reports-kpi-foot{margin-top:8px;color:var(--muted);font-size:11px;line-height:1.5}
+.reports-chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:16px}
+.reports-chart{height:290px;position:relative}
+.reports-note{margin:12px 0 18px;padding:14px 16px;background:rgba(93,239,255,.045);border:1px solid rgba(93,239,255,.16);border-radius:10px;color:var(--muted);font-size:12px;line-height:1.65}
+.reports-note strong{color:var(--text)}
+.reports-state{padding:24px;text-align:center;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:12px}
+@media(max-width:1000px){.reports-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.reports-chart-grid{grid-template-columns:1fr}.reports-chart{height:250px}.reports-toolbar{align-items:stretch}.reports-month-control input{width:100%}}
+
 @media(max-width:1200px) {
   .metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .content { padding-left: 22px; padding-right: 22px; }
@@ -1443,7 +1461,6 @@ button:disabled .refresh-icon { opacity: .65; }
         <button class="nav-item" type="button" data-page="orders">
           <span class="nav-icon">&#9635;</span>
           <span class="nav-text">Orders</span>
-          <span class="badge live">V1</span>
         </button>
         <button class="nav-item" type="button" data-page="abandoned">
           <span class="nav-icon">&#9675;</span>
@@ -1461,7 +1478,6 @@ button:disabled .refresh-icon { opacity: .65; }
         <button class="nav-item" type="button" data-page="customers">
           <span class="nav-icon">&#9827;</span>
           <span class="nav-text">Customers</span>
-          <span class="badge live">V1</span>
         </button>
       </div>
     </div>
@@ -1530,7 +1546,6 @@ button:disabled .refresh-icon { opacity: .65; }
         <button class="nav-item" type="button" data-page="reports">
           <span class="nav-icon">&#9637;</span>
           <span class="nav-text">Reports</span>
-          <span class="badge">Planned</span>
         </button>
         <button class="nav-item" type="button" data-page="settings">
           <span class="nav-icon">&#9881;</span>
@@ -1943,6 +1958,33 @@ button:disabled .refresh-icon { opacity: .65; }
       </div>
     </section>
 
+    <section id="reportsPage" class="page" hidden>
+      <div class="reports-toolbar">
+        <div>
+          <div class="panel-title">Monthly performance</div>
+          <div class="reports-toolbar-copy">Order value is based on every Native HighLevel order created during the selected period, regardless of payment status. The comparison uses the equivalent elapsed dates when the selected month is the current month.</div>
+        </div>
+        <label class="reports-month-control" for="reportsMonth">Reporting month<input id="reportsMonth" type="month" aria-label="Reporting month"></label>
+        <button id="reportsRefresh" class="customer-btn" type="button">Refresh reports</button>
+      </div>
+      <div id="reportsState" class="reports-state">Choose a month to load report data.</div>
+      <div id="reportsContent" hidden>
+        <div class="reports-kpis">
+          <article class="reports-kpi" style="--report-accent:#5DEFFF"><div class="reports-kpi-label">Total Order Value</div><div class="reports-kpi-value" id="reportOrderValue">â</div><div class="reports-kpi-foot" id="reportOrderValueCompare">Compared with previous period</div></article>
+          <article class="reports-kpi" style="--report-accent:#A5B4FC"><div class="reports-kpi-label">Total Orders</div><div class="reports-kpi-value" id="reportOrders">â</div><div class="reports-kpi-foot" id="reportOrdersCompare">Compared with previous period</div></article>
+          <article class="reports-kpi" style="--report-accent:#4ADE80"><div class="reports-kpi-label">Average Order Value</div><div class="reports-kpi-value" id="reportAov">â</div><div class="reports-kpi-foot">Total Order Value Ã· Total Orders</div></article>
+          <article class="reports-kpi" style="--report-accent:#FBBF24"><div class="reports-kpi-label">New Customers</div><div class="reports-kpi-value" id="reportNewCustomers">â</div><div class="reports-kpi-foot" id="reportNewCustomersCompare">First observed order in available history</div></article>
+        </div>
+        <div class="reports-chart-grid">
+          <article class="panel"><div class="panel-head"><div class="panel-title">Daily Order Value</div><div class="panel-sub">Order value by order creation date Â· EGP</div></div><div class="panel-body"><div class="reports-chart"><canvas id="reportOrderValueChart"></canvas></div></div></article>
+          <article class="panel"><div class="panel-head"><div class="panel-title">Daily Orders</div><div class="panel-sub">Number of orders created each day</div></div><div class="panel-body"><div class="reports-chart"><canvas id="reportOrdersChart"></canvas></div></div></article>
+          <article class="panel"><div class="panel-head"><div class="panel-title">New vs Returning Customers</div><div class="panel-sub">Unique customers with an order during each reporting period</div></div><div class="panel-body"><div class="reports-chart"><canvas id="reportCustomerMixChart"></canvas></div></div></article>
+          <article class="panel"><div class="panel-head"><div class="panel-title">New Customers Trend</div><div class="panel-sub">Customers counted on their first observed order date</div></div><div class="panel-body"><div class="reports-chart"><canvas id="reportNewCustomersChart"></canvas></div></div></article>
+        </div>
+        <div class="reports-note"><strong>Data interpretation:</strong> New/returning classification uses all order history returned by HighLevel and requires a contact ID. âNewâ means the first order observed in the available history, not necessarily the customerâs true first-ever order. All order-value metrics include orders regardless of payment status and use <code>createdAt</code> in the restaurantâs Africa/Cairo timezone.</div>
+      </div>
+    </section>
+
     <section id="placeholderPage" class="page" hidden>
       <div class="placeholder">
         <div class="placeholder-icon" id="placeholderIcon">â</div>
@@ -1981,7 +2023,11 @@ const currencyFormat = new Intl.NumberFormat("en-US", {
 let charts = {
   hourly: null,
   customers: null,
-  weekly: null
+  weekly: null,
+  reportOrderValue: null,
+  reportOrders: null,
+  reportCustomerMix: null,
+  reportNewCustomers: null
 };
 
 let controller = null;
@@ -2080,9 +2126,9 @@ const pages = {
   ],
   reports: [
     "Reports",
-    "Management",
     "Reports",
-    "Reporting and export tools will be added after core metrics are validated.",
+    "Reports",
+    "Monthly order performance and customer acquisition trends.",
     "â¥"
   ],
   settings: [
@@ -2569,6 +2615,124 @@ async function loadDashboard() {
     console.error("Weekly order trends failed:", error);
     $("weeklyOrdersNote").textContent = "Weekly order trends could not be loaded. Refresh to try again.";
   });
+}
+
+/* =====================================================
+   REPORTS â reads the additive daily series from /api/stats
+===================================================== */
+let reportsRequest = null;
+let reportsLoadedKey = "";
+
+function monthStart(value) { return `${value}-01`; }
+function monthEnd(value) {
+  const [year, month] = value.split("-").map(Number);
+  return `${year}-${String(month).padStart(2,"0")}-${String(new Date(Date.UTC(year, month, 0)).getUTCDate()).padStart(2,"0")}`;
+}
+function previousMonth(value) {
+  const [year, month] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 2, 1));
+  return `${date.getUTCFullYear()}-${String(date.getUTCMonth()+1).padStart(2,"0")}`;
+}
+function compareEndForMonth(month, currentMonth, selectedEnd) {
+  if (selectedEnd.slice(0,7) !== currentMonth) return monthEnd(month);
+  const day = Number(selectedEnd.slice(-2));
+  const [year, monthNumber] = month.split("-").map(Number);
+  const maxDay = new Date(Date.UTC(year, monthNumber, 0)).getUTCDate();
+  return `${year}-${String(monthNumber).padStart(2,"0")}-${String(Math.min(day,maxDay)).padStart(2,"0")}`;
+}
+function monthLabel(value) {
+  const [year, month] = value.split("-").map(Number);
+  return new Intl.DateTimeFormat("en-US", {month:"long",year:"numeric",timeZone:"UTC"}).format(new Date(Date.UTC(year,month-1,1)));
+}
+function reportChartOptions(money = false) {
+  return {
+    responsive:true, maintainAspectRatio:false,
+    interaction:{mode:"index",intersect:false},
+    plugins:{legend:{labels:{color:"#A9B8CC",usePointStyle:true,boxWidth:8}},tooltip:{callbacks: money ? {label:ctx=>` ${ctx.dataset.label}: ${formatMoney(ctx.raw)}`} : {label:ctx=>` ${ctx.dataset.label}: ${formatNumber(ctx.raw)}`}}},
+    scales:{x:{ticks:{color:"#A9B8CC",maxRotation:0,autoSkip:true,maxTicksLimit:12},grid:{color:"rgba(169,184,204,.08)"}},y:{beginAtZero:true,ticks:{color:"#A9B8CC",callback:value=>money?formatMoney(value):formatNumber(value)},grid:{color:"rgba(169,184,204,.08)"}}}
+  };
+}
+function renderReportCharts(current, previous, currentMonth, previousMonthValue) {
+  const daily = Array.isArray(current.dailyMetrics) ? current.dailyMetrics : null;
+  if (!daily) throw new Error("The stats API does not include dailyMetrics. Deploy the updated Stats.js endpoint before using Reports.");
+  const labels = daily.map(day => String(Number(day.date.slice(-2))));
+  const previousDaily = Array.isArray(previous.dailyMetrics) ? previous.dailyMetrics : [];
+  const previousMap = new Map(previousDaily.map(day => [day.date, day]));
+  const valueSeries = daily.map(day => Number(day.orderValue)||0);
+  const orderSeries = daily.map(day => Number(day.orders)||0);
+  const newSeries = daily.map(day => Number(day.newCustomers)||0);
+  const activeCustomers = Number(current.customers?.active)||0;
+  const newCustomers = Number(current.customers?.new)||0;
+  const returningCustomers = Number(current.customers?.returning)||0;
+  const previousActive = Number(previous.customers?.active)||0;
+  const previousNew = Number(previous.customers?.new)||0;
+  const previousReturning = Number(previous.customers?.returning)||0;
+
+  const chartConfigs = [
+    ["reportOrderValue","reportOrderValueChart",{type:"line",data:{labels,datasets:[{label:"Order value",data:valueSeries,borderColor:"#5DEFFF",backgroundColor:"rgba(93,239,255,.12)",fill:true,tension:.28,pointRadius:2}]},options:reportChartOptions(true)}],
+    ["reportOrders","reportOrdersChart",{type:"bar",data:{labels,datasets:[{label:"Orders",data:orderSeries,backgroundColor:"rgba(165,180,252,.78)",borderRadius:4}]},options:reportChartOptions(false)}],
+    ["reportCustomerMix","reportCustomerMixChart",{type:"bar",data:{labels:[monthLabel(previousMonthValue),monthLabel(currentMonth)],datasets:[{label:"New customers",data:[previousNew,newCustomers],backgroundColor:"#5DEFFF",borderRadius:4},{label:"Returning customers",data:[previousReturning,returningCustomers],backgroundColor:"#A5B4FC",borderRadius:4}]},options:{...reportChartOptions(false),scales:{...reportChartOptions(false).scales,x:{...reportChartOptions(false).scales.x, stacked:true},y:{...reportChartOptions(false).scales.y,stacked:true}}}}],
+    ["reportNewCustomers","reportNewCustomersChart",{type:"line",data:{labels,datasets:[{label:"New customers",data:newSeries,borderColor:"#4ADE80",backgroundColor:"rgba(74,222,128,.10)",fill:true,tension:.25,pointRadius:2}]},options:reportChartOptions(false)}]
+  ];
+  chartConfigs.forEach(([key,canvasId,config])=>{ if(charts[key]) charts[key].destroy(); charts[key]=new Chart($(canvasId),config); });
+  return {activeCustomers, previousActive, previousMap};
+}
+function setReportCompare(id, currentValue, previousValue, money = false) {
+  const difference = currentValue - previousValue;
+  const percent = previousValue ? (difference / previousValue) * 100 : null;
+  const deltaText = percent === null ? (currentValue === 0 ? "No activity in either period" : "No previous-period baseline") : `${difference > 0 ? "+" : ""}${formatPercent(percent)} vs previous period`;
+  $(id).textContent = `${money ? formatMoney(previousValue) : formatNumber(previousValue)} previous period Â· ${deltaText}`;
+}
+async function loadReports(force = false) {
+  const input = $("reportsMonth");
+  const nowDate = restaurantDateString();
+  const currentMonth = nowDate.slice(0,7);
+  if (!input.value) input.value = currentMonth;
+  const selectedMonth = input.value;
+  if (!/^\d{4}-\d{2}$/.test(selectedMonth)) return;
+  const cacheKey = selectedMonth;
+  if (!force && reportsLoadedKey === cacheKey) return;
+  if (reportsRequest) reportsRequest.abort();
+  reportsRequest = new AbortController();
+  const signal = reportsRequest.signal;
+  const priorMonth = previousMonth(selectedMonth);
+  const selectedEnd = selectedMonth === currentMonth ? nowDate : monthEnd(selectedMonth);
+  const previousEnd = compareEndForMonth(priorMonth, currentMonth, selectedEnd);
+  $("reportsState").hidden = false;
+  $("reportsState").textContent = "Loading report data from HighLevelâ¦";
+  $("reportsContent").hidden = true;
+  try {
+    const [currentResult, previousResult] = await Promise.all([
+      fetchJson(`/api/stats?${new URLSearchParams({startDate:monthStart(selectedMonth),endDate:selectedEnd})}`, signal),
+      fetchJson(`/api/stats?${new URLSearchParams({startDate:monthStart(priorMonth),endDate:previousEnd})}`, signal)
+    ]);
+    if (signal.aborted) return;
+    const current = currentResult.data || {};
+    const previous = previousResult.data || {};
+    const currentValue = Number(current.orderValue?.total)||0;
+    const currentOrders = Number(current.orders?.total)||0;
+    const currentNew = Number(current.customers?.new)||0;
+    const previousValue = Number(previous.orderValue?.total)||0;
+    const previousOrders = Number(previous.orders?.total)||0;
+    const previousNew = Number(previous.customers?.new)||0;
+    $("reportOrderValue").textContent = formatMoney(currentValue);
+    $("reportOrders").textContent = formatNumber(currentOrders);
+    $("reportAov").textContent = formatMoney(currentOrders ? currentValue/currentOrders : 0);
+    $("reportNewCustomers").textContent = formatNumber(currentNew);
+    setReportCompare("reportOrderValueCompare",currentValue,previousValue,true);
+    setReportCompare("reportOrdersCompare",currentOrders,previousOrders,false);
+    setReportCompare("reportNewCustomersCompare",currentNew,previousNew,false);
+    renderReportCharts(current,previous,selectedMonth,priorMonth);
+    $("reportsState").hidden = true;
+    $("reportsContent").hidden = false;
+    reportsLoadedKey = cacheKey;
+  } catch (error) {
+    if (signal.aborted) return;
+    console.error("Reports failed to load:",error);
+    $("reportsState").hidden = false;
+    $("reportsState").textContent = error.message || "Reports could not be loaded. Check the API deployment and refresh.";
+    $("reportsContent").hidden = true;
+  }
 }
 
 /* =====================================================
@@ -3530,6 +3694,7 @@ function showPage(key) {
   const isBirthday = key === "birthday";
   const isWinback = key === "winback";
   const isSlowtime = key === "slowtime";
+  const isReports = key === "reports";
 
   $("overviewPage").hidden = !isOverview;
   $("ordersPage").hidden = !isOrders;
@@ -3537,9 +3702,10 @@ function showPage(key) {
   $("birthdayPage").hidden = !isBirthday;
   $("winbackPage").hidden = !isWinback;
   $("slowtimePage").hidden = !isSlowtime;
-  $("placeholderPage").hidden = isOverview || isOrders || isCustomers || isBirthday || isWinback || isSlowtime;
+  $("reportsPage").hidden = !isReports;
+  $("placeholderPage").hidden = isOverview || isOrders || isCustomers || isBirthday || isWinback || isSlowtime || isReports;
 
-  if (!isOverview && !isOrders && !isCustomers && !isBirthday && !isWinback && !isSlowtime) {
+  if (!isOverview && !isOrders && !isCustomers && !isBirthday && !isWinback && !isSlowtime && !isReports) {
     $("placeholderTitle").textContent = page[0];
     $("placeholderDescription").textContent = page[3];
     $("placeholderIcon").textContent = page[4];
@@ -3551,6 +3717,7 @@ function showPage(key) {
   if (isBirthday) loadBirthday(false);
   if (isWinback) loadWinback(false);
   if (isSlowtime) loadSlowtime(false);
+  if (isReports) loadReports(false);
   closeSidebar();
 }
 
@@ -3687,9 +3854,7 @@ $("slowtimeRefresh").addEventListener("click", () => loadSlowtime(true));
 $("slowtimeSearch").addEventListener("input", renderSlowtimeCampaigns);
 $("slowtimeStatusFilter").addEventListener("change", renderSlowtimeCampaigns);
 $("slowtimeSortFilter").addEventListener("change", renderSlowtimeCampaigns);
+$("reportsMonth").addEventListener("change", () => loadReports(true));
+$("reportsRefresh").addEventListener("click", () => loadReports(true));
 
-loadDashboard();
-</script>
-
-</body>
-</html>
+loadDas
