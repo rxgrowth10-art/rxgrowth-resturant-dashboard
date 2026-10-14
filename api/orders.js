@@ -2,6 +2,7 @@ const GHL_BASE_URL = "https://services.leadconnectorhq.com";
 const API_VERSION = "2021-07-28";
 
 const LOCATION_ID = "A0gpQEZUjXc6m3mzsCUH";
+const TIME_ZONE = "Africa/Cairo";
 
 const MAX_PAGES = 100;
 const UPSTREAM_PAGE_SIZE = 100;
@@ -12,6 +13,119 @@ function sendJson(res, statusCode, payload) {
 
 function normalizeText(value) {
   return String(value ?? "").trim().toLowerCase();
+}
+
+/**
+ * Validate a YYYY-MM-DD calendar date.
+ */
+function parseCalendarDate(value, fieldName) {
+  if (!value) return null;
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    const error = new Error(`Invalid ${fieldName}`);
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const date = new Date(`${value}T00:00:00.000Z`);
+
+  if (
+    Number.isNaN(date.getTime()) ||
+    date.toISOString().slice(0, 10) !== value
+  ) {
+    const error = new Error(`Invalid ${fieldName}`);
+    error.statusCode = 400;
+    throw error;
+  }
+
+  return value;
+}
+
+/**
+ * Add calendar days without applying the server's local timezone.
+ */
+function addCalendarDays(dateString, days) {
+  const date = new Date(`${dateString}T00:00:00.000Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+/**
+ * Get wall-clock date/time parts in the restaurant timezone.
+ */
+function getZonedParts(date, timeZone = TIME_ZONE) {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  });
+
+  const parts = formatter.formatToParts(date);
+  const result = {};
+
+  for (const part of parts) {
+    if (part.type !== "literal") result[part.type] = part.value;
+  }
+
+  return {
+    year: Number(result.year),
+    month: Number(result.month),
+    day: Number(result.day),
+    hour: Number(result.hour),
+    minute: Number(result.minute),
+    second: Number(result.second),
+  };
+}
+
+/**
+ * Convert a Cairo-local date/time into a UTC instant. This avoids
+ * hardcoding Cairo's UTC offset, which can change with daylight saving.
+ */
+function zonedDateTimeToUtc(dateString, hour = 0, minute = 0, second = 0) {
+  const [year, month, day] = dateString.split("-").map(Number);
+  const targetUtc = Date.UTC(year, month - 1, day, hour, minute, second);
+  let candidate = targetUtc;
+
+  for (let i = 0; i < 4; i++) {
+    const parts = getZonedParts(new Date(candidate));
+    const representedUtc = Date.UTC(
+      parts.year, parts.month - 1, parts.day,
+      parts.hour, parts.minute, parts.second
+    );
+    const difference = targetUtc - representedUtc;
+    if (difference === 0) break;
+    candidate += difference;
+  }
+
+  return new Date(candidate);
+}
+
+/**
+ * Date-picker values are Cairo calendar dates. The end boundary is
+ * exclusive (midnight after the selected end date).
+ */
+function getPeriodBoundaries(startDate, endDate) {
+  const validStart = parseCalendarDate(startDate, "startDate");
+  const validEnd = parseCalendarDate(endDate, "endDate");
+
+  if (validStart && validEnd && validStart > validEnd) {
+    const error = new Error("startDate must be on or before endDate");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const start = validStart ? zonedDateTimeToUtc(validStart) : null;
+  const endExclusiveDate = validEnd ? addCalendarDays(validEnd, 1) : null;
+  const endExclusive = endExclusiveDate
+    ? zonedDateTimeToUtc(endExclusiveDate)
+    : null;
+
+  return { start, endExclusive, endExclusiveDate };
 }
 
 function getOrderId(order) {
@@ -251,13 +365,16 @@ async function fetchAllOrders(filters) {
       offset: page * UPSTREAM_PAGE_SIZE,
     };
 
-    // Native API filters already tested in this project.
-    if (filters.startDate) {
-      params.startAt = filters.startDate;
-    }
+    // Send explicit UTC instants for the selected Cairo calendar days.
+    // Local filtering below remains authoritative at the exclusive end.
+    if (filters.startDate || filters.endDate) {
+      const { start, endExclusive } = getPeriodBoundaries(
+        filters.startDate,
+        filters.endDate
+      );
 
-    if (filters.endDate) {
-      params.endAt = filters.endDate;
+      if (start) params.startAt = start.toISOString();
+      if (endExclusive) params.endAt = endExclusive.toISOString();
     }
 
     if (filters.paymentStatus) {
@@ -320,43 +437,18 @@ function matchesSearch(order, search) {
 }
 
 function matchesDateRange(order, startDate, endDate) {
-  if (!startDate && !endDate) {
-    return true;
-  }
+  if (!startDate && !endDate) return true;
 
-  const rawDate = order.createdAt;
-
-  if (!rawDate) {
-    return false;
-  }
+  const rawDate = getOrderDate(order);
+  if (!rawDate) return false;
 
   const timestamp = new Date(rawDate).getTime();
+  if (!Number.isFinite(timestamp)) return false;
 
-  if (!Number.isFinite(timestamp)) {
-    return false;
-  }
+  const { start, endExclusive } = getPeriodBoundaries(startDate, endDate);
 
-  if (startDate) {
-    const start = new Date(startDate).getTime();
-
-    if (
-      Number.isFinite(start) &&
-      timestamp < start
-    ) {
-      return false;
-    }
-  }
-
-  if (endDate) {
-    const end = new Date(endDate).getTime();
-
-    if (
-      Number.isFinite(end) &&
-      timestamp > end
-    ) {
-      return false;
-    }
-  }
+  if (start && timestamp < start.getTime()) return false;
+  if (endExclusive && timestamp >= endExclusive.getTime()) return false;
 
   return true;
 }
