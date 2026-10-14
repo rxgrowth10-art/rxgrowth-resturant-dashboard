@@ -402,9 +402,10 @@ button:disabled .refresh-icon { opacity: .65; }
 ===================================================== */
 
 .content {
-  max-width: 1650px;
+  width: 100%;
+  max-width: none;
   padding: 29px 29px 36px;
-  margin: auto;
+  margin: 0;
   position: relative;
 }
 
@@ -1331,6 +1332,63 @@ button:disabled .refresh-icon { opacity: .65; }
 @media(max-width:1100px){.slowtime-kpi-grid,.slowtime-status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.slowtime-filter-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.slowtime-toolbar{align-items:flex-start;flex-direction:column}.slowtime-toolbar .customer-btn{width:100%}.slowtime-kpi-grid,.slowtime-status-grid{gap:8px}.slowtime-kpi{padding:13px}.slowtime-kpi-value{font-size:22px}.slowtime-filter-row{grid-template-columns:1fr}.slowtime-table-head{padding:13px}.slowtime-table-foot{flex-direction:column}}
 
+
+
+/* =====================================================
+   READABILITY PASS â full-width pages, stronger card titles, clearer tables
+   Scoped as visual overrides to preserve existing data/API behavior.
+===================================================== */
+.content { width: 100%; max-width: none; }
+.metric-label,
+.orders-kpi-label,
+.customer-kpi-label,
+.birthday-kpi-label,
+.winback-kpi-label,
+.slowtime-kpi-label {
+  color: #FFFFFF !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 1.45;
+}
+.metric-value { font-size: clamp(27px, 2.2vw, 34px); }
+.metric-foot { font-size: 11px; }
+.orders-table-heading, .customer-table-heading,
+.birthday-toolbar-title, .birthday-table-title,
+.winback-toolbar-title, .winback-table-title,
+.slowtime-toolbar-title, .slowtime-table-title {
+  color: #FFFFFF;
+  font-size: 14px;
+}
+.orders-table-caption, .customer-table-caption,
+.birthday-toolbar-sub, .birthday-table-sub,
+.winback-toolbar-sub, .winback-table-sub,
+.slowtime-toolbar-sub, .slowtime-table-sub {
+  font-size: 11px;
+}
+.orders-table th, .customer-table th,
+.birthday-table th, .winback-table th, .slowtime-table th {
+  font-size: 11px;
+  padding: 13px 14px;
+}
+.orders-table td, .customer-table td,
+.birthday-table td, .winback-table td, .slowtime-table td {
+  font-size: 12px;
+  padding: 14px;
+}
+.orders-table-foot, .customer-table-foot,
+.birthday-table-foot, .winback-table-foot, .slowtime-table-foot {
+  font-size: 11px;
+}
+@media (max-width: 650px) {
+  .content { padding: 22px 14px 28px; }
+  .metric-label, .orders-kpi-label, .customer-kpi-label,
+  .birthday-kpi-label, .winback-kpi-label, .slowtime-kpi-label { font-size: 12px !important; }
+  .orders-table th, .customer-table th, .birthday-table th,
+  .winback-table th, .slowtime-table th { font-size: 10px; }
+  .orders-table td, .customer-table td, .birthday-table td,
+  .winback-table td, .slowtime-table td { font-size: 11px; }
+}
+
 </style>
 </head>
 
@@ -1395,28 +1453,20 @@ button:disabled .refresh-icon { opacity: .65; }
 
     <div class="nav-group collapsed">
       <button class="group-toggle" type="button" aria-expanded="false">
-        <span class="group-leading"><svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/><circle cx="12" cy="12" r="8.5"/></svg><span class="group-label">CAMPAIGNS & QR</span></span><span class="chev" aria-hidden="true"></span>
+        <span class="group-leading"><svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/><circle cx="12" cy="12" r="8.5"/></svg><span class="group-label">CAMPAIGNS</span></span><span class="chev" aria-hidden="true"></span>
       </button>
       <div class="group-items">
         <button class="nav-item" type="button" data-page="birthday">
           <span class="nav-icon">&#10022;</span>
           <span class="nav-text">Birthday</span>
-          <span class="badge live">V1</span>
         </button>
         <button class="nav-item" type="button" data-page="winback">
           <span class="nav-icon">&#8635;</span>
           <span class="nav-text">Win-Back</span>
-          <span class="badge">V1</span>
         </button>
         <button class="nav-item" type="button" data-page="slowtime">
           <span class="nav-icon">&#9675;</span>
           <span class="nav-text">Slow-Time</span>
-          <span class="badge live">V1</span>
-        </button>
-        <button class="nav-item" type="button" data-page="qr">
-          <span class="nav-icon">&#9638;</span>
-          <span class="nav-text">QR Ecosystem</span>
-          <span class="badge">Planned</span>
         </button>
       </div>
     </div>
@@ -1966,31 +2016,24 @@ const pages = {
   ],
   birthday: [
     "Birthday Campaign",
-    "Campaigns & QR",
+    "Campaigns",
     "Birthday",
     "Birthday Club membership and current campaign execution status.",
     "â¦"
   ],
   winback: [
     "Win-Back Campaign",
-    "Campaigns & QR",
+    "Campaigns",
     "Win-Back",
     "Reactivation campaign performance and attributed orders.",
     "â»"
   ],
   slowtime: [
     "Slow-Time Campaign",
-    "Campaigns & QR",
+    "Campaigns",
     "Slow-Time",
     "Slow-day offers, redemptions, and attributed order value.",
     "â"
-  ],
-  qr: [
-    "QR Ecosystem",
-    "Campaigns & QR",
-    "QR Ecosystem",
-    "QR analytics will appear when a reliable analytics source is connected.",
-    "â¦"
   ],
   retention: [
     "Retention",
