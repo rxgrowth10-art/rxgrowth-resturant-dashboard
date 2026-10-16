@@ -2529,17 +2529,40 @@ function renderDashboard(result, period) {
   }
 }
 
+function getRestaurantAccessId() {
+  const match = window.location.pathname.match(/^\/r\/([^/]+)\/?$/);
+
+  if (!match) {
+    return null;
+  }
+
+  return decodeURIComponent(match[1]);
+}
+
 async function fetchJson(url, signal) {
+  const restaurantAccessId = getRestaurantAccessId();
+
+  const headers = {
+    Accept: "application/json"
+  };
+
+  if (restaurantAccessId) {
+    headers["X-Rx-Restaurant"] = restaurantAccessId;
+  }
+
   const response = await fetch(url, {
     method: "GET",
-    headers: { Accept: "application/json" },
+    headers,
     cache: "no-store",
     signal
   });
+
   const result = await response.json();
+
   if (!response.ok || result.success === false) {
     throw new Error(result.error || `Request failed (${response.status})`);
   }
+
   return result;
 }
 
