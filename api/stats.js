@@ -144,8 +144,8 @@ function zonedDateTimeToUtc(
 /**
  * Send an authenticated GET request to HighLevel.
  */
-async function ghlRequest(path, params = {}) {
-  const token = process.env.GHL_API_KEY;
+async function ghlRequest(path, apiKey, params = {}) {
+  const token = apiKey;
 
   if (!token) {
     throw new Error("GHL_API_KEY is not configured");
@@ -189,7 +189,7 @@ async function ghlRequest(path, params = {}) {
  *
  * Duplicate order IDs are ignored.
  */
-async function fetchAllOrders() {
+async function fetchAllOrders(restaurant) {
   const orders = [];
   const seenIds = new Set();
 
@@ -202,13 +202,17 @@ async function fetchAllOrders() {
       throw new Error("Orders pagination limit exceeded");
     }
 
-    const result = await ghlRequest("/payments/orders", {
-      locationId: LOCATION_ID,
-      altId: LOCATION_ID,
-      altType: "location",
-      limit: PAGE_SIZE,
-      offset,
-    });
+    const result = await ghlRequest(
+  "/payments/orders",
+  restaurant.apiKey,
+  {
+    locationId: restaurant.locationId,
+    altId: restaurant.locationId,
+    altType: "location",
+    limit: PAGE_SIZE,
+    offset,
+  }
+);
 
     if (!Array.isArray(result.data)) {
       throw new Error("Unexpected Orders API response");
@@ -634,7 +638,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    const now = new Date();
+  const restaurant = getRestaurantConnection(req);
+
+  const now = new Date();
 
     const today = getZonedDateString(now);
     const defaultEndDate = today;
@@ -661,10 +667,10 @@ export default async function handler(req, res) {
     }
 
     const {
-      orders,
-      reportedTotal,
-      pagesFetched,
-    } = await fetchAllOrders();
+  orders,
+  reportedTotal,
+  pagesFetched,
+} = await fetchAllOrders(restaurant);
 
     const metrics = calculateMetrics(
       orders,
@@ -696,13 +702,20 @@ export default async function handler(req, res) {
       },
     });
   } catch (error) {
-    console.error("Dashboard API failed:", error.message);
+  console.error("Dashboard API failed:", error.message);
 
-    return res.status(500).json({
-      success: false,
-      error: "Unable to calculate dashboard metrics",
-    });
-  }
+  const statusCode = error.statusCode || 500;
+
+  return res.status(statusCode).json({
+    success: false,
+    error:
+      statusCode === 401
+        ? "Restaurant access ID is required."
+        : statusCode === 403
+          ? "Invalid restaurant access."
+          : "Unable to calculate dashboard metrics",
+  });
+}
 }
 
 const PAGE_SIZE = 100;
