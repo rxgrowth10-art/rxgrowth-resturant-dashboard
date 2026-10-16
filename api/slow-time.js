@@ -1,7 +1,8 @@
 const GHL_BASE_URL = "https://services.leadconnectorhq.com";
 const API_VERSION = "v3";
 
-const LOCATION_ID = "A0gpQEZUjXc6m3mzsCUH";
+const { getRestaurantConnection } = require("./restaurant.js");
+
 const OBJECT_KEY = "custom_objects.slow_time_campaigns";
 const OBJECT_ID = "6ac233e9d65f09dff80b81a6";
 
@@ -177,11 +178,13 @@ function normalizeRecord(record) {
 /**
  * Search one page of Slow-Time Campaign records.
  */
-async function ghlSearchRecords(page) {
-  const token = process.env.GHL_API_KEY;
+async function ghlSearchRecords(page, restaurant) {
+  const token = restaurant.apiKey;
 
   if (!token) {
-    throw new Error("GHL_API_KEY is not configured");
+    throw new Error(
+      "Missing GHL API key for restaurant connection."
+    );
   }
 
   const url =
@@ -198,7 +201,7 @@ async function ghlSearchRecords(page) {
     },
 
     body: JSON.stringify({
-      locationId: LOCATION_ID,
+      locationId: restaurant.locationId,
       page,
       pageLimit: PAGE_SIZE,
       query: "",
@@ -230,7 +233,7 @@ async function ghlSearchRecords(page) {
  *
  * Supports pagination and ignores duplicate records.
  */
-async function fetchAllCampaignRecords() {
+async function fetchAllCampaignRecords(restaurant) {
   const records = [];
   const seenIds = new Set();
 
@@ -238,7 +241,10 @@ async function fetchAllCampaignRecords() {
   let pagesFetched = 0;
 
   for (let page = 1; page <= MAX_PAGES; page++) {
-    const result = await ghlSearchRecords(page);
+    const result = await ghlSearchRecords(
+      page,
+      restaurant
+    );
 
     pagesFetched++;
 
@@ -476,7 +482,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const fetched = await fetchAllCampaignRecords();
+    const restaurant =
+      getRestaurantConnection(req);
+
+    const fetched =
+      await fetchAllCampaignRecords(restaurant);
 
     return res.status(200).json(
       buildResponse(fetched)
@@ -489,7 +499,8 @@ export default async function handler(req, res) {
 
     return res.status(500).json({
       success: false,
-      error: "Unable to fetch Slow-Time campaign records",
+      error:
+        "Unable to fetch Slow-Time campaign records",
     });
   }
 }
