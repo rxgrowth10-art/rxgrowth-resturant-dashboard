@@ -1,4 +1,4 @@
-const { getRestaurantConnection } = require("./_restaurant");
+const { getRestaurantConnection } = require("./restaurant");
 
 module.exports = async function handler(req, res) {
   try {
