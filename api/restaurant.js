@@ -1,6 +1,6 @@
 const KOI_ROLL_LOCATION_ID = "A0gpQEZUjXc6m3mzsCUH";
 
-function getRestaurantId(req) {
+function getRestaurantAccessId(req) {
   const headerId = req.headers["x-rx-restaurant"];
 
   if (typeof headerId === "string" && headerId.trim()) {
@@ -11,17 +11,19 @@ function getRestaurantId(req) {
 }
 
 function getRestaurantConnection(req) {
-  const restaurantId = getRestaurantId(req);
+  const accessId = getRestaurantAccessId(req);
 
-  if (!restaurantId) {
-    const error = new Error("Restaurant ID is required.");
+  if (!accessId) {
+    const error = new Error("Restaurant access ID is required.");
     error.statusCode = 401;
     throw error;
   }
 
-  if (restaurantId !== "koi-roll") {
-    const error = new Error("Unknown restaurant.");
-    error.statusCode = 404;
+  const koiRollAccessId = process.env.RXGROWTH_KOI_ROLL_ACCESS_ID;
+
+  if (!koiRollAccessId || accessId !== koiRollAccessId) {
+    const error = new Error("Invalid restaurant access.");
+    error.statusCode = 403;
     throw error;
   }
 
