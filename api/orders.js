@@ -1,8 +1,9 @@
 const GHL_BASE_URL = "https://services.leadconnectorhq.com";
 const API_VERSION = "2021-07-28";
 
-const LOCATION_ID = "A0gpQEZUjXc6m3mzsCUH";
 const TIME_ZONE = "Africa/Cairo";
+
+const { getRestaurantConnection } = require("./restaurant.js");
 
 const MAX_PAGES = 100;
 const UPSTREAM_PAGE_SIZE = 100;
@@ -94,8 +95,12 @@ function zonedDateTimeToUtc(dateString, hour = 0, minute = 0, second = 0) {
   for (let i = 0; i < 4; i++) {
     const parts = getZonedParts(new Date(candidate));
     const representedUtc = Date.UTC(
-      parts.year, parts.month - 1, parts.day,
-      parts.hour, parts.minute, parts.second
+      parts.year,
+      parts.month - 1,
+      parts.day,
+      parts.hour,
+      parts.minute,
+      parts.second
     );
     const difference = targetUtc - representedUtc;
     if (difference === 0) break;
@@ -270,12 +275,10 @@ function normalizeOrder(order) {
   };
 }
 
-async function ghlRequest(path, params = {}) {
-  const apiKey = process.env.GHL_API_KEY;
-
+async function ghlRequest(path, apiKey, params = {}) {
   if (!apiKey) {
     throw new Error(
-      "Missing GHL_API_KEY environment variable."
+      "Missing GHL API key for restaurant connection."
     );
   }
 
@@ -349,14 +352,14 @@ function extractOrders(response) {
   return [];
 }
 
-async function fetchAllOrders(filters) {
+async function fetchAllOrders(filters, restaurant) {
   const allOrders = [];
 
   for (let page = 0; page < MAX_PAGES; page++) {
     const params = {
-      locationId: LOCATION_ID,
+      locationId: restaurant.locationId,
 
-      altId: LOCATION_ID,
+      altId: restaurant.locationId,
 
       altType: "location",
 
@@ -387,6 +390,7 @@ async function fetchAllOrders(filters) {
 
     const response = await ghlRequest(
       "/payments/orders",
+      restaurant.apiKey,
       params
     );
 
@@ -422,7 +426,6 @@ function matchesSearch(order, search) {
   }
 
   const query = normalizeText(search);
-
   const searchableValues = [
     order.id,
     order.customerName,
@@ -582,7 +585,7 @@ function sortOrders(orders, sortBy, sortDir) {
   });
 }
 
-async function getOrderDetails(orderId) {
+async function getOrderDetails(orderId, restaurant) {
   if (!orderId) {
     const error = new Error("Order ID is required.");
     error.statusCode = 400;
@@ -591,9 +594,10 @@ async function getOrderDetails(orderId) {
 
   const response = await ghlRequest(
     `/payments/orders/${encodeURIComponent(orderId)}`,
+    restaurant.apiKey,
     {
-      locationId: LOCATION_ID,
-      altId: LOCATION_ID,
+      locationId: restaurant.locationId,
+      altId: restaurant.locationId,
       altType: "location",
     }
   );
@@ -617,12 +621,17 @@ module.exports = async (req, res) => {
     });
   }
 
+  const restaurant = getRestaurantConnection(req);
+
   try {
     const query = req.query || {};
 
     // Request one order's details.
     if (query.id) {
-      const order = await getOrderDetails(query.id);
+      const order = await getOrderDetails(
+        query.id,
+        restaurant
+      );
 
       return sendJson(res, 200, {
         success: true,
@@ -672,7 +681,10 @@ module.exports = async (req, res) => {
       ).trim(),
     };
 
-    const rawOrders = await fetchAllOrders(filters);
+    const rawOrders = await fetchAllOrders(
+      filters,
+      restaurant
+    );
 
     const normalizedOrders = rawOrders.map(
       normalizeOrder
