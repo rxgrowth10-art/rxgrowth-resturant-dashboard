@@ -1,7 +1,7 @@
 const KOI_ROLL_LOCATION_ID = "A0gpQEZUjXc6m3mzsCUH";
 const STENZ_LOCATION_ID = "V2q4leIVzpDKRiljAOOj";
 
-function getRestaurantAccessId(req) {
+function getRestaurantLocationId(req) {
   const headerId = req.headers["x-rx-restaurant"];
 
   if (typeof headerId === "string" && headerId.trim()) {
@@ -12,25 +12,16 @@ function getRestaurantAccessId(req) {
 }
 
 function getRestaurantConnection(req) {
-  const accessId = getRestaurantAccessId(req);
+  const locationId = getRestaurantLocationId(req);
 
-  if (!accessId) {
-    const error = new Error("Restaurant access ID is required.");
+  if (!locationId) {
+    const error = new Error("Restaurant location ID is required.");
     error.statusCode = 401;
     throw error;
   }
 
-  const koiRollAccessId =
-    process.env.RXGROWTH_KOI_ROLL_ACCESS_ID;
-
-  const stenzAccessId =
-    process.env.RXGROWTH_STENZ_ACCESS_ID;
-
   // Koi Roll
-  if (
-    koiRollAccessId &&
-    accessId === koiRollAccessId
-  ) {
+  if (locationId === KOI_ROLL_LOCATION_ID) {
     const apiKey = process.env.GHL_API_KEY;
 
     if (!apiKey) {
@@ -50,12 +41,8 @@ function getRestaurantConnection(req) {
   }
 
   // STENZ Coffee & Bakery Lounge
-  if (
-    stenzAccessId &&
-    accessId === stenzAccessId
-  ) {
-    const apiKey =
-      process.env.GHL_STENZ_API_KEY;
+  if (locationId === STENZ_LOCATION_ID) {
+    const apiKey = process.env.GHL_STENZ_API_KEY;
 
     if (!apiKey) {
       const error = new Error(
@@ -67,14 +54,13 @@ function getRestaurantConnection(req) {
 
     return {
       restaurantId: "stenz",
-      restaurantName:
-        "STENZ Coffee & Bakery Lounge",
+      restaurantName: "STENZ Coffee & Bakery Lounge",
       locationId: STENZ_LOCATION_ID,
       apiKey,
     };
   }
 
-  const error = new Error("Invalid restaurant access.");
+  const error = new Error("Invalid restaurant location.");
   error.statusCode = 403;
   throw error;
 }
