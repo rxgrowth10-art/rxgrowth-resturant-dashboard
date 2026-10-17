@@ -1,6 +1,9 @@
 const GHL_BASE_URL = "https://services.leadconnectorhq.com";
 const API_VERSION = "v3";
-const LOCATION_ID = "A0gpQEZUjXc6m3mzsCUH";
+
+import restaurantModule from "./restaurant.js";
+
+const { getRestaurantConnection } = restaurantModule;
 
 const PAGE_SIZE = 100;
 const MAX_PAGES = 100;
@@ -24,17 +27,25 @@ function normalizeName(value) {
     .toUpperCase();
 }
 
-async function ghlRequest(path, params = {}) {
-  const token = process.env.GHL_API_KEY;
-
-  if (!token) {
-    throw new Error("GHL_API_KEY is not configured");
+async function ghlRequest(
+  path,
+  apiKey,
+  params = {}
+) {
+  if (!apiKey) {
+    throw new Error(
+      "Missing GHL API key for restaurant connection."
+    );
   }
 
   const url = new URL(`${GHL_BASE_URL}${path}`);
 
   for (const [key, value] of Object.entries(params)) {
-    if (value !== undefined && value !== null && value !== "") {
+    if (
+      value !== undefined &&
+      value !== null &&
+      value !== ""
+    ) {
       url.searchParams.set(key, String(value));
     }
   }
@@ -42,32 +53,38 @@ async function ghlRequest(path, params = {}) {
   let response;
 
   try {
-    console.log("Fulfillment: requesting HighLevel API", {
-      endpoint: path,
-    });
+    console.log(
+      "Fulfillment: requesting HighLevel API",
+      {
+        endpoint: path,
+      }
+    );
 
     response = await fetch(url.toString(), {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${apiKey}`,
         Version: API_VERSION,
         Accept: "application/json",
       },
       signal: AbortSignal.timeout(20000),
     });
   } catch (error) {
-    console.error("Fulfillment: network request failed", {
-      endpoint: path,
-      errorName: error.name,
-      errorMessage: error.message,
-      cause: error.cause
-        ? {
-            name: error.cause.name,
-            code: error.cause.code,
-            message: error.cause.message,
-          }
-        : null,
-    });
+    console.error(
+      "Fulfillment: network request failed",
+      {
+        endpoint: path,
+        errorName: error.name,
+        errorMessage: error.message,
+        cause: error.cause
+          ? {
+              name: error.cause.name,
+              code: error.cause.code,
+              message: error.cause.message,
+            }
+          : null,
+      }
+    );
 
     throw new Error(
       `HighLevel network request failed: ${path}`
@@ -77,11 +94,14 @@ async function ghlRequest(path, params = {}) {
   const responseText = await response.text();
 
   if (!response.ok) {
-    console.error("Fulfillment: HighLevel API error", {
-      endpoint: path,
-      status: response.status,
-      response: responseText.slice(0, 500),
-    });
+    console.error(
+      "Fulfillment: HighLevel API error",
+      {
+        endpoint: path,
+        status: response.status,
+        response: responseText.slice(0, 500),
+      }
+    );
 
     throw new Error(
       `HighLevel API returned HTTP ${response.status}`
@@ -93,10 +113,13 @@ async function ghlRequest(path, params = {}) {
   try {
     result = JSON.parse(responseText);
   } catch {
-    console.error("Fulfillment: invalid JSON response", {
-      endpoint: path,
-      response: responseText.slice(0, 300),
-    });
+    console.error(
+      "Fulfillment: invalid JSON response",
+      {
+        endpoint: path,
+        response: responseText.slice(0, 300),
+      }
+    );
 
     throw new Error(
       "HighLevel API returned invalid JSON"
@@ -106,11 +129,12 @@ async function ghlRequest(path, params = {}) {
   return result;
 }
 
-async function fetchPipelines() {
+async function fetchPipelines(restaurant) {
   const result = await ghlRequest(
     "/opportunities/pipelines",
+    restaurant.apiKey,
     {
-      locationId: LOCATION_ID,
+      locationId: restaurant.locationId,
     }
   );
 
@@ -146,7 +170,10 @@ function findOrdersPipeline(pipelines) {
   return matches[0];
 }
 
-async function fetchPipelineOpportunities(pipelineId) {
+async function fetchPipelineOpportunities(
+  pipelineId,
+  restaurant
+) {
   const opportunities = [];
   const seenIds = new Set();
 
@@ -161,13 +188,16 @@ async function fetchPipelineOpportunities(pipelineId) {
     pagesFetched += 1;
 
     const params = {
-      locationId: LOCATION_ID,
+      locationId: restaurant.locationId,
       pipelineId,
       status: "all",
       limit: PAGE_SIZE,
     };
 
-    if (startAfter !== null && startAfterId !== null) {
+    if (
+      startAfter !== null &&
+      startAfterId !== null
+    ) {
       params.startAfter = startAfter;
       params.startAfterId = startAfterId;
     } else {
@@ -176,6 +206,7 @@ async function fetchPipelineOpportunities(pipelineId) {
 
     const result = await ghlRequest(
       "/opportunities/search",
+      restaurant.apiKey,
       params
     );
 
@@ -200,7 +231,9 @@ async function fetchPipelineOpportunities(pipelineId) {
     for (const opportunity of result.opportunities) {
       if (!opportunity.id) continue;
       if (seenIds.has(opportunity.id)) continue;
-      if (opportunity.pipelineId !== pipelineId) continue;
+      if (opportunity.pipelineId !== pipelineId) {
+        continue;
+      }
 
       seenIds.add(opportunity.id);
       opportunities.push(opportunity);
@@ -232,7 +265,10 @@ async function fetchPipelineOpportunities(pipelineId) {
       const nextStartAfterId =
         nextUrl.searchParams.get("startAfterId");
 
-      if (nextStartAfter && nextStartAfterId) {
+      if (
+        nextStartAfter &&
+        nextStartAfterId
+      ) {
         startAfter = nextStartAfter;
         startAfterId = nextStartAfterId;
         continue;
@@ -251,8 +287,10 @@ async function fetchPipelineOpportunities(pipelineId) {
     startAfterId = null;
   }
 
-  if (pagesFetched >= MAX_PAGES &&
-      opportunities.length < reportedTotal) {
+  if (
+    pagesFetched >= MAX_PAGES &&
+    opportunities.length < reportedTotal
+  ) {
     throw new Error(
       "Opportunities pagination limit exceeded"
     );
@@ -265,8 +303,13 @@ async function fetchPipelineOpportunities(pipelineId) {
   };
 }
 
-function calculateStageCounts(pipeline, opportunities) {
-  const pipelineStages = Array.isArray(pipeline.stages)
+function calculateStageCounts(
+  pipeline,
+  opportunities
+) {
+  const pipelineStages = Array.isArray(
+    pipeline.stages
+  )
     ? pipeline.stages
     : [];
 
@@ -279,7 +322,8 @@ function calculateStageCounts(pipeline, opportunities) {
   let opportunitiesWithoutKnownStage = 0;
 
   for (const opportunity of opportunities) {
-    const stageId = opportunity.pipelineStageId;
+    const stageId =
+      opportunity.pipelineStageId;
 
     if (counts.has(stageId)) {
       counts.set(
@@ -291,20 +335,25 @@ function calculateStageCounts(pipeline, opportunities) {
     }
   }
 
-  const stages = pipelineStages.map((stage) => ({
-    id: stage.id,
-    name: stage.name,
-    count: counts.get(stage.id) || 0,
-  }));
+  const stages = pipelineStages.map(
+    (stage) => ({
+      id: stage.id,
+      name: stage.name,
+      count: counts.get(stage.id) || 0,
+    })
+  );
 
-  const actualStageNames = stages.map((stage) =>
-    normalizeName(stage.name)
+  const actualStageNames = stages.map(
+    (stage) =>
+      normalizeName(stage.name)
   );
 
   const expectedStagesMatch =
-    EXPECTED_STAGES.length === actualStageNames.length &&
+    EXPECTED_STAGES.length ===
+      actualStageNames.length &&
     EXPECTED_STAGES.every(
-      (name, index) => name === actualStageNames[index]
+      (name, index) =>
+        name === actualStageNames[index]
     );
 
   return {
@@ -315,8 +364,14 @@ function calculateStageCounts(pipeline, opportunities) {
   };
 }
 
-export default async function handler(req, res) {
-  res.setHeader("Cache-Control", "no-store");
+export default async function handler(
+  req,
+  res
+) {
+  res.setHeader(
+    "Cache-Control",
+    "no-store"
+  );
 
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
@@ -328,23 +383,35 @@ export default async function handler(req, res) {
   }
 
   try {
-    const pipelines = await fetchPipelines();
-    const pipeline = findOrdersPipeline(pipelines);
+    const restaurant =
+      getRestaurantConnection(req);
+
+    const pipelines =
+      await fetchPipelines(restaurant);
+
+    const pipeline =
+      findOrdersPipeline(pipelines);
 
     const {
       opportunities,
       reportedTotal,
       pagesFetched,
-    } = await fetchPipelineOpportunities(pipeline.id);
+    } =
+      await fetchPipelineOpportunities(
+        pipeline.id,
+        restaurant
+      );
 
-    const metrics = calculateStageCounts(
-      pipeline,
-      opportunities
-    );
+    const metrics =
+      calculateStageCounts(
+        pipeline,
+        opportunities
+      );
 
     return res.status(200).json({
       success: true,
-      source: "highlevel_opportunities",
+      source:
+        "highlevel_opportunities",
 
       pipeline: {
         id: pipeline.id,
@@ -352,7 +419,8 @@ export default async function handler(req, res) {
       },
 
       data: {
-        totalOpportunities: opportunities.length,
+        totalOpportunities:
+          opportunities.length,
         stages: metrics.stages,
         opportunitiesWithoutKnownStage:
           metrics.opportunitiesWithoutKnownStage,
@@ -361,28 +429,37 @@ export default async function handler(req, res) {
       validation: {
         expectedStagesMatch:
           metrics.expectedStagesMatch,
-        expectedStages: metrics.expectedStages,
-        actualStageNames: metrics.stages.map(
-          (stage) => stage.name
-        ),
+        expectedStages:
+          metrics.expectedStages,
+        actualStageNames:
+          metrics.stages.map(
+            (stage) => stage.name
+          ),
       },
 
       diagnostics: {
-        apiReportedTotal: reportedTotal,
-        opportunitiesFetched: opportunities.length,
+        apiReportedTotal:
+          reportedTotal,
+        opportunitiesFetched:
+          opportunities.length,
         pagesFetched,
-        calculatedAt: new Date().toISOString(),
+        calculatedAt:
+          new Date().toISOString(),
       },
     });
   } catch (error) {
-    console.error("Fulfillment API failed:", {
-      message: error.message,
-      stack: error.stack,
-    });
+    console.error(
+      "Fulfillment API failed:",
+      {
+        message: error.message,
+        stack: error.stack,
+      }
+    );
 
     return res.status(500).json({
       success: false,
-      error: "Unable to calculate fulfillment metrics",
+      error:
+        "Unable to calculate fulfillment metrics",
     });
   }
 }
