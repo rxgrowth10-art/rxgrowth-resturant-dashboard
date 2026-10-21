@@ -261,6 +261,55 @@ function extractFields(contact, fieldMap) {
 
   return fields;
 }
+function normalizeBusinessDate(value) {
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+
+  // HighLevel may return Date fields as Unix milliseconds.
+  if (typeof value === "number" && Number.isFinite(value)) {
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return null;
+    }
+
+    return getBusinessDateString(date);
+  }
+
+  const stringValue = String(value).trim();
+
+  // Numeric Unix timestamp returned as a string.
+  if (/^\d+$/.test(stringValue)) {
+    const numericValue = Number(stringValue);
+
+    if (!Number.isFinite(numericValue)) {
+      return null;
+    }
+
+    const date = new Date(numericValue);
+
+    if (Number.isNaN(date.getTime())) {
+      return null;
+    }
+
+    return getBusinessDateString(date);
+  }
+
+  // Date-only value: preserve the calendar date exactly.
+  if (/^\d{4}-\d{2}-\d{2}$/.test(stringValue)) {
+    return stringValue;
+  }
+
+  // ISO / datetime value.
+  const date = new Date(stringValue);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return getBusinessDateString(date);
+}
 
 function calculateM10(fields) {
   const totalOrders = Number(fields.total_orders);
@@ -278,17 +327,24 @@ function calculateM10(fields) {
   let daysSinceLastOrder = null;
 
   if (
-    lastOrderDate &&
-    todayBusinessDate
-  ) {
-    daysSinceLastOrder = Math.max(
-      0,
-      calendarDayDifference(
+  lastOrderDate !== null &&
+  lastOrderDate !== undefined &&
+  todayBusinessDate
+) {
+  const normalizedLastOrderDate =
+    normalizeBusinessDate(lastOrderDate);
+
+  const difference = normalizedLastOrderDate
+    ? calendarDayDifference(
         todayBusinessDate,
-        String(lastOrderDate).slice(0, 10)
+        normalizedLastOrderDate
       )
-    );
+    : null;
+
+  if (difference !== null) {
+    daysSinceLastOrder = Math.max(0, difference);
   }
+}
 
   let orderCycleRatio = null;
 
