@@ -476,60 +476,61 @@ export default async function handler(req, res) {
     }
 
     return res.status(200).json({
-      success: true,
+  success: true,
 
-      mode: "read_only",
+  mode: "read_only",
 
-      restaurant: {
-        id: restaurant.restaurantId,
-        name: restaurant.restaurantName,
-        locationId: restaurant.locationId,
-      },
+  restaurant: {
+    id: restaurant.restaurantId,
+    name: restaurant.restaurantName,
+    locationId: restaurant.locationId,
+  },
 
-      workflow: {
-        id: M10_WORKFLOW_ID,
-        name:
-          "ROS | M10 | WIN-BACK | Customer Reactivation",
-      },
+  workflow: {
+    id: M10_WORKFLOW_ID,
+    name:
+      "ROS | M10 | WIN-BACK | Customer Reactivation",
+  },
 
-      calculation: {
-        timezone: BUSINESS_TIMEZONE,
-        minimumOrders: 3,
-        minimumDaysSinceLastOrder: 21,
-        minimumCycleRatio: 1.5,
-      },
+  calculation: {
+    timezone: BUSINESS_TIMEZONE,
+    minimumOrders: 3,
+    minimumDaysSinceLastOrder: 21,
+    minimumCycleRatio: 1.5,
+  },
 
-      summary: {
-        contactsFetched:
-          contactResult.contacts.length,
+  summary: {
+    contactsFetched:
+      contactResult.contacts.length,
 
-        apiReportedTotal:
-          contactResult.reportedTotal,
+    apiReportedTotal:
+      contactResult.reportedTotal,
 
-        pagesFetched:
-          contactResult.pagesFetched,
+    pagesFetched:
+      contactResult.pagesFetched,
 
-        partial:
-          contactResult.partial,
+    partial:
+      contactResult.partial,
 
-        eligible:
-          eligible.length,
+    eligible:
+      eligible.length,
 
-        notEligible:
-          notEligible.length,
+    notEligible:
+      notEligible.length,
 
-        inProgress:
-          inProgress.length,
-      },
+    inProgress:
+      inProgress.length,
+  },
 
-      eligible,
-      inProgress,
+  eligible,
+  notEligible,
+  inProgress,
 
-      diagnostics: {
-        calculatedAt:
-          new Date().toISOString(),
-      },
-    });
+  diagnostics: {
+    calculatedAt:
+      new Date().toISOString(),
+  },
+});
   } catch (error) {
     console.error(
       "M10 Win-Back API failed:",
