@@ -7,7 +7,7 @@ const REQUEST_TIMEOUT_MS = 15000;
 
 const BUSINESS_TIMEZONE = "Africa/Cairo";
 
-const M10_WORKFLOW_ID = "9da63be7-ddb1-4cc5-ba8c-c467aeadebaa";
+const M10_WORKFLOW_ID = "9da63be7-ddb1-4cc5-ba8c-c467eaadebaa";
 
 const { getRestaurantConnection } = require("./restaurant.js");
 
@@ -382,28 +382,13 @@ export default async function handler(req, res) {
   try {
     /*
      * Security:
-     * HighLevel Scheduler → Custom Webhook
-     * must send:
+     * Vercel Deployment Protection is used
+     * through the x-vercel-protection-bypass header.
      *
-     * X-RX-M10-SECRET: <M10_SCHEDULER_SECRET>
+     * HighLevel must also send:
+     *
      * X-RX-RESTAURANT: <locationId>
      */
-
-    const expectedSecret =
-      process.env.M10_SCHEDULER_SECRET;
-
-    const providedSecret =
-      req.headers["x-rx-m10-secret"];
-
-    if (
-      !expectedSecret ||
-      providedSecret !== expectedSecret
-    ) {
-      return res.status(401).json({
-        success: false,
-        error: "Unauthorized",
-      });
-    }
 
     const restaurantLocationId =
       req.headers["x-rx-restaurant"];
