@@ -1,18 +1,29 @@
-const GHL_BASE_URL = "https://services.leadconnectorhq.com";
+const GHL_BASE_URL =
+  "https://services.leadconnectorhq.com";
 
-const READ_API_VERSION = "2021-07-28";
-const WRITE_API_VERSION = "v3";
+const READ_API_VERSION =
+  "2021-07-28";
+
+const WRITE_API_VERSION =
+  "v3";
 
 const PAGE_SIZE = 100;
 const MAX_PAGES = 100;
 const REQUEST_TIMEOUT_MS = 15000;
 
-const BUSINESS_TIMEZONE = "Africa/Cairo";
+const BUSINESS_TIMEZONE =
+  "Africa/Cairo";
 
 const M10_WORKFLOW_ID =
   "9da63be7-ddb1-4cc5-ba8c-c467eaadebaa";
 
-const { getRestaurantConnection } = require("./restaurant.js");
+const { getRestaurantConnection } =
+  require("./restaurant.js");
+
+
+/* =========================================================
+   HIGHLEVEL REQUEST HELPERS
+   ========================================================= */
 
 async function ghlRequest(
   urlOrPath,
@@ -20,46 +31,69 @@ async function ghlRequest(
   options = {}
 ) {
   if (!apiKey) {
-    throw new Error("Missing GHL API key.");
+    throw new Error(
+      "Missing GHL API key."
+    );
   }
 
   const url =
     urlOrPath instanceof URL
       ? urlOrPath
-      : new URL(urlOrPath, GHL_BASE_URL);
+      : new URL(
+          urlOrPath,
+          GHL_BASE_URL
+        );
 
-  if (url.origin !== GHL_BASE_URL) {
+  if (
+    url.origin !==
+    GHL_BASE_URL
+  ) {
     throw new Error(
       "Unexpected HighLevel API host."
     );
   }
 
-  const method = options.method || "GET";
+  const method =
+    options.method || "GET";
 
   const headers = {
-    Authorization: `Bearer ${apiKey}`,
+    Authorization:
+      `Bearer ${apiKey}`,
+
     Version:
       options.version ||
       READ_API_VERSION,
-    Accept: "application/json",
+
+    Accept:
+      "application/json",
   };
 
-  if (options.body !== undefined) {
+  if (
+    options.body !== undefined
+  ) {
     headers["Content-Type"] =
       "application/json";
   }
 
-  const response = await fetch(url, {
-    method,
-    headers,
-    body:
-      options.body !== undefined
-        ? JSON.stringify(options.body)
-        : undefined,
-    signal: AbortSignal.timeout(
-      REQUEST_TIMEOUT_MS
-    ),
-  });
+  const response =
+    await fetch(url, {
+      method,
+
+      headers,
+
+      body:
+        options.body !==
+        undefined
+          ? JSON.stringify(
+              options.body
+            )
+          : undefined,
+
+      signal:
+        AbortSignal.timeout(
+          REQUEST_TIMEOUT_MS
+        ),
+    });
 
   const responseText =
     await response.text();
@@ -68,10 +102,14 @@ async function ghlRequest(
 
   if (responseText) {
     try {
-      data = JSON.parse(responseText);
+      data =
+        JSON.parse(
+          responseText
+        );
     } catch {
       data = {
-        raw: responseText,
+        raw:
+          responseText,
       };
     }
   }
@@ -91,6 +129,7 @@ async function ghlRequest(
   return data;
 }
 
+
 async function ghlGet(
   urlOrPath,
   apiKey
@@ -100,10 +139,12 @@ async function ghlGet(
     apiKey,
     {
       method: "GET",
-      version: READ_API_VERSION,
+      version:
+        READ_API_VERSION,
     }
   );
 }
+
 
 async function ghlPut(
   urlOrPath,
@@ -115,11 +156,13 @@ async function ghlPut(
     apiKey,
     {
       method: "PUT",
-      version: WRITE_API_VERSION,
+      version:
+        WRITE_API_VERSION,
       body,
     }
   );
 }
+
 
 async function ghlPost(
   urlOrPath,
@@ -131,16 +174,26 @@ async function ghlPost(
     apiKey,
     {
       method: "POST",
-      version: WRITE_API_VERSION,
+      version:
+        WRITE_API_VERSION,
       body,
     }
   );
 }
 
-function getBusinessDateString(date) {
+
+/* =========================================================
+   DATE HELPERS
+   ========================================================= */
+
+function getBusinessDateString(
+  date
+) {
   if (
     !(date instanceof Date) ||
-    Number.isNaN(date.getTime())
+    Number.isNaN(
+      date.getTime()
+    )
   ) {
     return null;
   }
@@ -149,7 +202,9 @@ function getBusinessDateString(date) {
     new Intl.DateTimeFormat(
       "en-CA",
       {
-        timeZone: BUSINESS_TIMEZONE,
+        timeZone:
+          BUSINESS_TIMEZONE,
+
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
@@ -157,11 +212,15 @@ function getBusinessDateString(date) {
     );
 
   const parts =
-    formatter.formatToParts(date);
+    formatter.formatToParts(
+      date
+    );
 
   const result = {};
 
-  for (const part of parts) {
+  for (
+    const part of parts
+  ) {
     if (
       part.type === "year" ||
       part.type === "month" ||
@@ -183,7 +242,10 @@ function getBusinessDateString(date) {
   return `${result.year}-${result.month}-${result.day}`;
 }
 
-function normalizeBusinessDate(value) {
+
+function normalizeBusinessDate(
+  value
+) {
   if (
     value === null ||
     value === undefined ||
@@ -198,13 +260,17 @@ function normalizeBusinessDate(value) {
    * - ISO date string
    * - Unix milliseconds
    */
+
   if (
     typeof value === "number" &&
     Number.isFinite(value)
   ) {
-    const date = new Date(value);
+    const date =
+      new Date(value);
 
-    return getBusinessDateString(date);
+    return getBusinessDateString(
+      date
+    );
   }
 
   const stringValue =
@@ -215,19 +281,24 @@ function normalizeBusinessDate(value) {
   }
 
   if (
-    /^\d+$/.test(stringValue)
+    /^\d+$/.test(
+      stringValue
+    )
   ) {
     const numericValue =
-      Number(stringValue);
+      Number(
+        stringValue
+      );
 
-    /*
-     * Support Unix milliseconds.
-     */
     if (
-      Number.isFinite(numericValue)
+      Number.isFinite(
+        numericValue
+      )
     ) {
       const date =
-        new Date(numericValue);
+        new Date(
+          numericValue
+        );
 
       if (
         !Number.isNaN(
@@ -250,7 +321,9 @@ function normalizeBusinessDate(value) {
   }
 
   const date =
-    new Date(stringValue);
+    new Date(
+      stringValue
+    );
 
   if (
     Number.isNaN(
@@ -265,11 +338,13 @@ function normalizeBusinessDate(value) {
   );
 }
 
+
 function businessDateToCalendarUTC(
   value
 ) {
   if (
-    typeof value !== "string" ||
+    typeof value !==
+      "string" ||
     !/^\d{4}-\d{2}-\d{2}$/.test(
       value
     )
@@ -293,6 +368,7 @@ function businessDateToCalendarUTC(
   return date;
 }
 
+
 function calendarDayDifference(
   currentDate,
   previousDate
@@ -307,7 +383,10 @@ function calendarDayDifference(
       previousDate
     );
 
-  if (!current || !previous) {
+  if (
+    !current ||
+    !previous
+  ) {
     return null;
   }
 
@@ -319,13 +398,19 @@ function calendarDayDifference(
   );
 }
 
+
+/* =========================================================
+   HIGHLEVEL FIELD DEFINITIONS
+   ========================================================= */
+
 async function fetchFieldDefinitions(
   restaurant
 ) {
-  const url = new URL(
-    `/locations/${restaurant.locationId}/customFields`,
-    GHL_BASE_URL
-  );
+  const url =
+    new URL(
+      `/locations/${restaurant.locationId}/customFields`,
+      GHL_BASE_URL
+    );
 
   const data =
     await ghlGet(
@@ -343,10 +428,12 @@ async function fetchFieldDefinitions(
     );
   }
 
-  const map = new Map();
+  const map =
+    new Map();
 
   for (
-    const field of data.customFields
+    const field of
+      data.customFields
   ) {
     if (
       !field ||
@@ -373,16 +460,23 @@ async function fetchFieldDefinitions(
   return map;
 }
 
+
+/* =========================================================
+   FETCH ALL CONTACTS
+   ========================================================= */
+
 async function fetchAllContacts(
   restaurant
 ) {
   const contacts = [];
-  const seenIds = new Set();
+  const seenIds =
+    new Set();
 
-  let nextUrl = new URL(
-    "/contacts/",
-    GHL_BASE_URL
-  );
+  let nextUrl =
+    new URL(
+      "/contacts/",
+      GHL_BASE_URL
+    );
 
   nextUrl.searchParams.set(
     "locationId",
@@ -391,7 +485,9 @@ async function fetchAllContacts(
 
   nextUrl.searchParams.set(
     "limit",
-    String(PAGE_SIZE)
+    String(
+      PAGE_SIZE
+    )
   );
 
   let pagesFetched = 0;
@@ -400,7 +496,8 @@ async function fetchAllContacts(
 
   while (
     nextUrl &&
-    pagesFetched < MAX_PAGES
+    pagesFetched <
+      MAX_PAGES
   ) {
     pagesFetched += 1;
 
@@ -434,7 +531,8 @@ async function fetchAllContacts(
     }
 
     for (
-      const contact of data.contacts
+      const contact of
+        data.contacts
     ) {
       if (
         !contact ||
@@ -456,7 +554,8 @@ async function fetchAllContacts(
     }
 
     if (
-      reportedTotal !== null &&
+      reportedTotal !==
+        null &&
       contacts.length >=
         reportedTotal
     ) {
@@ -494,7 +593,8 @@ async function fetchAllContacts(
       break;
     }
 
-    nextUrl = candidate;
+    nextUrl =
+      candidate;
   }
 
   if (
@@ -513,6 +613,11 @@ async function fetchAllContacts(
   };
 }
 
+
+/* =========================================================
+   EXTRACT CUSTOM FIELDS
+   ========================================================= */
+
 function extractFields(
   contact,
   fieldMap
@@ -527,7 +632,8 @@ function extractFields(
       : [];
 
   for (
-    const field of customFields
+    const field of
+      customFields
   ) {
     if (
       !field ||
@@ -550,6 +656,11 @@ function extractFields(
 
   return fields;
 }
+
+
+/* =========================================================
+   M10 CALCULATOR
+   ========================================================= */
 
 function calculateM10(
   fields
@@ -692,6 +803,11 @@ function calculateM10(
   };
 }
 
+
+/* =========================================================
+   CONTACT HELPERS
+   ========================================================= */
+
 function getContactName(
   contact
 ) {
@@ -708,6 +824,7 @@ function getContactName(
     contact.id
   );
 }
+
 
 function getFieldIdByKey(
   fieldMap,
@@ -729,6 +846,11 @@ function getFieldIdByKey(
 
   return null;
 }
+
+
+/* =========================================================
+   WRITE M10 CONTACT FIELDS
+   ========================================================= */
 
 async function updateM10Fields(
   contact,
@@ -756,7 +878,9 @@ async function updateM10Fields(
     );
   }
 
-  if (!tierFieldId) {
+  if (
+    !tierFieldId
+  ) {
     throw new Error(
       "Custom field 'winback_tier' was not found."
     );
@@ -764,21 +888,27 @@ async function updateM10Fields(
 
   const customFields = [
     {
-      id: eligibilityFieldId,
+      id:
+        eligibilityFieldId,
+
       fieldValue:
         result.winBackEligibility,
     },
+
     {
-      id: tierFieldId,
+      id:
+        tierFieldId,
+
       fieldValue:
         result.winBackTier,
     },
   ];
 
-  const url = new URL(
-    `/contacts/${contact.id}`,
-    GHL_BASE_URL
-  );
+  const url =
+    new URL(
+      `/contacts/${contact.id}`,
+      GHL_BASE_URL
+    );
 
   const response =
     await ghlPut(
@@ -791,19 +921,27 @@ async function updateM10Fields(
 
   return {
     succeeded:
-      response?.succeeded === true,
+      response?.succeeded ===
+      true,
+
     response,
   };
 }
+
+
+/* =========================================================
+   DIRECT M10 WORKFLOW ENROLLMENT
+   ========================================================= */
 
 async function addContactToM10Workflow(
   contactId,
   apiKey
 ) {
-  const url = new URL(
-    `/contacts/${contactId}/workflow/${M10_WORKFLOW_ID}`,
-    GHL_BASE_URL
-  );
+  const url =
+    new URL(
+      `/contacts/${contactId}/workflow/${M10_WORKFLOW_ID}`,
+      GHL_BASE_URL
+    );
 
   const response =
     await ghlPost(
@@ -817,10 +955,164 @@ async function addContactToM10Workflow(
 
   return {
     succeeded:
-      response?.succeeded === true,
+      response?.succeeded ===
+      true,
+
     response,
   };
 }
+
+
+/* =========================================================
+   WEBHOOK INPUT HELPERS
+   ========================================================= */
+
+function getWebhookBody(
+  req
+) {
+  if (
+    req.body &&
+    typeof req.body ===
+      "object"
+  ) {
+    return req.body;
+  }
+
+  return {};
+}
+
+
+function getLocationIdFromWebhook(
+  req,
+  body
+) {
+  /*
+   * Priority:
+   *
+   * 1. X-RX-RESTAURANT header
+   * 2. body.locationId
+   * 3. body.location.id
+   */
+
+  const headerLocation =
+    req.headers[
+      "x-rx-restaurant"
+    ];
+
+  if (
+    typeof headerLocation ===
+      "string" &&
+    headerLocation.trim()
+  ) {
+    return headerLocation.trim();
+  }
+
+  if (
+    typeof body.locationId ===
+      "string" &&
+    body.locationId.trim()
+  ) {
+    return body.locationId.trim();
+  }
+
+  if (
+    body.location &&
+    typeof body.location.id ===
+      "string" &&
+    body.location.id.trim()
+  ) {
+    return body.location.id.trim();
+  }
+
+  return null;
+}
+
+
+function getModeFromWebhook(
+  req,
+  body
+) {
+  /*
+   * Supports:
+   *
+   * body.mode
+   * query ?mode=
+   *
+   * Default remains read_only
+   * for safety.
+   */
+
+  const bodyMode =
+    body?.mode;
+
+  if (
+    bodyMode ===
+      "write" ||
+    bodyMode ===
+      "read_only"
+  ) {
+    return bodyMode;
+  }
+
+  const queryMode =
+    req.query?.mode;
+
+  if (
+    queryMode ===
+      "write" ||
+    queryMode ===
+      "read_only"
+  ) {
+    return queryMode;
+  }
+
+  return "read_only";
+}
+
+
+function getWebhookSecret(
+  req,
+  body
+) {
+  /*
+   * Supports both:
+   *
+   * X-RX-M10-SECRET header
+   *
+   * and standard HighLevel
+   * Webhook custom-data:
+   *
+   * secret = <value>
+   */
+
+  const headerSecret =
+    req.headers[
+      "x-rx-m10-secret"
+    ];
+
+  if (
+    typeof headerSecret ===
+      "string" &&
+    headerSecret
+  ) {
+    return headerSecret;
+  }
+
+  if (
+    typeof body.secret ===
+      "string" &&
+    body.secret
+  ) {
+    return body.secret;
+  }
+
+  return null;
+}
+
+
+/* =========================================================
+   MAIN HANDLER
+   ========================================================= */
 
 export default async function handler(
   req,
@@ -847,20 +1139,71 @@ export default async function handler(
   }
 
   try {
-    const restaurantLocationId =
-      req.headers[
-        "x-rx-restaurant"
-      ];
+    const body =
+      getWebhookBody(req);
+
+    /*
+     * -------------------------------------------------------
+     * SECURITY
+     * -------------------------------------------------------
+     *
+     * The scheduler secret must exist in Vercel:
+     *
+     * M10_SCHEDULER_SECRET
+     */
+
+    const expectedSecret =
+      process.env
+        .M10_SCHEDULER_SECRET;
 
     if (
-      typeof restaurantLocationId !==
-        "string" ||
-      !restaurantLocationId.trim()
+      !expectedSecret
+    ) {
+      return res.status(500).json({
+        success: false,
+        error:
+          "M10_SCHEDULER_SECRET environment variable is not configured.",
+      });
+    }
+
+    const providedSecret =
+      getWebhookSecret(
+        req,
+        body
+      );
+
+    if (
+      !providedSecret ||
+      providedSecret !==
+        expectedSecret
+    ) {
+      return res.status(401).json({
+        success: false,
+        error:
+          "Unauthorized M10 webhook request.",
+      });
+    }
+
+
+    /*
+     * -------------------------------------------------------
+     * RESTAURANT
+     * -------------------------------------------------------
+     */
+
+    const restaurantLocationId =
+      getLocationIdFromWebhook(
+        req,
+        body
+      );
+
+    if (
+      !restaurantLocationId
     ) {
       return res.status(400).json({
         success: false,
         error:
-          "X-RX-RESTAURANT header is required.",
+          "Restaurant location ID is required. Provide X-RX-RESTAURANT, body.locationId, or body.location.id.",
       });
     }
 
@@ -868,17 +1211,28 @@ export default async function handler(
       getRestaurantConnection({
         headers: {
           "x-rx-restaurant":
-            restaurantLocationId.trim(),
+            restaurantLocationId,
         },
       });
 
+
+    /*
+     * -------------------------------------------------------
+     * MODE
+     * -------------------------------------------------------
+     */
+
     const mode =
-      req.body?.mode ||
-      "read_only";
+      getModeFromWebhook(
+        req,
+        body
+      );
 
     if (
-      mode !== "read_only" &&
-      mode !== "write"
+      mode !==
+        "read_only" &&
+      mode !==
+        "write"
     ) {
       return res.status(400).json({
         success: false,
@@ -887,6 +1241,13 @@ export default async function handler(
       });
     }
 
+
+    /*
+     * -------------------------------------------------------
+     * LOAD DATA
+     * -------------------------------------------------------
+     */
+
     const [
       fieldMap,
       contactResult,
@@ -894,15 +1255,24 @@ export default async function handler(
       fetchFieldDefinitions(
         restaurant
       ),
+
       fetchAllContacts(
         restaurant
       ),
     ]);
 
+
     const eligible = [];
     const notEligible = [];
     const inProgress = [];
     const writeResults = [];
+
+
+    /*
+     * -------------------------------------------------------
+     * EVALUATE EVERY CONTACT
+     * -------------------------------------------------------
+     */
 
     for (
       const contact of
@@ -919,9 +1289,12 @@ export default async function handler(
         fields.win_back_cycle_status ??
         null;
 
+
       /*
-       * Never interfere with an active M10 cycle.
+       * Never interfere with
+       * an active M10 cycle.
        */
+
       if (
         String(
           cycleStatus || ""
@@ -929,34 +1302,51 @@ export default async function handler(
         "In Progress"
       ) {
         inProgress.push({
-          id: contact.id,
+          id:
+            contact.id,
+
           name:
             getContactName(
               contact
             ),
+
           cycleStatus,
         });
 
         continue;
       }
 
+
       const result =
         calculateM10(
           fields
         );
 
+
       const record = {
-        id: contact.id,
+        id:
+          contact.id,
+
         name:
           getContactName(
             contact
           ),
+
         email:
           contact.email || "",
+
         phone:
           contact.phone || "",
+
         ...result,
       };
+
+
+      /*
+       * -----------------------------------------------------
+       * ELIGIBLE
+       * -----------------------------------------------------
+       */
 
       if (
         result.winBackEligibility ===
@@ -966,31 +1356,50 @@ export default async function handler(
           record
         );
 
+
         /*
+         * ---------------------------------------------------
          * WRITE MODE
          *
-         * 1. Update Win-Back Eligibility
-         * 2. Update Win-Back Tier
-         * 3. Directly enroll contact into M10
+         * 1. Update Eligibility
+         * 2. Update Tier
+         * 3. Enroll directly into M10
+         * ---------------------------------------------------
          */
+
         if (
-          mode === "write"
+          mode ===
+          "write"
         ) {
           const writeRecord = {
-            id: contact.id,
+            id:
+              contact.id,
+
             name:
               getContactName(
                 contact
               ),
+
             eligibilityUpdated:
               false,
+
             workflowEnrollment:
               false,
+
             status:
               "pending",
           };
 
+
           try {
+            /*
+             * STEP 1 + 2
+             *
+             * Write:
+             * Win-Back Eligibility
+             * Win-Back Tier
+             */
+
             const updateResult =
               await updateM10Fields(
                 contact,
@@ -999,12 +1408,19 @@ export default async function handler(
                 restaurant.apiKey
               );
 
-            writeRecord.eligibilityUpdated =
+
+            writeRecord
+              .eligibilityUpdated =
               updateResult.succeeded;
 
+
             /*
-             * Only enroll after the field update succeeds.
+             * STEP 3
+             *
+             * Only enroll after
+             * the field update succeeds.
              */
+
             if (
               updateResult.succeeded
             ) {
@@ -1014,18 +1430,32 @@ export default async function handler(
                   restaurant.apiKey
                 );
 
-              writeRecord.workflowEnrollment =
+
+              writeRecord
+                .workflowEnrollment =
                 workflowResult.succeeded;
+
 
               writeRecord.status =
                 workflowResult.succeeded
                   ? "success"
                   : "workflow_enrollment_failed";
+
+
+              if (
+                !workflowResult.succeeded
+              ) {
+                writeRecord.error =
+                  "HighLevel did not confirm workflow enrollment.";
+              }
             } else {
               writeRecord.status =
                 "field_update_failed";
             }
-          } catch (writeError) {
+
+          } catch (
+            writeError
+          ) {
             writeRecord.status =
               "failed";
 
@@ -1033,16 +1463,25 @@ export default async function handler(
               writeError.message;
           }
 
+
           writeResults.push(
             writeRecord
           );
         }
+
       } else {
         notEligible.push(
           record
         );
       }
     }
+
+
+    /*
+     * -------------------------------------------------------
+     * RESPONSE
+     * -------------------------------------------------------
+     */
 
     return res.status(200).json({
       success: true,
@@ -1052,8 +1491,10 @@ export default async function handler(
       restaurant: {
         id:
           restaurant.restaurantId,
+
         name:
           restaurant.restaurantName,
+
         locationId:
           restaurant.locationId,
       },
@@ -1061,6 +1502,7 @@ export default async function handler(
       workflow: {
         id:
           M10_WORKFLOW_ID,
+
         name:
           "ROS | M10 | WIN-BACK | Customer Reactivation",
       },
@@ -1068,9 +1510,15 @@ export default async function handler(
       calculation: {
         timezone:
           BUSINESS_TIMEZONE,
-        minimumOrders: 3,
-        minimumDaysSinceLastOrder: 21,
-        minimumCycleRatio: 1.5,
+
+        minimumOrders:
+          3,
+
+        minimumDaysSinceLastOrder:
+          21,
+
+        minimumCycleRatio:
+          1.5,
       },
 
       summary: {
@@ -1123,7 +1571,8 @@ export default async function handler(
 
       inProgress,
 
-      ...(mode === "write"
+      ...(mode ===
+      "write"
         ? {
             writeResults,
           }
@@ -1134,7 +1583,10 @@ export default async function handler(
           new Date().toISOString(),
       },
     });
-  } catch (error) {
+
+  } catch (
+    error
+  ) {
     console.error(
       "M10 Win-Back API failed:",
       error
@@ -1142,6 +1594,7 @@ export default async function handler(
 
     return res.status(500).json({
       success: false,
+
       error:
         error.message ||
         "Unable to calculate M10 Win-Back eligibility.",
