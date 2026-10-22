@@ -14,9 +14,6 @@ const REQUEST_TIMEOUT_MS = 15000;
 const BUSINESS_TIMEZONE =
   "Africa/Cairo";
 
-const M10_WORKFLOW_ID =
-  "9da63be7-ddb1-4cc5-ba8c-c467eaadebaa";
-
 const { getRestaurantConnection } =
   require("./restaurant.js");
 
@@ -988,11 +985,21 @@ function getEventStartTimeWithTimezone() {
 
 async function addContactToM10Workflow(
   contactId,
-  apiKey
+  apiKey,
+  workflowId
 ) {
+  if (
+    typeof workflowId !== "string" ||
+    !workflowId.trim()
+  ) {
+    throw new Error(
+      "M10 workflow ID is not configured for this restaurant."
+    );
+  }
+
   const url =
     new URL(
-      `/contacts/${contactId}/workflow/${M10_WORKFLOW_ID}`,
+      `/contacts/${contactId}/workflow/${workflowId.trim()}`,
       GHL_BASE_URL
     );
 
@@ -1502,10 +1509,11 @@ export default async function handler(
               updateResult.succeeded
             ) {
               const workflowResult =
-                await addContactToM10Workflow(
-                  contact.id,
-                  restaurant.apiKey
-                );
+  await addContactToM10Workflow(
+    contact.id,
+    restaurant.apiKey,
+    restaurant.m10WorkflowId
+  );
 
 
               writeRecord
@@ -1576,13 +1584,12 @@ export default async function handler(
           restaurant.locationId,
       },
 
-      workflow: {
-        id:
-          M10_WORKFLOW_ID,
-
-        name:
-          "ROS | M10 | WIN-BACK | Customer Reactivation",
-      },
+     workflow: {
+  id:
+    restaurant.m10WorkflowId,
+  name:
+    "ROS | M10 | WIN-BACK | Customer Reactivation",
+},
 
       calculation: {
         timezone:
