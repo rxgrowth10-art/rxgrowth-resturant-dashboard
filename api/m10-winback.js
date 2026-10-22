@@ -1035,21 +1035,38 @@ function getModeFromWebhook(
   /*
    * Supports:
    *
-   * body.mode
-   * query ?mode=
+   * 1. HighLevel Custom Data:
+   *    customData.mode
+   *
+   * 2. Direct body:
+   *    body.mode
+   *
+   * 3. Query string:
+   *    ?mode=
+   *
+   * Priority:
+   * customData.mode -> body.mode -> query.mode
    *
    * Default remains read_only
    * for safety.
    */
 
+  const customDataMode =
+    body?.customData?.mode;
+
+  if (
+    customDataMode === "write" ||
+    customDataMode === "read_only"
+  ) {
+    return customDataMode;
+  }
+
   const bodyMode =
     body?.mode;
 
   if (
-    bodyMode ===
-      "write" ||
-    bodyMode ===
-      "read_only"
+    bodyMode === "write" ||
+    bodyMode === "read_only"
   ) {
     return bodyMode;
   }
@@ -1058,10 +1075,8 @@ function getModeFromWebhook(
     req.query?.mode;
 
   if (
-    queryMode ===
-      "write" ||
-    queryMode ===
-      "read_only"
+    queryMode === "write" ||
+    queryMode === "read_only"
   ) {
     return queryMode;
   }
@@ -1069,20 +1084,23 @@ function getModeFromWebhook(
   return "read_only";
 }
 
-
 function getWebhookSecret(
   req,
   body
 ) {
   /*
-   * Supports both:
+   * Supports:
    *
-   * X-RX-M10-SECRET header
+   * 1. X-RX-M10-SECRET header
+   * 2. body.secret
+   * 3. body.customData.secret
    *
-   * and standard HighLevel
-   * Webhook custom-data:
+   * HighLevel standard Webhook
+   * sends Custom Data inside:
    *
-   * secret = <value>
+   * customData: {
+   *   secret: "..."
+   * }
    */
 
   const headerSecret =
@@ -1091,24 +1109,31 @@ function getWebhookSecret(
     ];
 
   if (
-    typeof headerSecret ===
-      "string" &&
+    typeof headerSecret === "string" &&
     headerSecret
   ) {
     return headerSecret;
   }
 
   if (
-    typeof body.secret ===
-      "string" &&
+    typeof body.secret === "string" &&
     body.secret
   ) {
     return body.secret;
   }
 
+  const customDataSecret =
+    body?.customData?.secret;
+
+  if (
+    typeof customDataSecret === "string" &&
+    customDataSecret
+  ) {
+    return customDataSecret;
+  }
+
   return null;
 }
-
 
 /* =========================================================
    MAIN HANDLER
