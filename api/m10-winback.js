@@ -928,6 +928,59 @@ async function updateM10Fields(
   };
 }
 
+function getEventStartTimeWithTimezone() {
+  const now = new Date();
+
+  const parts = new Intl.DateTimeFormat(
+    "en-CA",
+    {
+      timeZone: BUSINESS_TIMEZONE,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23",
+      timeZoneName: "longOffset",
+    }
+  ).formatToParts(now);
+
+  const values = {};
+
+  for (const part of parts) {
+    if (
+      part.type === "year" ||
+      part.type === "month" ||
+      part.type === "day" ||
+      part.type === "hour" ||
+      part.type === "minute" ||
+      part.type === "second" ||
+      part.type === "timeZoneName"
+    ) {
+      values[part.type] = part.value;
+    }
+  }
+
+  let offset =
+    values.timeZoneName || "GMT+00:00";
+
+  offset = offset.replace(
+    /^GMT/,
+    ""
+  );
+
+  if (!offset) {
+    offset = "+00:00";
+  }
+
+  return (
+    `${values.year}-${values.month}-${values.day}` +
+    `T${values.hour}:${values.minute}:${values.second}` +
+    offset
+  );
+}
+
 
 /* =========================================================
    DIRECT M10 WORKFLOW ENROLLMENT
@@ -949,7 +1002,7 @@ async function addContactToM10Workflow(
       apiKey,
       {
         eventStartTime:
-          new Date().toISOString(),
+          getEventStartTimeWithTimezone(),
       }
     );
 
@@ -957,7 +1010,6 @@ async function addContactToM10Workflow(
     succeeded:
       response?.succeeded ===
       true,
-
     response,
   };
 }
